@@ -1,0 +1,32 @@
+dubbo:
+  protocols:
+    dubbo:
+      port: 20880
+  registry:
+    address: spring-cloud://localhost
+server:
+  port: 9082
+spring:
+  application:
+    name: cb-platform-service
+  main:
+    allow-bean-definition-overriding: true
+  zipkin:
+    base-url: http://134.175.101.170:9411/
+    discovery-client-enabled: true
+    service:
+      name: zipkin-feign
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 1
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        group: cbstp-test
+        prefix: cbstp
+        server-addr: 134.175.101.170:8845,134.175.101.170:8846,134.175.101.170:8847
+  profiles:
+    active: nacos, sentinel, mysql, rabbitmq, redis
