@@ -27,4 +27,5 @@ spring:
         prefix: cbstp
         server-addr: 134.175.101.170:8845,134.175.101.170:8846,134.175.101.170:8847
   profiles:
-    active: nacos, sso-server, sentinel, mysql, rabbitmq, redis, platform-core
+    # rabbitmq,
+    active: nacos, sso-server, sentinel, mysql, redis, platform-core

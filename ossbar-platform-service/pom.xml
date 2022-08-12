@@ -159,12 +159,6 @@
 	</build>
 	<profiles>
         <profile>
-            <id>dev</id>
-            <properties>
-                <group>dev</group>
-			</properties>
-		</profile>
-        <profile>
             <id>test</id>
             <properties>
                 <group>test</group>
@@ -177,7 +171,7 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>alone</id>
+			<id>dev</id>
 			<properties>
 				<group>dev</group>
 			</properties>

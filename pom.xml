@@ -20,6 +20,7 @@
         <module>ossbar-platform-dubbo</module>
         <module>ossbar-platform-db-mysql</module>
         <module>ossbar-platform-service</module>
+        <module>ossbar</module>
     </modules>
 
     <properties>

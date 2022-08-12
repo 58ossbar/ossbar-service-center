@@ -183,12 +183,6 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>dev</id>
-			<properties>
-				<group>dev</group>
-			</properties>
-		</profile>
-		<profile>
 			<id>test</id>
 			<properties>
 				<group>test</group>
@@ -202,7 +196,7 @@
 		</profile>
 		<!--打包成jar包，可以作为第三方，被其它项目引用-->
 		<profile>
-			<id>alone</id>
+			<id>dev</id>
 			<properties>
 				<group>dev</group>
 			</properties>
