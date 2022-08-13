@@ -1,5 +1,6 @@
 package com.ossbar.modules.sys.domain;
 
+
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
 public class TuserToken extends BaseDomain<Object> {

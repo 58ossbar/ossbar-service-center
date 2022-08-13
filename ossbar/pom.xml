@@ -20,16 +20,6 @@
 			<groupId>com.ossbar</groupId>
 			<artifactId>ossbar-platform-service</artifactId>
 			<version>1.0.0</version>
-			<!-- <exclusions>
-				<exclusion>
-					<groupId>org.springframework.cloud</groupId>
-					<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.springframework.cloud</groupId>
-					<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-				</exclusion>
-			</exclusions> -->
 		</dependency>
 		<dependency>
 			<groupId>com.ossbar</groupId>

@@ -2,17 +2,18 @@
  * <p> Title: </p>
  * <p> Description:</p>
  * <p> Copyright: Copyright (c) 2017 </p>
- * <p> Company:ossbar.co.,ltd </p>
+ * <p> Company:creatorblue.co.,ltd </p>
  *
  * @author zhujw
  * @version 1.0
  */
 
 package com.ossbar.modules.sys.domain;
+
+
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
-
-public class TuserGroup extends BaseDomain<Object>{
+public class TuserGroup extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
 	
 	//alias
@@ -25,45 +26,45 @@ public class TuserGroup extends BaseDomain<Object>{
     /**
      * usergroupId       db_column: USERGROUP_ID 
      */	
-	private java.lang.String usergroupId;
+	private String usergroupId;
     /**
      * 组ID       db_column: GROUP_ID 
      */	
-	private java.lang.String groupId;
+	private String groupId;
     /**
      * 用户ID       db_column: USER_ID 
      */	
-	private java.lang.String userId;
+	private String userId;
 	//columns END
 
 	public TuserGroup(){
 	}
 
 	public TuserGroup(
-		java.lang.String usergroupId
+		String usergroupId
 	){
 		this.usergroupId = usergroupId;
 	}
 
-	public void setUsergroupId(java.lang.String value) {
+	public void setUsergroupId(String value) {
 		this.usergroupId = value;
 	}
 	
-	public java.lang.String getUsergroupId() {
+	public String getUsergroupId() {
 		return this.usergroupId;
 	}
-	public void setGroupId(java.lang.String value) {
+	public void setGroupId(String value) {
 		this.groupId = value;
 	}
 	
-	public java.lang.String getGroupId() {
+	public String getGroupId() {
 		return this.groupId;
 	}
-	public void setUserId(java.lang.String value) {
+	public void setUserId(String value) {
 		this.userId = value;
 	}
 	
-	public java.lang.String getUserId() {
+	public String getUserId() {
 		return this.userId;
 	}
 	

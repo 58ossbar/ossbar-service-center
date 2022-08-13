@@ -1,8 +1,12 @@
 package com.ossbar.modules.sys.domain;
 
-import java.util.List;
-
 import com.ossbar.core.baseclass.domain.BaseDomain;
+
+import java.util.List;
+//import org.hibernate.validator.constraints.Email;
+//import org.hibernate.validator.constraints.NotBlank;
+//import com.creatorblue.common.cbsecurity.validator.group.AddGroup;
+//import com.creatorblue.common.cbsecurity.validator.group.UpdateGroup;
 /**
  * 用户信息
  * @author
@@ -15,6 +19,7 @@ public class TsysUserinfo extends BaseDomain<Object> {
 	 * 用户ID
 	 */
 	private String userId;
+	private String id;
 
 	/**
 	 * 用户名
@@ -54,6 +59,7 @@ public class TsysUserinfo extends BaseDomain<Object> {
 	 * 角色ID列表
 	 */
 	private List<String> roleIdList;
+	private List<String> roleNameList;
 
 	private List<String> orgIdList;
 
@@ -97,61 +103,61 @@ public class TsysUserinfo extends BaseDomain<Object> {
 	 * 性别
 	 */
 	private String sex;
-	private java.lang.String userTheme;
+	private String userTheme;
     /**
      * 身份证号码       db_column: user_card 
      */	
-	private java.lang.String userCard;
+	private String userCard;
     /**
      * 出生年月       db_column: birthday 
      */	
-	private java.lang.String birthday;
+	private String birthday;
     /**
      * 家庭住址       db_column: native_place 
      */	
-	private java.lang.String nativePlace;
+	private String nativePlace;
     /**
      * 民族       db_column: nation 
      */	
-	private java.lang.String nation;
+	private String nation;
 	
-	public java.lang.String getUserTheme() {
+	public String getUserTheme() {
 		return userTheme;
 	}
 
-	public void setUserTheme(java.lang.String userTheme) {
+	public void setUserTheme(String userTheme) {
 		this.userTheme = userTheme;
 	}
 
-	public java.lang.String getUserCard() {
+	public String getUserCard() {
 		return userCard;
 	}
 
-	public void setUserCard(java.lang.String userCard) {
+	public void setUserCard(String userCard) {
 		this.userCard = userCard;
 	}
 
-	public java.lang.String getBirthday() {
+	public String getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(java.lang.String birthday) {
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
 
-	public java.lang.String getNativePlace() {
+	public String getNativePlace() {
 		return nativePlace;
 	}
 
-	public void setNativePlace(java.lang.String nativePlace) {
+	public void setNativePlace(String nativePlace) {
 		this.nativePlace = nativePlace;
 	}
 
-	public java.lang.String getNation() {
+	public String getNation() {
 		return nation;
 	}
 
-	public void setNation(java.lang.String nation) {
+	public void setNation(String nation) {
 		this.nation = nation;
 	}
 
@@ -400,6 +406,22 @@ public class TsysUserinfo extends BaseDomain<Object> {
 	 */
 	public void setOrgId(String orgId) {
 		this.orgId = orgId;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public List<String> getRoleNameList() {
+		return roleNameList;
+	}
+
+	public void setRoleNameList(List<String> roleNameList) {
+		this.roleNameList = roleNameList;
 	}
 	
 	

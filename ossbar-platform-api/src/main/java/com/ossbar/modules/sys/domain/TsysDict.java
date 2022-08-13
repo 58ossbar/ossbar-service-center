@@ -1,11 +1,12 @@
 package com.ossbar.modules.sys.domain;
 
-import com.ossbar.core.baseclass.domain.BaseDomain;
 
 //import org.hibernate.validator.constraints.NotBlank;
 //import com.creatorblue.common.cbsecurity.validator.group.AddGroup;
 //import com.creatorblue.common.cbsecurity.validator.group.UpdateGroup;
-//import com.ossbar.core.baseclass.domain.BaseDomain;
+//import com.creatorblue.core.baseclass.domain.BaseDomain;
+
+import com.ossbar.core.baseclass.domain.BaseDomain;
 
 /**
  * <p>
@@ -18,7 +19,7 @@ import com.ossbar.core.baseclass.domain.BaseDomain;
  * Copyright: Copyright (c) 2017
  * </p>
  * <p>
- * Company:ossbar.co.,ltd
+ * Company:creatorblue.co.,ltd
  * </p>
  *
  * @author zhujw
@@ -48,11 +49,11 @@ public class TsysDict extends BaseDomain<Object> {
 	/**
 	 * dictId db_column: DICT_ID
 	 */
-	private java.lang.String dictId;
-	//@NotBlank(message = "字典分类不能为空", groups = { AddGroup.class, UpdateGroup.class })
-	private java.lang.String dictType;
+	private String dictId;
+	// @NotBlank(message = "字典分类不能为空", groups = { AddGroup.class, UpdateGroup.class
+	// })
+	private String dictType;
 	private String dictUrl;
-
 
 	public String getDictUrl() {
 		return dictUrl;
@@ -65,193 +66,203 @@ public class TsysDict extends BaseDomain<Object> {
 	/**
 	 * 字典分类名称 db_column: DICT_NAME
 	 */
-	//@NotBlank(message = "字典分类名称不能为空", groups = { AddGroup.class, UpdateGroup.class })
-	private java.lang.String dictName;
+	// @NotBlank(message = "字典分类名称不能为空", groups = { AddGroup.class,
+	// UpdateGroup.class })
+	private String dictName;
 	/**
 	 * 字典值 db_column: DICT_VALUE
 	 */
-	//@NotBlank(message = "字典值不能为空", groups = { AddGroup.class, UpdateGroup.class })
-	private java.lang.String dictValue;
+	// @NotBlank(message = "字典值不能为空", groups = { AddGroup.class, UpdateGroup.class
+	// })
+	private String dictValue;
 	/**
 	 * 字典编码 db_column: DICT_CODE
 	 */
-	//@NotBlank(message = "字典编码不能为空", groups = { AddGroup.class, UpdateGroup.class })
-	private java.lang.String dictCode;
+	// @NotBlank(message = "字典编码不能为空", groups = { AddGroup.class, UpdateGroup.class
+	// })
+	private String dictCode;
 	/**
 	 * 字典描述 db_column: REMARK
 	 */
-	private java.lang.String remark;
+	private String remark;
 	/**
 	 * 1、平台内2、平台外 db_column: DICT_SORT
 	 */
-	private java.lang.String dictSort;
+	private String dictSort;
 	/**
 	 * 排序号 db_column: SORT_NUM
 	 */
-	private java.lang.Integer sortNum;
+	private Integer sortNum;
 	/**
 	 * 父分类 db_column: PARENT_TYPE
 	 */
-	private java.lang.String parentType;
+	private String parentType;
 	/**
 	 * 字典展现分类:下拉类型(select)树形(tree) 复选型(checkbox)单选radio db_column: DISPLAY_SORT
 	 */
-	private java.lang.String displaySort;
+	private String displaySort;
 	/**
 	 * dictClass db_column: DICT_CLASS
 	 */
-	private java.lang.Integer dictClass;
+	private Integer dictClass;
 	/**
 	 * 单选或多选：主要针对树形控件 db_column: MULTI_TYPE
 	 */
-	private java.lang.String multiType;
+	private String multiType;
 	/**
 	 * 所属机构 db_column: ORG_ID
 	 */
-	private java.lang.String orgId;
+	private String orgId;
 	/**
 	 * 是否显示 db_column: displaying
 	 */
-	private java.lang.String displaying;
+	private String displaying;
 
 	/**
 	 * 是否默认值 db_column: isdefault
 	 */
-	private java.lang.String isdefault;
+	private String isdefault;
 	// columns END
+	private String orgName;
+	
+	public String getOrgName() {
+		return orgName;
+	}
 
-	public java.lang.String getIsdefault() {
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public String getIsdefault() {
 		return isdefault;
 	}
 
-	public void setIsdefault(java.lang.String isdefault) {
+	public void setIsdefault(String isdefault) {
 		this.isdefault = isdefault;
 	}
 
 	public TsysDict() {
 	}
 
-	public TsysDict(java.lang.String dictId) {
+	public TsysDict(String dictId) {
 		this.dictId = dictId;
 	}
 
-	public void setDictId(java.lang.String value) {
+	public void setDictId(String value) {
 		this.dictId = value;
 	}
 
-	public java.lang.String getDictId() {
+	public String getDictId() {
 		return this.dictId;
 	}
 
-	public void setDictType(java.lang.String value) {
+	public void setDictType(String value) {
 		this.dictType = value;
 	}
 
-	public java.lang.String getDictType() {
+	public String getDictType() {
 		return this.dictType;
 	}
 
-	public void setDictName(java.lang.String value) {
+	public void setDictName(String value) {
 		this.dictName = value;
 	}
 
-	public java.lang.String getDictName() {
+	public String getDictName() {
 		return this.dictName;
 	}
 
-	public void setDictValue(java.lang.String value) {
+	public void setDictValue(String value) {
 		this.dictValue = value;
 	}
 
-	public java.lang.String getDictValue() {
+	public String getDictValue() {
 		return this.dictValue;
 	}
 
-	public void setDictCode(java.lang.String value) {
+	public void setDictCode(String value) {
 		this.dictCode = value;
 	}
 
-	public java.lang.String getDictCode() {
+	public String getDictCode() {
 		return this.dictCode;
 	}
 
-	public void setRemark(java.lang.String value) {
+	public void setRemark(String value) {
 		this.remark = value;
 	}
 
-	public java.lang.String getRemark() {
+	public String getRemark() {
 		return this.remark;
 	}
 
-	public void setDictSort(java.lang.String value) {
+	public void setDictSort(String value) {
 		this.dictSort = value;
 	}
 
-	public java.lang.String getDictSort() {
+	public String getDictSort() {
 		return this.dictSort;
 	}
 
-	public void setSortNum(java.lang.Integer value) {
+	public void setSortNum(Integer value) {
 		this.sortNum = value;
 	}
 
-	public java.lang.Integer getSortNum() {
+	public Integer getSortNum() {
 		return this.sortNum;
 	}
 
-	public void setParentType(java.lang.String value) {
+	public void setParentType(String value) {
 		this.parentType = value;
 	}
 
-	public java.lang.String getParentType() {
+	public String getParentType() {
 		return this.parentType;
 	}
 
-	public void setDisplaySort(java.lang.String value) {
+	public void setDisplaySort(String value) {
 		this.displaySort = value;
 	}
 
-	public java.lang.String getDisplaySort() {
+	public String getDisplaySort() {
 		return this.displaySort;
 	}
 
-	public void setDictClass(java.lang.Integer value) {
+	public void setDictClass(Integer value) {
 		this.dictClass = value;
 	}
 
-	public java.lang.Integer getDictClass() {
+	public Integer getDictClass() {
 		return this.dictClass;
 	}
 
-	public void setMultiType(java.lang.String value) {
+	public void setMultiType(String value) {
 		this.multiType = value;
 	}
 
-	public java.lang.String getMultiType() {
+	public String getMultiType() {
 		return this.multiType;
 	}
 
-	public void setOrgId(java.lang.String value) {
+	public void setOrgId(String value) {
 		this.orgId = value;
 	}
 
-	public java.lang.String getOrgId() {
+	public String getOrgId() {
 		return this.orgId;
 	}
 
-	public void setDisplaying(java.lang.String value) {
+	public void setDisplaying(String value) {
 		this.displaying = value;
 	}
 
-	public java.lang.String getDisplaying() {
+	public String getDisplaying() {
 		return this.displaying;
 	}
-	
-	public TsysDict clone(){
+
+	public TsysDict clone() {
 		TsysDict dict = new TsysDict();
-		
-		
-		
+
 		dict.setCreateTime(this.getCreateTime());
 		dict.setCreateUserId(this.getCreateUserId());
 		dict.setDelFlag(this.getDelFlag());

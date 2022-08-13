@@ -2,17 +2,18 @@
  * <p> Title: </p>
  * <p> Description:</p>
  * <p> Copyright: Copyright (c) 2017 </p>
- * <p> Company:ossbar.co.,ltd </p>
+ * <p> Company:creatorblue.co.,ltd </p>
  *
  * @author zhujw
  * @version 1.0
  */
 
 package com.ossbar.modules.sys.domain;
+
+
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
-
-public class TorgUser extends BaseDomain<Object>{
+public class TorgUser extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
 	
 	//alias
@@ -26,56 +27,56 @@ public class TorgUser extends BaseDomain<Object>{
     /**
      * orguserId       db_column: orguser_id 
      */	
-	private java.lang.String orguserId;
+	private String orguserId;
     /**
      * 机构ID       db_column: ORG_ID 
      */	
-	private java.lang.String orgId;
+	private String orgId;
     /**
      * 用户ID       db_column: USER_ID 
      */	
-	private java.lang.String userId;
+	private String userId;
     /**
      * 是否主机构（0：否，1：是）       db_column: IS_MAIN 
      */	
-	private java.lang.Integer isMain;
+	private Integer isMain;
 	//columns END
 
 	public TorgUser(){
 	}
 
 	public TorgUser(
-		java.lang.String orguserId
+		String orguserId
 	){
 		this.orguserId = orguserId;
 	}
 
-	public void setOrguserId(java.lang.String value) {
+	public void setOrguserId(String value) {
 		this.orguserId = value;
 	}
 	
-	public java.lang.String getOrguserId() {
+	public String getOrguserId() {
 		return this.orguserId;
 	}
-	public void setOrgId(java.lang.String value) {
+	public void setOrgId(String value) {
 		this.orgId = value;
 	}
 	
-	public java.lang.String getOrgId() {
+	public String getOrgId() {
 		return this.orgId;
 	}
-	public void setUserId(java.lang.String value) {
+	public void setUserId(String value) {
 		this.userId = value;
 	}
 	
-	public java.lang.String getUserId() {
+	public String getUserId() {
 		return this.userId;
 	}
-	public void setIsMain(java.lang.Integer value) {
+	public void setIsMain(Integer value) {
 		this.isMain = value;
 	}
 	
-	public java.lang.Integer getIsMain() {
+	public Integer getIsMain() {
 		return this.isMain;
 	}
 	

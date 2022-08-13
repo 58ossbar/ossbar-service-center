@@ -3,7 +3,6 @@ package com.ossbar.modules.sys.domain;
 
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
-
 public class TuserRole extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
 	

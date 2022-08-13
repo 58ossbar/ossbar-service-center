@@ -2,7 +2,7 @@
  * <p> Title: </p>
  * <p> Description:</p>
  * <p> Copyright: Copyright (c) 2017 </p>
- * <p> Company:ossbar.co.,ltd </p>
+ * <p> Company:creatorblue.co.,ltd </p>
  *
  * @author zhujw
  * @version 1.0
@@ -10,10 +10,15 @@
 
 package com.ossbar.modules.sys.domain;
 
+//import javax.validation.constraints.Min;
+//import org.hibernate.validator.constraints.NotBlank;
+//import com.creatorblue.common.cbsecurity.validator.group.AddGroup;
+//import com.creatorblue.common.cbsecurity.validator.group.UpdateGroup;
+
+
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
-
-public class TsysSerialno extends BaseDomain<Object>{
+public class TsysSerialno extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
 	
 	//alias
@@ -35,154 +40,164 @@ public class TsysSerialno extends BaseDomain<Object>{
     /**
      * serialnoId       db_column: SERIALNO_ID 
      */	
-	private java.lang.String serialnoId;
+	private String serialnoId;
+	private String id;
+	
     /**
      * 名称       db_column: SERIAL_NAME 
      */	
 	//@NotBlank(message = ALIAS_SERIAL_NAME +"不能为空",groups={AddGroup.class,UpdateGroup.class})
-	private java.lang.String serialName;
+	private String serialName;
     /**
      * 字段名       db_column: SECOUND_NAME 
      */	
 	//@NotBlank(message = ALIAS_SECOUND_NAME +"不能为空",groups={AddGroup.class,UpdateGroup.class})
-	private java.lang.String secoundName;
+	private String secoundName;
     /**
      * 规则 {yyyy}{MM}{DD}-{NO}  NO:000001开始       db_column: FORMULAR_REGX 
      */	
 	//@NotBlank(message = "规则不能为空",groups={AddGroup.class,UpdateGroup.class})
-	private java.lang.String formularRegx;
+	private String formularRegx;
     /**
      * 生成方式       db_column: CREATE_TYPE 
      */	
-	private java.lang.String createType;
+	private String createType;
     /**
      * 流水号长度       db_column: SERIAL_LENGTH 
      */	
 	//@NotBlank(message = ALIAS_SERIAL_LENGTH +"不能为空",groups={AddGroup.class,UpdateGroup.class})
 	//@Min(value=1,message=ALIAS_SERIAL_LENGTH + "必须大于{value}")
-	private java.lang.Integer serialLength;
+	private Integer serialLength;
     /**
      * 步长       db_column: STEP 
      */	
 	//@NotBlank(message = ALIAS_STEP +"不能为空",groups={AddGroup.class,UpdateGroup.class})
-	private java.lang.Integer step;
+	private Integer step;
     /**
      * 初始值       db_column: INIT_VALUE 
      */	
 	//@NotBlank(message = ALIAS_INIT_VALUE +"不能为空",groups={AddGroup.class,UpdateGroup.class})
-	private java.lang.String initValue;
+	private String initValue;
     /**
      * 当前值       db_column: CURRENT_VALUE 
      */	
 	//@NotBlank(message = ALIAS_CURRENT_VALUE +"不能为空",groups={AddGroup.class,UpdateGroup.class})
-	private java.lang.String currentValue;
+	private String currentValue;
     /**
      * 备注说明       db_column: REMARK 
      */	
-	private java.lang.String remark;
+	private String remark;
     /**
      * 表名       db_column: TAB_NAME 
      */	
 	//@NotBlank(message = ALIAS_TAB_NAME +"不能为空",groups={AddGroup.class,UpdateGroup.class})
-	private java.lang.String tabName;
+	private String tabName;
     /**
      * 是否补零       db_column: SFBL 
      */	
-	private java.lang.String sfbl;
+	private String sfbl;
 	//columns END
 
 	public TsysSerialno(){
 	}
 
 	public TsysSerialno(
-		java.lang.String serialnoId
+		String serialnoId
 	){
 		this.serialnoId = serialnoId;
 	}
 
-	public void setSerialnoId(java.lang.String value) {
+	public void setSerialnoId(String value) {
 		this.serialnoId = value;
 	}
 	
-	public java.lang.String getSerialnoId() {
+	public String getSerialnoId() {
 		return this.serialnoId;
 	}
-	public void setSerialName(java.lang.String value) {
+	public void setSerialName(String value) {
 		this.serialName = value;
 	}
 	
-	public java.lang.String getSerialName() {
+	public String getSerialName() {
 		return this.serialName;
 	}
-	public void setSecoundName(java.lang.String value) {
+	public void setSecoundName(String value) {
 		this.secoundName = value;
 	}
 	
-	public java.lang.String getSecoundName() {
+	public String getSecoundName() {
 		return this.secoundName;
 	}
-	public void setFormularRegx(java.lang.String value) {
+	public void setFormularRegx(String value) {
 		this.formularRegx = value;
 	}
 	
-	public java.lang.String getFormularRegx() {
+	public String getFormularRegx() {
 		return this.formularRegx;
 	}
-	public void setCreateType(java.lang.String value) {
+	public void setCreateType(String value) {
 		this.createType = value;
 	}
 	
-	public java.lang.String getCreateType() {
+	public String getCreateType() {
 		return this.createType;
 	}
-	public void setSerialLength(java.lang.Integer value) {
+	public void setSerialLength(Integer value) {
 		this.serialLength = value;
 	}
 	
-	public java.lang.Integer getSerialLength() {
+	public Integer getSerialLength() {
 		return this.serialLength;
 	}
-	public void setStep(java.lang.Integer value) {
+	public void setStep(Integer value) {
 		this.step = value;
 	}
 	
-	public java.lang.Integer getStep() {
+	public Integer getStep() {
 		return this.step;
 	}
-	public void setInitValue(java.lang.String value) {
+	public void setInitValue(String value) {
 		this.initValue = value;
 	}
 	
-	public java.lang.String getInitValue() {
+	public String getInitValue() {
 		return this.initValue;
 	}
-	public void setCurrentValue(java.lang.String value) {
+	public void setCurrentValue(String value) {
 		this.currentValue = value;
 	}
 	
-	public java.lang.String getCurrentValue() {
+	public String getCurrentValue() {
 		return this.currentValue;
 	}
-	public void setRemark(java.lang.String value) {
+	public void setRemark(String value) {
 		this.remark = value;
 	}
 	
-	public java.lang.String getRemark() {
+	public String getRemark() {
 		return this.remark;
 	}
-	public void setTabName(java.lang.String value) {
+	public void setTabName(String value) {
 		this.tabName = value;
 	}
 	
-	public java.lang.String getTabName() {
+	public String getTabName() {
 		return this.tabName;
 	}
-	public void setSfbl(java.lang.String value) {
+	public void setSfbl(String value) {
 		this.sfbl = value;
 	}
 	
-	public java.lang.String getSfbl() {
+	public String getSfbl() {
 		return this.sfbl;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

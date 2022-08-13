@@ -2,17 +2,18 @@
  * <p> Title: </p>
  * <p> Description:</p>
  * <p> Copyright: Copyright (c) 2017 </p>
- * <p> Company:ossbar.co.,ltd </p>
+ * <p> Company:creatorblue.co.,ltd </p>
  *
  * @author zhujw
  * @version 1.0
  */
 
 package com.ossbar.modules.sys.domain;
+
+
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
-
-public class TsysUserprivilege extends BaseDomain<Object>{
+public class TsysUserprivilege extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
 	
 	//alias
@@ -25,45 +26,45 @@ public class TsysUserprivilege extends BaseDomain<Object>{
     /**
      * 用户特权ID       db_column: USERPRVIID 
      */	
-	private java.lang.String userprviid;
+	private String userprviid;
     /**
      * 资源ID       db_column: MENU_ID 
      */	
-	private java.lang.String menuId;
+	private String menuId;
     /**
      * 用户ID       db_column: USERID 
      */	
-	private java.lang.String userid;
+	private String userid;
 	//columns END
 
 	public TsysUserprivilege(){
 	}
 
 	public TsysUserprivilege(
-		java.lang.String userprviid
+		String userprviid
 	){
 		this.userprviid = userprviid;
 	}
 
-	public void setUserprviid(java.lang.String value) {
+	public void setUserprviid(String value) {
 		this.userprviid = value;
 	}
 	
-	public java.lang.String getUserprviid() {
+	public String getUserprviid() {
 		return this.userprviid;
 	}
-	public void setMenuId(java.lang.String value) {
+	public void setMenuId(String value) {
 		this.menuId = value;
 	}
 	
-	public java.lang.String getMenuId() {
+	public String getMenuId() {
 		return this.menuId;
 	}
-	public void setUserid(java.lang.String value) {
+	public void setUserid(String value) {
 		this.userid = value;
 	}
 	
-	public java.lang.String getUserid() {
+	public String getUserid() {
 		return this.userid;
 	}
 	

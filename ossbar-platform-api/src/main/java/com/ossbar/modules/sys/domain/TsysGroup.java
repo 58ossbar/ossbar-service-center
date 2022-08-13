@@ -2,17 +2,18 @@
  * <p> Title: </p>
  * <p> Description:</p>
  * <p> Copyright: Copyright (c) 2017 </p>
- * <p> Company:ossbar.co.,ltd </p>
+ * <p> Company:creatorblue.co.,ltd </p>
  *
  * @author zhujw
  * @version 1.0
  */
 
 package com.ossbar.modules.sys.domain;
+
+
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
-
-public class TsysGroup extends BaseDomain<Object>{
+public class TsysGroup extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
 	
 	//alias
@@ -27,68 +28,68 @@ public class TsysGroup extends BaseDomain<Object>{
     /**
      * 组ID       db_column: GROUP_ID 
      */	
-	private java.lang.String groupId;
+	private String groupId;
     /**
      * 组名称       db_column: GROUP_NAME 
      */	
-	private java.lang.String groupName;
+	private String groupName;
     /**
      * 组描述       db_column: REMARK 
      */	
-	private java.lang.String remark;
+	private String remark;
     /**
      * 组类别
                    db_column: GROUP_TYPE 
      */	
-	private java.lang.String groupType;
+	private String groupType;
     /**
      * 父组ID        db_column: PARENT_GROUPID 
      */	
-	private java.lang.String parentGroupid;
+	private String parentGroupid;
 	//columns END
 
 	public TsysGroup(){
 	}
 
 	public TsysGroup(
-		java.lang.String groupId
+		String groupId
 	){
 		this.groupId = groupId;
 	}
 
-	public void setGroupId(java.lang.String value) {
+	public void setGroupId(String value) {
 		this.groupId = value;
 	}
 	
-	public java.lang.String getGroupId() {
+	public String getGroupId() {
 		return this.groupId;
 	}
-	public void setGroupName(java.lang.String value) {
+	public void setGroupName(String value) {
 		this.groupName = value;
 	}
 	
-	public java.lang.String getGroupName() {
+	public String getGroupName() {
 		return this.groupName;
 	}
-	public void setRemark(java.lang.String value) {
+	public void setRemark(String value) {
 		this.remark = value;
 	}
 	
-	public java.lang.String getRemark() {
+	public String getRemark() {
 		return this.remark;
 	}
-	public void setGroupType(java.lang.String value) {
+	public void setGroupType(String value) {
 		this.groupType = value;
 	}
 	
-	public java.lang.String getGroupType() {
+	public String getGroupType() {
 		return this.groupType;
 	}
-	public void setParentGroupid(java.lang.String value) {
+	public void setParentGroupid(String value) {
 		this.parentGroupid = value;
 	}
 	
-	public java.lang.String getParentGroupid() {
+	public String getParentGroupid() {
 		return this.parentGroupid;
 	}
 }

@@ -1,5 +1,6 @@
 package com.ossbar.modules.sys.domain;
 
+
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
 public class TsysLog extends BaseDomain<Object> {
@@ -14,6 +15,8 @@ public class TsysLog extends BaseDomain<Object> {
 	private String method;
 	// 请求参数
 	private String params;
+	// 响应参数
+	private String returns;
 	// IP地址
 	private String ip;
 	// 创建时间
@@ -200,4 +203,13 @@ public class TsysLog extends BaseDomain<Object> {
 	public String getCreateDate() {
 		return createDate;
 	}
+
+	public String getReturns() {
+		return returns;
+	}
+
+	public void setReturns(String returns) {
+		this.returns = returns;
+	}
+	
 }

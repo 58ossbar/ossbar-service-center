@@ -3,8 +3,8 @@ com:
     anno-filter: /druid/**, /user/login, /user/logout, /user/captcha.jpg, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.js, /**/*.css, /**/*.jpg, /doLogin, /logoutRest
     file-upload-path: /mnt/cbstp/uploads
     redisFlag: false
-publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAOSVrgZEvirvjeElVNOio+EZadoCflQ+8oxF42lDq4yQ2Dg8epeWP0hQAUGBik8wgy1S9MFJkK82MC5LX87IAgUCAwEAAQ==
-password: g9xdSrtpAu5u/+/T/6kARJGWsGoh2c9dzKE7xIcqi5KcMes9XL2yjrRJqLlonp1hz9jdzvZtQELLA2q7CNLHrw==
+publicKey:
+password:
 server:
   port: 9084
   servlet:
@@ -35,8 +35,8 @@ spring:
       pool-prepared-statements: true
       stat-view-servlet:
         enabled: true
-        login-password: creatorblue.com
-        login-username: creatorblue
+        login-password: ossbar
+        login-username: ossbar
         url-pattern: /druid/*
       test-on-borrow: false
       test-on-return: false

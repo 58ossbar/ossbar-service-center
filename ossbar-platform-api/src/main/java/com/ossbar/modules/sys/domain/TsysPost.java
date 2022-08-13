@@ -2,20 +2,22 @@
  * <p> Title: </p>
  * <p> Description:</p>
  * <p> Copyright: Copyright (c) 2017 </p>
- * <p> Company:ossbar.co.,ltd </p>
+ * <p> Company:creatorblue.co.,ltd </p>
  *
  * @author zhujw
  * @version 1.0
  */
 
 package com.ossbar.modules.sys.domain;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class TsysPost extends BaseDomain<Object>{
+
+
+public class TsysPost extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
 	
 	//alias
@@ -30,67 +32,72 @@ public class TsysPost extends BaseDomain<Object>{
     /**
      * 岗位ID       db_column: POST_ID 
      */	
-	private java.lang.String postId;
+	private String postId;
     /**
      * 岗位名称       db_column: POST_NAME 
      */	
-	private java.lang.String postName;
+	private String postName;
     /**
      * 岗位描述       db_column: REMARK 
      */	
-	private java.lang.String remark;
+	private String remark;
     /**
      * 岗位类别:字典中定义       db_column: POST_TYPE 
      */	
-	private java.lang.String postType;
+	private String postType;
     /**
      * 父岗位ID       db_column: PARENT_POSTID 
      */	
-	private java.lang.String parentPostid;
+	private String parentPostid;
+	
+	private List<TsysPost> children;
+	private String parentName; // 父岗位名称
+	private Integer sort; // 排序号
+	
 	//columns END
 
 	public TsysPost(){
 	}
 
 	public TsysPost(
-		java.lang.String postId
+		String postId
 	){
 		this.postId = postId;
 	}
 
-	public void setPostId(java.lang.String value) {
+	public void setPostId(String value) {
 		this.postId = value;
 	}
 	
-	public java.lang.String getPostId() {
+	public String getPostId() {
 		return this.postId;
 	}
-	public void setPostName(java.lang.String value) {
+	public void setPostName(String value) {
 		this.postName = value;
 	}
 	
-	public java.lang.String getPostName() {
+	public String getPostName() {
 		return this.postName;
 	}
-	public void setRemark(java.lang.String value) {
+	public void setRemark(String value) {
 		this.remark = value;
 	}
 	
-	public java.lang.String getRemark() {
+	public String getRemark() {
 		return this.remark;
 	}
-	public void setPostType(java.lang.String value) {
+	public void setPostType(String value) {
 		this.postType = value;
 	}
 	
-	public java.lang.String getPostType() {
+	public String getPostType() {
 		return this.postType;
 	}
-	public void setParentPostid(java.lang.String value) {
+	public void setParentPostid(String value) {
 		this.parentPostid = value;
 	}
 	
-	public java.lang.String getParentPostid() {
+	public String getParentPostid() {
 		return this.parentPostid;
 	}
 	
@@ -114,6 +121,30 @@ public class TsysPost extends BaseDomain<Object>{
 	@SuppressWarnings("unchecked")
 	public Set<TrolePost> getTrolePosts() {
 		return trolePosts;
+	}
+
+	public List<TsysPost> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<TsysPost> children) {
+		this.children = children;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 
 }

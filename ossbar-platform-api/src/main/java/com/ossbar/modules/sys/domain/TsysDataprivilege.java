@@ -2,17 +2,18 @@
  * <p> Title: </p>
  * <p> Description:</p>
  * <p> Copyright: Copyright (c) 2017 </p>
- * <p> Company:ossbar.co.,ltd </p>
+ * <p> Company:creatorblue.co.,ltd </p>
  *
  * @author zhujw
  * @version 1.0
  */
 
 package com.ossbar.modules.sys.domain;
+
+
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
-
-public class TsysDataprivilege extends BaseDomain<Object>{
+public class TsysDataprivilege extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
 	
 	//alias
@@ -25,45 +26,45 @@ public class TsysDataprivilege extends BaseDomain<Object>{
     /**
      * roleOrgid       db_column: ROLE_ORGID 
      */	
-	private java.lang.String roleOrgid;
+	private String roleOrgid;
     /**
      * 机构ID       db_column: ORG_ID 
      */	
-	private java.lang.String orgId;
+	private String orgId;
     /**
      * 角色ID       db_column: ROLE_ID 
      */	
-	private java.lang.String roleId;
+	private String roleId;
 	//columns END
 
 	public TsysDataprivilege(){
 	}
 
 	public TsysDataprivilege(
-		java.lang.String roleOrgid
+		String roleOrgid
 	){
 		this.roleOrgid = roleOrgid;
 	}
 
-	public void setRoleOrgid(java.lang.String value) {
+	public void setRoleOrgid(String value) {
 		this.roleOrgid = value;
 	}
 	
-	public java.lang.String getRoleOrgid() {
+	public String getRoleOrgid() {
 		return this.roleOrgid;
 	}
-	public void setOrgId(java.lang.String value) {
+	public void setOrgId(String value) {
 		this.orgId = value;
 	}
 	
-	public java.lang.String getOrgId() {
+	public String getOrgId() {
 		return this.orgId;
 	}
-	public void setRoleId(java.lang.String value) {
+	public void setRoleId(String value) {
 		this.roleId = value;
 	}
 	
-	public java.lang.String getRoleId() {
+	public String getRoleId() {
 		return this.roleId;
 	}
 	

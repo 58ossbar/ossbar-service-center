@@ -1,23 +1,25 @@
 package com.ossbar.modules.sys.domain;
 
-import com.ossbar.core.baseclass.domain.BaseDomain;
 
 //import org.hibernate.validator.constraints.NotBlank;
 //import com.creatorblue.common.cbsecurity.validator.group.AddGroup;
 //import com.creatorblue.common.cbsecurity.validator.group.UpdateGroup;
-//import com.ossbar.core.baseclass.domain.BaseDomain;
+//import com.creatorblue.core.baseclass.domain.BaseDomain;
+
+import com.ossbar.core.baseclass.domain.BaseDomain;
+
 /**
  * <p> Title: </p>
  * <p> Description:</p>
  * <p> Copyright: Copyright (c) 2017 </p>
- * <p> Company:ossbar.co.,ltd </p>
+ * <p> Company:creatorblue.co.,ltd </p>
  *
  * @author zhujw
  * @version 1.0
  */
 
 @SuppressWarnings("rawtypes")
-public class TsysLoginLog extends BaseDomain{
+public class TsysLoginLog extends BaseDomain {
 	private static final long serialVersionUID = 1L;
 	
 	//alias
@@ -35,32 +37,32 @@ public class TsysLoginLog extends BaseDomain{
      * 主键       db_column: loginlogid 
      */	
 	//@NotBlank(message="主键不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	private java.lang.String loginlogid;
+	private String loginlogid;
     /**
      * 日志名称       db_column: logname 
      */	
 	//@NotBlank(message="日志名称不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	private java.lang.String logname;
+	private String logname;
     /**
      * 管理员id       db_column: userid 
      */	
 	//@NotBlank(message="管理员id不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	private java.lang.String userid;
+	private String userid;
     /**
      * 是否执行成功       db_column: succeed 
      */	
 	//@NotBlank(message="是否执行成功不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	private java.lang.String succeed;
+	private String succeed;
     /**
      * 具体消息       db_column: message 
      */	
 	//@NotBlank(message="具体消息不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	private java.lang.String message;
+	private String message;
     /**
      * 登录ip       db_column: ip 
      */	
 	//@NotBlank(message="登录ip不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	private java.lang.String ip;
+	private String ip;
 	
 	private String beginTime;
 	private String endTime;
@@ -86,51 +88,51 @@ public class TsysLoginLog extends BaseDomain{
 	}
 
 	public TsysLoginLog(
-		java.lang.String loginlogid
+		String loginlogid
 	){
 		this.loginlogid = loginlogid;
 	}
 
-	public void setLoginlogid(java.lang.String value) {
+	public void setLoginlogid(String value) {
 		this.loginlogid = value;
 	}
 	
-	public java.lang.String getLoginlogid() {
+	public String getLoginlogid() {
 		return this.loginlogid;
 	}
-	public void setLogname(java.lang.String value) {
+	public void setLogname(String value) {
 		this.logname = value;
 	}
 	
-	public java.lang.String getLogname() {
+	public String getLogname() {
 		return this.logname;
 	}
-	public void setUserid(java.lang.String value) {
+	public void setUserid(String value) {
 		this.userid = value;
 	}
 	
-	public java.lang.String getUserid() {
+	public String getUserid() {
 		return this.userid;
 	}
-	public void setSucceed(java.lang.String value) {
+	public void setSucceed(String value) {
 		this.succeed = value;
 	}
 	
-	public java.lang.String getSucceed() {
+	public String getSucceed() {
 		return this.succeed;
 	}
-	public void setMessage(java.lang.String value) {
+	public void setMessage(String value) {
 		this.message = value;
 	}
 	
-	public java.lang.String getMessage() {
+	public String getMessage() {
 		return this.message;
 	}
-	public void setIp(java.lang.String value) {
+	public void setIp(String value) {
 		this.ip = value;
 	}
 	
-	public java.lang.String getIp() {
+	public String getIp() {
 		return this.ip;
 	}
 

@@ -1,8 +1,9 @@
 package com.ossbar.modules.sys.domain;
 
-import java.util.List;
-
 import com.ossbar.core.baseclass.domain.BaseDomain;
+
+import java.util.List;
+//import org.hibernate.validator.constraints.NotBlank;
 
 public class TsysRole extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
@@ -21,6 +22,7 @@ public class TsysRole extends BaseDomain<Object> {
 	 * 角色ID
 	 */
 	private String roleId;
+	private String id;
 
 	/**
 	 * 角色名称
@@ -33,7 +35,7 @@ public class TsysRole extends BaseDomain<Object> {
 	 */
 	private String remark;
 
-
+	private List<String> roleIdList; // 角色ID集
 
 	private List<String> menuIdList;
 
@@ -44,20 +46,20 @@ public class TsysRole extends BaseDomain<Object> {
 	/**
 	 * 角色类型：公有、私有 db_column: role_type
 	 */
-	private java.lang.String roleType;
+	private String roleType;
 	/**
 	 * 所属机构 db_column: org_id
 	 */
-	private java.lang.String orgId;
+	private String orgId;
 	/**
 	 * 数据范围:01所有数据 02所在机构及以下数据; 03本级数据 04自定义明细 05所在部门数据06所在部门及以下数据 07本人数据 db_column:
 	 * data_scope
 	 */
-	private java.lang.String dataScope;
+	private String dataScope;
 	/**
 	 * 角色状态：启用、禁用 db_column: status
 	 */
-	private java.lang.String status;
+	private String status;
 
 	/**
 	 * 设置：
@@ -126,35 +128,35 @@ public class TsysRole extends BaseDomain<Object> {
 	}
 
 
-	public java.lang.String getRoleType() {
+	public String getRoleType() {
 		return roleType;
 	}
 
-	public void setRoleType(java.lang.String roleType) {
+	public void setRoleType(String roleType) {
 		this.roleType = roleType;
 	}
 
-	public java.lang.String getOrgId() {
+	public String getOrgId() {
 		return orgId;
 	}
 
-	public void setOrgId(java.lang.String orgId) {
+	public void setOrgId(String orgId) {
 		this.orgId = orgId;
 	}
 
-	public java.lang.String getDataScope() {
+	public String getDataScope() {
 		return dataScope;
 	}
 
-	public void setDataScope(java.lang.String dataScope) {
+	public void setDataScope(String dataScope) {
 		this.dataScope = dataScope;
 	}
 
-	public java.lang.String getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(java.lang.String status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -172,6 +174,22 @@ public class TsysRole extends BaseDomain<Object> {
 
 	public void setUserIdList(List<String> userIdList) {
 		this.userIdList = userIdList;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public List<String> getRoleIdList() {
+		return roleIdList;
+	}
+
+	public void setRoleIdList(List<String> roleIdList) {
+		this.roleIdList = roleIdList;
 	}
 	
 }

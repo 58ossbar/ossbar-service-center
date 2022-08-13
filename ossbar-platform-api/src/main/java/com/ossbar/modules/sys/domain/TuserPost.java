@@ -2,17 +2,18 @@
  * <p> Title: </p>
  * <p> Description:</p>
  * <p> Copyright: Copyright (c) 2017 </p>
- * <p> Company:ossbar.co.,ltd </p>
+ * <p> Company:creatorblue.co.,ltd </p>
  *
  * @author zhujw
  * @version 1.0
  */
 
 package com.ossbar.modules.sys.domain;
+
+
 import com.ossbar.core.baseclass.domain.BaseDomain;
 
-
-public class TuserPost extends BaseDomain<Object>{
+public class TuserPost extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
 	
 	//alias
@@ -26,56 +27,57 @@ public class TuserPost extends BaseDomain<Object>{
     /**
      * userJobid       db_column: USER_JOBID 
      */	
-	private java.lang.String userJobid;
+	private String userJobid;
     /**
      * 用户ID       db_column: USER_ID 
      */	
-	private java.lang.String userId;
+	private String userId;
     /**
      * 岗位ID       db_column: POST_ID 
      */	
-	private java.lang.String postId;
+	private String postId;
+	private String postName;
     /**
      * 是否主岗位（0：否，1：是）       db_column: IS_MAIN 
      */	
-	private java.lang.String isMain;
+	private String isMain;
 	//columns END
 
 	public TuserPost(){
 	}
 
 	public TuserPost(
-		java.lang.String userJobid
+		String userJobid
 	){
 		this.userJobid = userJobid;
 	}
 
-	public void setUserJobid(java.lang.String value) {
+	public void setUserJobid(String value) {
 		this.userJobid = value;
 	}
 	
-	public java.lang.String getUserJobid() {
+	public String getUserJobid() {
 		return this.userJobid;
 	}
-	public void setUserId(java.lang.String value) {
+	public void setUserId(String value) {
 		this.userId = value;
 	}
 	
-	public java.lang.String getUserId() {
+	public String getUserId() {
 		return this.userId;
 	}
-	public void setPostId(java.lang.String value) {
+	public void setPostId(String value) {
 		this.postId = value;
 	}
 	
-	public java.lang.String getPostId() {
+	public String getPostId() {
 		return this.postId;
 	}
-	public void setIsMain(java.lang.String value) {
+	public void setIsMain(String value) {
 		this.isMain = value;
 	}
 	
-	public java.lang.String getIsMain() {
+	public String getIsMain() {
 		return this.isMain;
 	}
 	
@@ -97,6 +99,14 @@ public class TuserPost extends BaseDomain<Object>{
 	
 	public TsysPost getTsysPost() {
 		return tsysPost;
+	}
+
+	public String getPostName() {
+		return postName;
+	}
+
+	public void setPostName(String postName) {
+		this.postName = postName;
 	}
 
 }

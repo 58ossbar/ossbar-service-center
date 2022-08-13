@@ -1,8 +1,9 @@
 package com.ossbar.modules.sys.domain;
 
+import com.ossbar.core.baseclass.domain.BaseDomain;
+
 import java.util.List;
 
-import com.ossbar.core.baseclass.domain.BaseDomain;
 
 public class TsysResource extends BaseDomain<Object> {
 	private static final long serialVersionUID = 1L;
@@ -67,54 +68,81 @@ public class TsysResource extends BaseDomain<Object> {
 	/**
 	 * 应用ID db_column: APP_ID
 	 */
-	private java.lang.String orgId;
+	private String orgId;
 	/**
 	 * 层级 db_column: RESOURCE_CLASS
 	 */
-	private java.lang.Integer resourceClass;
+	private Integer resourceClass;
 	/**
 	 * 资源描述 db_column: REMARK
 	 */
-	private java.lang.String remark;
+	private String remark;
 	/**
 	 * 是否可见 db_column: DISPLAY
 	 */
-	private java.lang.String display;
+	private String display;
+	/**
+	 * 是否有子结点
+	 */
+	private boolean isLeaf;
+
+	private int level; // 节点所级别
+	private List<TsysResource> children; // 子数据
+
+	public boolean isLeaf() {
+		return isLeaf;
+	}
+
+	public void setLeaf(boolean isLeaf) {
+		this.isLeaf = isLeaf;
+	}
+
 	// columns END
+	
+	private String orgName;
+	
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
 	/**
 	 * ztree属性
 	 */
 	private Boolean open;
 
-	public java.lang.String getOrgId() {
+	public String getOrgId() {
 		return orgId;
 	}
 
-	public void setOrgId(java.lang.String orgId) {
+	public void setOrgId(String orgId) {
 		this.orgId = orgId;
 	}
 
-	public java.lang.Integer getResourceClass() {
+	public Integer getResourceClass() {
 		return resourceClass;
 	}
 
-	public void setResourceClass(java.lang.Integer resourceClass) {
+	public void setResourceClass(Integer resourceClass) {
 		this.resourceClass = resourceClass;
 	}
 
-	public java.lang.String getRemark() {
+	public String getRemark() {
 		return remark;
 	}
 
-	public void setRemark(java.lang.String remark) {
+	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 
-	public java.lang.String getDisplay() {
+	public String getDisplay() {
 		return display;
 	}
 
-	public void setDisplay(java.lang.String display) {
+	public void setDisplay(String display) {
 		this.display = display;
 	}
 
@@ -131,8 +159,7 @@ public class TsysResource extends BaseDomain<Object> {
 	/**
 	 * 设置：父菜单ID，一级菜单为0
 	 * 
-	 * @param parentId
-	 *            父菜单ID，一级菜单为0
+	 * @param parentId 父菜单ID，一级菜单为0
 	 */
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
@@ -150,8 +177,7 @@ public class TsysResource extends BaseDomain<Object> {
 	/**
 	 * 设置：菜单名称
 	 * 
-	 * @param name
-	 *            菜单名称
+	 * @param name 菜单名称
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -169,8 +195,7 @@ public class TsysResource extends BaseDomain<Object> {
 	/**
 	 * 设置：菜单URL
 	 * 
-	 * @param url
-	 *            菜单URL
+	 * @param url 菜单URL
 	 */
 	public void setUrl(String url) {
 		this.url = url;
@@ -204,8 +229,7 @@ public class TsysResource extends BaseDomain<Object> {
 	/**
 	 * 设置：菜单图标
 	 * 
-	 * @param icon
-	 *            菜单图标
+	 * @param icon 菜单图标
 	 */
 	public void setIcon(String icon) {
 		this.icon = icon;
@@ -223,8 +247,7 @@ public class TsysResource extends BaseDomain<Object> {
 	/**
 	 * 设置：排序
 	 * 
-	 * @param orderNum
-	 *            排序
+	 * @param orderNum 排序
 	 */
 	public void setOrderNum(Integer orderNum) {
 		this.orderNum = orderNum;
@@ -261,5 +284,21 @@ public class TsysResource extends BaseDomain<Object> {
 
 	public void setOpen(Boolean open) {
 		this.open = open;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public List<TsysResource> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<TsysResource> children) {
+		this.children = children;
 	}
 }
