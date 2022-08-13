@@ -1,6 +1,6 @@
 dubbo:
   cloud:
-    subscribed-services: cb-platform-service
+    subscribed-services: ob-platform-service
   registry:
     address: spring-cloud://localhost
 server:

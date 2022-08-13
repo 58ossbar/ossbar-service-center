@@ -24,9 +24,16 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+
+        <ossbar-platform-db-mysql.version>1.0.0</ossbar-platform-db-mysql.version>
+        <ossbar-platform-utils.version>1.0.0</ossbar-platform-utils.version>
+        <ossbar-platform-api.version>1.0.0</ossbar-platform-api.version>
+        <ossbar-platform-dubbo.version>1.0.0</ossbar-platform-dubbo.version>
+
+        <!--<maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>-->
         <java.version>1.8</java.version>
+
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
         <spring-cloud-alibaba.version>0.9.0.RELEASE</spring-cloud-alibaba.version>
         <pagehelper-spring-boot-starter.version>1.2.11</pagehelper-spring-boot-starter.version>
@@ -120,6 +127,12 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+        </dependency>
+        <!-- kaptcha验证码 -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>2.3.2</version>
         </dependency>
         <!-- 引入任务调度框架必须：quartz和spring-context-support支持 -->
         <dependency>

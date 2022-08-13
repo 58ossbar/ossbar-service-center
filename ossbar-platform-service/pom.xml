@@ -11,32 +11,25 @@
 	<name>ossbar-platform-service</name>
 	<description>ossbar-platform-service</description>
 	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
+		<group>dev</group>
+		<!--<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>-->
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>com.ossbar</groupId>
-			<artifactId>ossbar-platform-api</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-			<dependency>
-			<groupId>com.ossbar</groupId>
-			<artifactId>ossbar-platform-db-mysql</artifactId>
-			<version>1.0.0</version>
-		</dependency>
 		<dependency>
 			<groupId>com.ossbar</groupId>
 			<artifactId>ossbar-platform-utils</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<groupId>com.ossbar</groupId>
+			<artifactId>ossbar-platform-db-mysql</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>com.ossbar</groupId>
+			<artifactId>ossbar-platform-api</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -52,6 +45,15 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -72,6 +74,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-swagger2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox-swagger2.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -111,7 +123,19 @@
 				<includes>
 					<include>**/*.*</include>
 				</includes>
+				<excludes>
+					<exclude>Dockerfile</exclude>
+				</excludes>
+				<!-- 不过滤，改成true会导致creatorblue.lic文件失效 -->
 				<filtering>false</filtering>
+			</resource>
+			<!-- 单独过滤application.properties文件，填充变量 -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>bootstrap.yaml</include>
+				</includes>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 		<plugins>
@@ -136,6 +160,29 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
+				<configuration>
+					<encoding>utf-8</encoding>
+					<aggregate>true</aggregate>
+					<charset>utf-8</charset>
+					<docencoding>utf-8</docencoding>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -155,70 +202,97 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!--<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<configuration>
+					<dockerHost>http://192.168.1.100:2375</dockerHost>
+					<imageName>creatorblue/ossbar-platform-service</imageName>
+					<imageTags>
+						<imageTag>latest</imageTag>
+					</imageTags>
+					<forceTags>false</forceTags>
+					<dockerDirectory>${project.basedir}/src/main/resources</dockerDirectory>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
+			</plugin>-->
 		</plugins>
 	</build>
 	<profiles>
-        <profile>
-            <id>test</id>
-            <properties>
-                <group>test</group>
-			</properties>
-		</profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <group>prod</group>
-			</properties>
-		</profile>
 		<profile>
 			<id>dev</id>
 			<properties>
 				<group>dev</group>
 			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<group>test</group>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<group>prod</group>
+			</properties>
+		</profile>
+		<profile>
+			<id>alone</id>
+			<properties>
+				<group>dev</group>
+			</properties>
 			<build>
-                <plugins>
-                	<plugin>
-		                <groupId>org.springframework.boot</groupId>
-		                <artifactId>spring-boot-maven-plugin</artifactId>
-		                <configuration>
-		                    <!-- 屏蔽该插件，插件不打可执行Jar包 -->
-		                    <skip>true</skip>
-		                    <classifier>exec</classifier>
-		                    <mainClass>com.ossbar.CreatorbluePlatformServiceApplication</mainClass>
-		                </configuration>
-		                <executions>
-		                    <execution>
-		                        <goals>
-		                            <goal>repackage</goal>
-		                        </goals>
-		                    </execution>
-		                </executions>
-		            </plugin>
-		            <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-jar-plugin</artifactId>
-		                <executions>
-		                    <execution>
-		                        <id>default-jar</id>
-		                        <phase>package</phase>
-		                        <goals>
-		                            <goal>jar</goal>
-		                        </goals>
-		                        <configuration>
-		                            <excludes>
-		                                <!--排除一些不需要打包的class文件,避免出现多个应用程序入口 -->
-		                                <exclude>com/ossbar/CreatorbluePlatformServiceApplication.class</exclude>
-		                                <exclude>bootstrap.yaml</exclude>
-		                                <exclude>banner.txt</exclude>
-		                                <exclude>logback-spring.xml</exclude>
-		                                <exclude>Dockerfile</exclude>
-		                            </excludes>
-		                        </configuration>
-		                    </execution>
-		                </executions>
-		            </plugin>
-                </plugins>
-            </build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<!-- 屏蔽该插件，插件不打可执行Jar包 -->
+							<skip>true</skip>
+							<classifier>exec</classifier>
+							<mainClass>com.ossbar.CreatorbluePlatformServiceApplication</mainClass>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>repackage</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>default-jar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<excludes>
+										<!--排除一些不需要打包的class文件,避免出现多个应用程序入口 -->
+										<exclude>com/ossbar/CreatorbluePlatformServiceApplication.class</exclude>
+										<exclude>bootstrap.yaml</exclude>
+										<exclude>banner.txt</exclude>
+										<exclude>logback-spring.xml</exclude>
+										<exclude>Dockerfile</exclude>
+									</excludes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 </project>

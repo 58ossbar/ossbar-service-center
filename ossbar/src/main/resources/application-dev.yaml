@@ -1,8 +1,19 @@
 com:
   creatorblue:
-    anno-filter: /druid/**, /user/login, /user/logout, /user/captcha.jpg, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.js, /**/*.css, /**/*.jpg, /doLogin, /logoutRest
+    anno-filter: /druid/**, /user/login, /user/logout, /index.html, /user/captcha.jpg, /user/querySettings, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.ttf, /**/*.woff, /**/*.js, /**/*.css, /**/*.jpg, /**/*.jpeg, /**/*.png, /**/*.git, /**/*.bmp, /doLogin, /logoutRest, /cbeditor/**
     file-upload-path: D:/uploads
+    file-access-path: /uploads
+    cb-upload-paths: /default, /dict-img, /sys-user-img, /settings-img, /site-img, /avd-img, /news-img, /teacher-img, /stustar-img, /partner-img
+    cbeditor-image-path: cbeditor-image
+    cbeditor-image-suffix: png, jpg, jpeg, gif
+    cbeditor-media-path: cbeditor-media
+    cbeditor-media-suffix: mp4, rmvb, avi
+    cbeditor-file-path: cbeditor-file
+    cbeditor-file-suffix: rar, zip, doc, docx, ppt, pptx, xls, xlsx, txt
     redisFlag: false
+    is-cors: true
+    schedule-cluster: false
+    schedule-autostart: true
 server:
   port: 9084
   servlet:
@@ -17,6 +28,9 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
+    initialization-mode: never
+    schema: classpath:/db/ossbar-platform-schema-mysql.sql
+    data: classpath:/db/ossbar-platform-data-mysql.sql
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       connection-init-sqls: set names utf8mb4;
@@ -29,8 +43,8 @@ spring:
       pool-prepared-statements: true
       stat-view-servlet:
         enabled: true
-        login-password: ossbar.com
-        login-username: ossbar
+        login-password: creatorblue.com
+        login-username: creatorblue
         url-pattern: /druid/*
       test-on-borrow: false
       test-on-return: false
@@ -44,7 +58,7 @@ spring:
     password: root
     sql-script-encoding: UTF-8
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/creatorblue-stp?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/creatorblue-platform?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=GMT%2B8
     username: root
   http:
     encoding:

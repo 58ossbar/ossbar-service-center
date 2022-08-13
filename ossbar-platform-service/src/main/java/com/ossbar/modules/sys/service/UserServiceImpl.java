@@ -1,5 +1,6 @@
 package com.ossbar.modules.sys.service;
 
+import io.swagger.annotations.Api;
 import org.apache.dubbo.config.annotation.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.ossbar.modules.sys.api.UserService;
 import com.ossbar.modules.sys.domain.User;
 
+@Api(tags="用户接口")
 @Service(version = "1.0.0")
 @RestController
 @RequestMapping("/")

@@ -16,6 +16,24 @@
 		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 	<dependencies>
+
+		<dependency>
+			<groupId>com.ossbar</groupId>
+			<artifactId>ossbar-platform-utils</artifactId>
+			<version>${ossbar-platform-utils.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ossbar</groupId>
+			<artifactId>ossbar-platform-api</artifactId>
+			<version>${ossbar-platform-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ossbar</groupId>
+			<artifactId>ossbar-platform-dubbo</artifactId>
+			<version>${ossbar-platform-dubbo.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -56,15 +74,26 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-data-redis</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-swagger2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox-swagger2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>${thumbnailator.version}</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
@@ -183,6 +212,12 @@
 	</build>
 	<profiles>
 		<profile>
+			<id>dev</id>
+			<properties>
+				<group>dev</group>
+			</properties>
+		</profile>
+		<profile>
 			<id>test</id>
 			<properties>
 				<group>test</group>
@@ -196,7 +231,7 @@
 		</profile>
 		<!--打包成jar包，可以作为第三方，被其它项目引用-->
 		<profile>
-			<id>dev</id>
+			<id>alone</id>
 			<properties>
 				<group>dev</group>
 			</properties>

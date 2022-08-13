@@ -12,8 +12,6 @@
 	<description>ossbar</description>
 	<properties>
 		<group>dev</group>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -23,17 +21,21 @@
 		</dependency>
 		<dependency>
 			<groupId>com.ossbar</groupId>
-			<artifactId>ossbar-platform-core</artifactId>
+			<artifactId>ossbar-sso</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ossbar</groupId>
-			<artifactId>ossbar-sso</artifactId>
+			<artifactId>ossbar-platform-core</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -106,6 +108,7 @@
 								<!--排除一些不需要打包的class文件,避免出现多个应用程序入口 -->
 								<exclude>application-prod.yaml</exclude>
 								<exclude>application-test.yaml</exclude>
+								<exclude>application-prod-demo.yaml</exclude>
 								<exclude>Dockerfile</exclude>
 							</excludes>
 						</configuration>
@@ -164,6 +167,7 @@
 										<!--排除一些不需要打包的class文件,避免出现多个应用程序入口 -->
 										<exclude>application-prod.yaml</exclude>
 										<exclude>application-dev.yaml</exclude>
+										<exclude>application-prod-demo.yaml</exclude>
 										<exclude>Dockerfile</exclude>
 									</excludes>
 								</configuration>
@@ -195,6 +199,7 @@
 										<!--排除一些不需要打包的class文件,避免出现多个应用程序入口 -->
 										<exclude>application-test.yaml</exclude>
 										<exclude>application-dev.yaml</exclude>
+										<exclude>application-prod-demo.yaml</exclude>
 										<exclude>Dockerfile</exclude>
 									</excludes>
 								</configuration>
@@ -204,5 +209,7 @@
 				</plugins>
 			</build>
 		</profile>
+
 	</profiles>
+
 </project>
