@@ -86,6 +86,10 @@
                     <include>**/*.*</include>
                 </includes>
                 <filtering>false</filtering>
+                <!-- 聚合模块-单机版-排除下这个 -->
+                <excludes>
+                    <exclude>application.properties</exclude>
+                </excludes>
             </resource>
         </resources>
         <plugins>
@@ -144,16 +148,4 @@
         </plugins>
     </build>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>http://frp.creatorblue.com/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-    <repositories>
-        <repository>
-            <id>nexus-public-snapshots</id>
-            <url>http://frp.creatorblue.com/nexus/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
 </project>
