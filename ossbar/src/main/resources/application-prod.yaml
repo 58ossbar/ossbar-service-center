@@ -50,7 +50,7 @@ spring:
     password: ${password}
     sql-script-encoding: UTF-8
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/creatorblue-stp?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/ossbar-platform?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=GMT%2B8
     username: root
   http:
     encoding:

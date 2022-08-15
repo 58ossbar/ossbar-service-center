@@ -190,7 +190,7 @@ public interface TsysUserinfoService {
 	List<String> selectAllMenuId(String userId);
 	
 	/**
-	 * <p>根据用户名，查询系统用户</p>
+	 * 根据唯一用户名，查询系统用户
 	 * @author huj
 	 * @data 2019年5月5日
 	 * @param username

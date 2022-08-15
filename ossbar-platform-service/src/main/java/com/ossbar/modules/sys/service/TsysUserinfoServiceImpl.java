@@ -3,7 +3,9 @@ package com.ossbar.modules.sys.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
 import org.apache.dubbo.config.annotation.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +17,9 @@ import com.ossbar.modules.sys.domain.TsysUserinfo;
 @RestController
 @RequestMapping("/sys/userinfo")
 public class TsysUserinfoServiceImpl implements TsysUserinfoService {
+
+	@Autowired
+	private TsysUserinfoMapper tsysUserinfoMapper;
 
 	@Override
 	public R query(Map<String, Object> params) {
@@ -118,10 +123,15 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		return null;
 	}
 
+	/**
+	 * 根据唯一用户名查询记录
+	 * @param username
+	 * @return
+	 */
 	@Override
 	public TsysUserinfo selectObjectByUserName(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		TsysUserinfo tsysUserinfo = tsysUserinfoMapper.selectObjectByUserName(username);
+		return tsysUserinfo;
 	}
 
 	@Override
