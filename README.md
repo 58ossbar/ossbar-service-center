@@ -67,9 +67,6 @@ Redis >= 3
 
 ![](https://www.ossbar.com/codeshop/uploads/fe19d407-7b17-40bb-8d68-6735d17c04b9.png "合作企业")
 
-![](https://www.ossbar.com/codeshop/uploads/4bf1898c-0320-43c5-a64a-86239af2a4d7.png "职业课程")
-
-
 # 文档详细规范
 
 平台提供详细的说明文档，初学者快速入门
