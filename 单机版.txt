@@ -1,0 +1,4 @@
+
+github仓库地址：https://github.com/58ossbar/ossbar-platform.git
+
+微服务版，请移步【micro-service】分支
