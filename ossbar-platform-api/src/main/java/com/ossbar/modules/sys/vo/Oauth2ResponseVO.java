@@ -20,6 +20,16 @@ public class Oauth2ResponseVO implements Serializable {
 
     private String scope;
 
+    /**
+     * 错误类型，可能有：invalid_grant 等错误
+     */
+    private String error;
+
+    /**
+     * 异常时的描述，可能是：Bad credentials 等错误信息
+     */
+    private String error_description;
+
     public Oauth2ResponseVO() {
     }
 
@@ -63,14 +73,32 @@ public class Oauth2ResponseVO implements Serializable {
         this.scope = scope;
     }
 
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getError_description() {
+        return error_description;
+    }
+
+    public void setError_description(String error_description) {
+        this.error_description = error_description;
+    }
+
     @Override
     public String toString() {
-        return "Oauth2Response{" +
+        return "Oauth2ResponseVO{" +
                 "access_token='" + access_token + '\'' +
                 ", token_type='" + token_type + '\'' +
                 ", refresh_token='" + refresh_token + '\'' +
                 ", expires_in=" + expires_in +
                 ", scope='" + scope + '\'' +
+                ", error='" + error + '\'' +
+                ", error_description='" + error_description + '\'' +
                 '}';
     }
 }

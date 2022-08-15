@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ossbar.common.constants.ExecStatus;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysLoginLogService;
 import com.ossbar.modules.sys.api.TsysSettingsService;
@@ -22,11 +23,13 @@ import com.ossbar.modules.sys.domain.TsysUserinfo;
 import com.ossbar.modules.sys.vo.Oauth2ResponseVO;
 import com.ossbar.modules.sys.vo.SysUserVO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
+import com.ossbar.platform.core.common.handler.CustomResponseErrorHandler;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.BeanUtils;
 import com.ossbar.utils.tool.StrUtils;
 import com.ossbar.utils.tool.TicketDesUtil;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +39,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -105,9 +109,8 @@ public class LoginController {
 		}
 		TsysUserinfo userInfo = tsysUserinfoService.selectObjectByUserName(username);
 		if (userInfo == null) {
-			String msg = "账号或密码错误！";
-			tsysLoginLogService.saveFailMessage(request, msg);
-			return R.error(msg);
+			tsysLoginLogService.saveFailMessage(request, ExecStatus.INCORRECT_ACCOUNT_PASSWORD.getMsg());
+			return R.error(ExecStatus.INCORRECT_ACCOUNT_PASSWORD.getMsg());
 		}
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("username", username);
@@ -126,8 +129,15 @@ public class LoginController {
 		}
 		try {
 			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, header);
+			// 自定义错误处理
+			restTemplate.setErrorHandler(new CustomResponseErrorHandler());
 			// oauth认证
 			Oauth2ResponseVO response = restTemplate.postForObject(url, httpEntity, Oauth2ResponseVO.class);
+			if (response != null && !StringUtils.isEmpty(response.getError())) {
+				log.error("用户{}登录失败 {}", username, response.getError_description());
+				tsysLoginLogService.saveFailMessage(request, ExecStatus.INCORRECT_ACCOUNT_PASSWORD.getMsg());
+				return R.error(response.getError_description());
+			}
 			// 记录登录日志
 			tsysLoginLogService.saveSuccessMessage(request, "用户正常登录", userInfo.getUserRealname());
 			// 组装部分数据，满足前端需要
@@ -136,10 +146,8 @@ public class LoginController {
 			vo.setToken(response.getAccess_token());
 			return R.ok().put(Constant.R_DATA, vo);
 		} catch (Exception e) {
-			log.error("系统出现异常！", e);
-			String msg = "账号或密码错误！";
-			tsysLoginLogService.saveFailMessage(request, msg);
-			return R.error(msg);
+			log.error("系统出现了问题！", e);
+			return R.error("系统出现了问题，请联系管理员！");
 		}
 	}
 
