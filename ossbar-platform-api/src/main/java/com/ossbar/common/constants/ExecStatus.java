@@ -32,6 +32,7 @@ public enum ExecStatus {
     EXPIRED_TOKEN(2072, "令牌过期"),
     TOKEN_NOT_EXITS(2073, "令牌不存在"),
     INVALID_SIGNATURE(2074, "签名错误"),
+    INCORRECT_ACCOUNT_PASSWORD(2100, "账号或密码错误！"),
     //表单重复提交等
     FORM_REP_REPEATED_SUBMIT(2075, "请不要重复提交数据!"),
     DENIED_TOKEN(2076, "权限不足，请联系管理员!"),
