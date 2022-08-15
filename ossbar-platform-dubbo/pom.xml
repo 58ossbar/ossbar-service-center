@@ -123,16 +123,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<url>http://frp.creatorblue.com/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-	<repositories>
-		<repository>
-			<id>nexus-public-snapshots</id>
-			<url>http://frp.creatorblue.com/nexus/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
 </project>
