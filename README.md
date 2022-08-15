@@ -1,5 +1,5 @@
 # ossbar-platform
-开源吧业务基础平台
+开源吧快速开发平台
 是一个Java EE 企业级快速开发平台，基于经典技术组合（Spring Boot、Spring Security、MyBatis、Jwt、Vue），包括许多内置系统模块如：组织角色用户、资源菜单管理、数据权限、参数管理、流水号管理，附件管理等。模块增减便捷；众多安全设置，密码策略；在线定时任务；多数据源；100%纯开源系统、可自由修改，私有化部署及二次开发，可重复商用；0加密代码。
 
 # 平台优势
@@ -60,6 +60,7 @@ Redis >= 3
 连接池监视：监视当期系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
 
 # 功能截图
+
 ![](https://www.ossbar.com/codeshop/uploads/3121bde9-d404-4112-a385-2a7d84f1b525.png "登录界面")
 
 ![](https://www.ossbar.com/codeshop/uploads/4a20f7de-5cb9-452f-b762-6357f0ea491d.png "内容编排")
