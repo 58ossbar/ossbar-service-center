@@ -11,6 +11,7 @@ import com.ossbar.modules.sys.domain.TsysResource;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import com.ossbar.platform.core.common.utils.LoginUtils;
+import com.ossbar.utils.constants.Constant;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -51,10 +52,9 @@ public class ApiController {
 	}
 
 	@RequestMapping("menu/findNavTree")
-	public R findNavTree(@RequestBody(required = false) JSONObject data) {
+	public R findNavTree() {
 		List<TsysResource> menuList = tsysResourceService.getUserMenuList(loginUtils.getLoginUserId(), "19c786f2bfbf46398e3b495f6c7014b1");
-		R r = R.ok().put("data", menuList);
-		return r;
+		return R.ok().put(Constant.R_DATA, menuList);
 	}
 
 	@ApiOperation(value = "保存用户2", notes = "<b>参数说明<b>:<br/>" + "&emsp;id:用户id<br/>" + "&emsp;name:用户姓名<br/>"
