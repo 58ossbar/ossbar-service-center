@@ -88,7 +88,7 @@ spring:
 security:
   oauth2:
     client:
-      access-token-uri: http://localhost:${server.port}/${server.servlet.context-path}/oauth/token
+      access-token-uri: http://localhost:${server.port}${server.servlet.context-path}/oauth/token
       logout: http://localhost:${server.port}/${server.servlet.context-path}/logoutRest
       client-id: creatorblue-platform-core
       client-secret: s9sd8uf9ewj9egwejgewgj0

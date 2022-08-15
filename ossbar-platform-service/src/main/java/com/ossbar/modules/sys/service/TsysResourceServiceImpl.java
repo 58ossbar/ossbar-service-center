@@ -1,10 +1,13 @@
 package com.ossbar.modules.sys.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.ossbar.modules.sys.persistence.TsysResourceMapper;
+import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
+import com.ossbar.utils.constants.Constant;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +19,11 @@ import com.ossbar.modules.sys.domain.TsysResource;
 @RestController
 @RequestMapping("/sys/resource")
 public class TsysResourceServiceImpl implements TsysResourceService {
+
+	@Autowired
+	private TsysResourceMapper tsysResourceMapper;
+	@Autowired
+	private TsysUserinfoMapper tsysUserinfoMapper;
 
 	@Override
 	public R saveOrUpdate(TsysResource tsysResource) {
@@ -102,9 +110,28 @@ public class TsysResourceServiceImpl implements TsysResourceService {
 	}
 
 	@Override
+	//@Cacheable(value = "menu_list_cache", key = "'getUserPermissions_'+#userId")
 	public Set<String> getUserPermissions(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> permsList;
+		// 系统管理员，拥有最高权限
+		if (userId.equalsIgnoreCase(Constant.SUPER_ADMIN)) {
+			List<TsysResource> menuList = tsysResourceMapper.selectListByMap(new HashMap<>());
+			permsList = new ArrayList<>(menuList.size());
+			for (TsysResource menu : menuList) {
+				permsList.add(menu.getPerms());
+			}
+		} else {
+			permsList = tsysUserinfoMapper.selectAllPerms(userId);
+		}
+		// 用户权限列表
+		Set<String> permsSet = new HashSet<>();
+		for (String perms : permsList) {
+			if (StringUtils.isBlank(perms)) {
+				continue;
+			}
+			permsSet.addAll(Arrays.asList(perms.trim().split(",")));
+		}
+		return permsSet;
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,11 +18,12 @@ import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysLoginLogService;
 import com.ossbar.modules.sys.api.TsysSettingsService;
 import com.ossbar.modules.sys.api.TsysUserinfoService;
-import com.ossbar.modules.sys.domain.TsysLoginLog;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
+import com.ossbar.modules.sys.vo.Oauth2ResponseVO;
+import com.ossbar.modules.sys.vo.SysUserVO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
-import com.ossbar.utils.tool.DateUtils;
-import com.ossbar.utils.tool.IPUtils;
+import com.ossbar.utils.constants.Constant;
+import com.ossbar.utils.tool.BeanUtils;
 import com.ossbar.utils.tool.StrUtils;
 import com.ossbar.utils.tool.TicketDesUtil;
 import org.apache.commons.io.IOUtils;
@@ -124,20 +124,19 @@ public class LoginController {
 		} catch (UnsupportedEncodingException e) {
 			log.error("出现异常", e.getMessage(), e);
 		}
-		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, header);
 		try {
-			System.out.println("请求地址： " + url);
-			JSONObject response = restTemplate.postForObject(url, httpEntity, JSONObject.class);
-			System.out.println("响应结果" + response);
+			HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, header);
+			// oauth认证
+			Oauth2ResponseVO response = restTemplate.postForObject(url, httpEntity, Oauth2ResponseVO.class);
+			// 记录登录日志
 			tsysLoginLogService.saveSuccessMessage(request, "用户正常登录", userInfo.getUserRealname());
 			// 组装部分数据，满足前端需要
-			Map<String, Object> m = new HashMap<>();
-			m.put("userimg", userInfo.getUserimg()); // 用户头像
-			m.put("userId", userInfo.getUserId()); // 用户ID
-			m.put("userRealname", userInfo.getUserRealname()); // 用户真实姓名
-			return R.ok().put("token", response.get("access_token")).put("data", m);
+			SysUserVO vo = new SysUserVO();
+			BeanUtils.copyProperties(vo, userInfo);
+			vo.setToken(response.getAccess_token());
+			return R.ok().put(Constant.R_DATA, vo);
 		} catch (Exception e) {
-			log.error("登录失败！", e);
+			log.error("系统出现异常！", e);
 			String msg = "账号或密码错误！";
 			tsysLoginLogService.saveFailMessage(request, msg);
 			return R.error(msg);
