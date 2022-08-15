@@ -59,6 +59,16 @@ Redis >= 3
 
 连接池监视：监视当期系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
 
+#功能截图
+https://www.ossbar.com/codeshop/uploads/3121bde9-d404-4112-a385-2a7d84f1b525.png
+
+https://www.ossbar.com/codeshop/uploads/4a20f7de-5cb9-452f-b762-6357f0ea491d.png
+
+https://www.ossbar.com/codeshop/uploads/fe19d407-7b17-40bb-8d68-6735d17c04b9.png
+
+https://www.ossbar.com/codeshop/uploads/4bf1898c-0320-43c5-a64a-86239af2a4d7.png
+
+
 # 文档详细规范
 
 平台提供详细的说明文档，初学者快速入门
