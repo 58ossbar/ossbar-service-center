@@ -16,6 +16,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			property="postType" />
 		<result column="PARENT_POSTID" jdbcType="VARCHAR"
 			property="parentPostid" />
+		<result column="sort" jdbcType="INTEGER"
+				property="sort" />
 	</resultMap>
 
 	<!-- 用于select查询公用抽取的列 -->
@@ -32,7 +34,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		create_user_id,
 		create_time,
 		update_user_id,
-		update_time 
+		update_time ,
+		sort
 		) VALUES (
 
 		#{postId,jdbcType=VARCHAR} ,
@@ -47,7 +50,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		#{createUserId},
 		#{createTime},
 		#{updateUserId},
-		#{updateTime}  
+		#{updateTime},
+		#{sort,jdbcType=INTEGER}
 		)
 	</insert>
 	<update id="update" parameterType="com.ossbar.modules.sys.domain.TsysPost">
@@ -71,7 +75,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<if test="updateTime != null and updateTime.trim() != ''">
 			update_time = #{updateTime,jdbcType=VARCHAR}
 		</if>
-		
+		<if test="sort != null">
+			sort = #{sort,jdbcType=INTEGER}
+		</if>
 		WHERE
 		POST_ID = #{postId,jdbcType=VARCHAR} 
 	</update>
@@ -106,15 +112,29 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			<if test="userId != null and userId.trim() != ''">
 				and post_id in (select POST_ID  from T_USER_POST WHERE user_id = #{userId})
 			</if>
+			<if test="sort != null">
+				and sort = #{sort}
+			</if>
 		</where>
 		<choose>
 		<when test="sidx != null and sidx.trim() != ''">
 				order by ${sidx} ${order}
 			</when>
 			<otherwise>
-				order by create_time desc,update_time desc 
+				order by create_time desc, update_time desc
 			</otherwise>
 		</choose>
+	</select>
+
+	<!--修改排序号-->
+	<update id="updateSort" parameterType="com.ossbar.modules.sys.domain.TsysPost">
+		update t_sys_post set sort = #{sort,jdbcType=VARCHAR}
+		WHERE
+		POST_ID = #{postId,jdbcType=VARCHAR}
+	</update>
+	<!--获取最大排序号-->
+	<select id="getMaxSort" resultType="int">
+		select ifnull(max(sort), 1) from t_sys_post
 	</select>
 </mapper>
 

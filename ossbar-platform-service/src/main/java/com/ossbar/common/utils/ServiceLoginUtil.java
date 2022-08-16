@@ -20,7 +20,7 @@ public class ServiceLoginUtil {
 		TsysUserinfo userInfo = null;
 		try {
 			Object loginUtils = SpringContextUtils.getBean("loginUtils");
-			Class<?> cls = Class.forName("com.creatorblue.modules.core.common.utils.LoginUtils");
+			Class<?> cls = Class.forName("com.ossbar.platform.core.common.utils.LoginUtils");
 			Object sUserInfo = cls.getDeclaredMethod("getLoginUser").invoke(loginUtils);
 			if (!StrUtils.isNull(sUserInfo)) {
 				userInfo = (TsysUserinfo)sUserInfo;
@@ -44,7 +44,7 @@ public class ServiceLoginUtil {
 		String userId = null;
 		try {
 			Object loginUtils = SpringContextUtils.getBean("loginUtils");
-			Class<?> cls = Class.forName("com.creatorblue.modules.core.common.utils.LoginUtils");
+			Class<?> cls = Class.forName("com.ossbar.platform.core.common.utils.LoginUtils");
 			Object sUserId = cls.getDeclaredMethod("getLoginUserId").invoke(loginUtils);
 			if (!StrUtils.isNull(sUserId)) {
 				userId = sUserId.toString();

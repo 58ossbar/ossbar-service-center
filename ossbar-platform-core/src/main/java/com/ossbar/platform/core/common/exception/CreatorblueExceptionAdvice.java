@@ -1,24 +1,29 @@
 package com.ossbar.platform.core.common.exception;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.ossbar.common.constants.ExecStatus;
 import com.ossbar.common.exception.CreatorblueException;
 import com.ossbar.common.exception.RepeatedSubmitFormException;
 import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.utils.constants.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Title:异常处理器 Copyright: Copyright (c) 2017 Company:creatorblue.co.,ltd
@@ -123,7 +128,13 @@ public class CreatorblueExceptionAdvice {
 			HttpServletResponse response) {
 		// 判断提交表单的请求是否为Ajax请求,若是则生成refresh_token,以替换表单页面的formToken,解决Ajax提交后,验证不通过无法再次提交的问题
 		logger.error(ex.getMessage(), ex);
-		return returnValue(R.error("表单参数校验不通过！"), request, response);
+		BindingResult bindingResult = ex.getBindingResult();
+		Map<String,String> errorMap = new HashMap<>();
+		bindingResult.getFieldErrors().forEach((fieldError)->{
+			errorMap.put(fieldError.getField(),fieldError.getDefaultMessage());
+		});
+		//return returnValue(R.error("表单参数校验不通过！"), request, response);
+		return R.error(500, "表单参数校验不通过！").put(Constant.R_DATA, errorMap);
 
 	}
 
@@ -152,6 +163,16 @@ public class CreatorblueExceptionAdvice {
 			HttpServletResponse response) {
 		logger.error(ex.getMessage(), ex);
 		return returnValue(R.error(ExecStatus.DENIED_TOKEN.getCode(), ExecStatus.DENIED_TOKEN.getMsg()), request, response);
+	}
 
+	/**
+	 * 缺少所需的请求体
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	@ResponseBody
+	public R missingRequestBodyException(HttpMessageNotReadableException e) {
+		return R.error(500, e.getMessage());
 	}
 }

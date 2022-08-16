@@ -1,9 +1,10 @@
 package com.ossbar.modules.sys.service;
 
-import java.util.*;
-
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.ossbar.common.utils.Query;
+import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.sys.api.TsysResourceService;
+import com.ossbar.modules.sys.domain.TsysResource;
 import com.ossbar.modules.sys.persistence.TsysResourceMapper;
 import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
 import com.ossbar.utils.constants.Constant;
@@ -15,9 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ossbar.core.baseclass.domain.R;
-import com.ossbar.modules.sys.api.TsysResourceService;
-import com.ossbar.modules.sys.domain.TsysResource;
+import java.util.*;
 
 @Service(version = "1.0.0")
 @RestController

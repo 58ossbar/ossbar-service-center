@@ -8,13 +8,19 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>ossbar-platform-api</artifactId>
 	<version>1.0.0</version>
-	<name>ossbar-platform-api</name>
+    <name>ossbar-platform-api</name>
 	<description>ossbar-platform-api</description>
 	<packaging>jar</packaging>
 	<properties>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+	</dependencies>
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<resources>

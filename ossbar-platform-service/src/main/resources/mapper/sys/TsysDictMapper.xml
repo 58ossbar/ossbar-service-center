@@ -197,9 +197,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		</choose>
 	</select>
 	<!-- 实际业务需要增加的SQL语句 -->
-	<select id="selectListByMapNotZero" resultMap="BaseResultMap"
-		parameterType="map">
-		select * from T_SYS_DICT where PARENT_TYPE!='0'
+	<select id="selectListByMapNotZero" parameterType="map" resultType="com.ossbar.modules.sys.vo.dict.TsysDictVO">
+		select dict_id, dict_code, dict_value, dict_url from T_SYS_DICT where PARENT_TYPE != '0'
 		<if test="dictType != null and dictType.trim() != ''">
 			and DICT_TYPE =#{dictType,jdbcType=VARCHAR}
 		</if>
@@ -229,7 +228,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 				order by ${sidx} ${order}
 			</when>
 			<otherwise>
-				order by DICT_NAME asc
+				order by DICT_CODE asc
 			</otherwise>
 		</choose>
 	</select>
