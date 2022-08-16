@@ -1,10 +1,7 @@
 package com.ossbar.platform.core.common.cbsecurity.log;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import com.ossbar.modules.sys.api.TsysLogService;
 import com.ossbar.modules.sys.domain.TsysLog;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
@@ -27,8 +24,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
 
 /**
  * Title:系统日志，切面处理类 Copyright: Copyright (c) 2017
@@ -65,7 +65,7 @@ public class SysLogAspect {
 		Object[] args = point.getArgs();
 		if(args != null && args.length > 0) {
 			String params = new Gson().toJson(args[0]);
-			System.err.println(params);
+			// System.err.println(params);
 		}
 		long beginTime = System.currentTimeMillis();
 		TsysLog sysLog = new TsysLog();
