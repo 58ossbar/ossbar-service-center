@@ -69,8 +69,6 @@ Redis >= 3
 
 ![](https://www.ossbar.com/codeshop/uploads/fe19d407-7b17-40bb-8d68-6735d17c04b9.png "合作企业")
 
-# 文档详细规范
+# 详细安装和部署手册
 
-平台提供详细的说明文档，初学者快速入门
-
-
+详见：https://www.ossbar.com/#/platformConsultingDetails?newsId=165
