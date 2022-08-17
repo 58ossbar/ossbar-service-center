@@ -23,6 +23,15 @@ public interface TsysPostService {
     R query(Map<String, Object> params);
 
     /**
+     * 查询明细
+     * @author huj
+     * @data 2019年5月29日
+     * @param id
+     * @return
+     */
+    R selectObjectById(String id);
+
+    /**
      * 根据条件查询列表(返回List<Bean>)
      * @param params
      * @return
@@ -43,4 +52,29 @@ public interface TsysPostService {
      */
     R update(TsysPost tsysPost);
 
+    /**
+     * 批量删除
+     * @author huj
+     * @data 2019年5月29日
+     * @param ids
+     * @return
+     */
+    R deleteBatch(String[] ids);
+
+    /**
+     * 更新排序号
+     * @author huj
+     * @data 2019年6月18日
+     * @param map
+     * @return
+     */
+    R updateSort(Map<String, Object> map);
+
+    /**
+     * 获取最大排序号
+     * @author huj
+     * @data 2019年6月24日
+     * @return
+     */
+    Integer getMaxSortNum();
 }

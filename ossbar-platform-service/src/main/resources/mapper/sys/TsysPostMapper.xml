@@ -22,7 +22,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="Base_Column_List">
-		POST_ID,POST_NAME,REMARK,POST_TYPE,PARENT_POSTID
+		POST_ID,POST_NAME,REMARK,IFNULL(POST_TYPE, "0") AS POST_TYPE,PARENT_POSTID,SORT
 	</sql>
 	<insert id="insert" parameterType="com.ossbar.modules.sys.domain.TsysPost">
 		INSERT INTO T_SYS_POST (
@@ -73,7 +73,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			update_user_id = #{updateUserId,jdbcType=VARCHAR},
 		</if>
 		<if test="updateTime != null and updateTime.trim() != ''">
-			update_time = #{updateTime,jdbcType=VARCHAR}
+			update_time = #{updateTime,jdbcType=VARCHAR},
 		</if>
 		<if test="sort != null">
 			sort = #{sort,jdbcType=INTEGER}
@@ -92,8 +92,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			#{postId}
 		</foreach>
 	</delete>
-	<select id="selectObjectById" parameterType="java.lang.String"
-		resultMap="BaseResultMap">
+	<select id="selectObjectById" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from T_SYS_POST WHERE
@@ -133,8 +132,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		POST_ID = #{postId,jdbcType=VARCHAR}
 	</update>
 	<!--获取最大排序号-->
-	<select id="getMaxSort" resultType="int">
-		select ifnull(max(sort), 1) from t_sys_post
+	<select id="getMaxSortNum" resultType="Integer">
+		select ifnull(max(sort), 1) + 1 from t_sys_post
 	</select>
 </mapper>
 

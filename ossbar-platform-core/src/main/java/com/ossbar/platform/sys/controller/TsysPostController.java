@@ -1,11 +1,13 @@
 package com.ossbar.platform.sys.controller;
 
 import com.ossbar.common.validator.group.AddGroup;
+import com.ossbar.common.validator.group.UpdateGroup;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysPostService;
 import com.ossbar.modules.sys.domain.TsysPost;
 import com.ossbar.modules.sys.vo.post.SavePostVO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
+import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.BeanUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,6 +44,24 @@ public class TsysPostController {
         return tsysPostService.query(params);
     }
 
+    /**
+     * 查看
+     * @author huj
+     * @data 2019年5月29日
+     * @param id
+     * @return
+     */
+    @GetMapping("/view/{id}")
+    @PreAuthorize("hasAuthority('sys:tsyspost:view')")
+    public R selectObjectById(@PathVariable("id") String id) {
+        return tsysPostService.selectObjectById(id);
+    }
+
+    /**
+     * 新增
+     * @param vo
+     * @return
+     */
     @PostMapping("/save")
     //@PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
     @SysLog("执行岗位数据新增")
@@ -51,5 +71,57 @@ public class TsysPostController {
         return tsysPostService.save(tsysPost);
     }
 
+    /**
+     * 修改
+     * @param vo
+     * @return
+     */
+    @PostMapping("/update")
+    //@PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
+    @SysLog("执行岗位数据修改")
+    public R update(@RequestBody @Validated({UpdateGroup.class}) SavePostVO vo) {
+        TsysPost tsysPost = new TsysPost();
+        BeanUtils.copyProperties(tsysPost, vo);
+        return tsysPostService.update(tsysPost);
+    }
 
+    /**
+     * 批量删除
+     * @author huj
+     * @data 2019年5月29日
+     * @param ids
+     * @return
+     */
+    @PostMapping("/deletes")
+    @PreAuthorize("hasAuthority('sys:tsyspost:remove')")
+    @SysLog("批量删除岗位")
+    public R deleteBatch(@RequestBody(required = false) String[] ids) {
+        return tsysPostService.deleteBatch(ids);
+    }
+
+
+    /**
+     * 修改排序号
+     * @author huj
+     * @data 2019年6月18日
+     * @param params
+     * @return
+     */
+    @GetMapping("/updateSort")
+    @PreAuthorize("hasAuthority('sys:tsyspost:move')")
+    @SysLog("修改岗位排序号")
+    public R updateSort(@RequestParam Map<String, Object> params) {
+        return tsysPostService.updateSort(params);
+    }
+
+    /**
+     * 获取岗位的最大排序号
+     * @author huj
+     * @data 2019年6月24日
+     * @return
+     */
+    @GetMapping("/getMaxSortNum")
+    public R getMaxSortNum() {
+        return R.ok().put(Constant.R_DATA, tsysPostService.getMaxSortNum());
+    }
 }

@@ -16,4 +16,8 @@ import com.ossbar.modules.sys.domain.TsysPost;
 @Mapper
 public interface TsysPostMapper extends BaseSqlMapper<TsysPost> {
 
+    Integer updateSort(TsysPost post);
+
+    Integer getMaxSortNum();
+
 }

@@ -1,8 +1,11 @@
 package com.ossbar.modules.sys.persistence;
-import org.apache.ibatis.annotations.Mapper;
 
 import com.ossbar.core.baseclass.persistence.BaseSqlMapper;
 import com.ossbar.modules.sys.domain.TuserPost;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
 /**
  * <p> Title: </p>
  * <p> Description:</p>
@@ -15,5 +18,7 @@ import com.ossbar.modules.sys.domain.TuserPost;
 
 @Mapper
 public interface TuserPostMapper extends BaseSqlMapper<TuserPost> {
+
+    List<TuserPost> selectListByPostIds(String[] ids);
 
 }

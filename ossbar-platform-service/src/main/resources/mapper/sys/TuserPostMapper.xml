@@ -66,5 +66,15 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			#{userId}
 		</foreach>
 	</delete>
+	<select id="selectListByPostIds" parameterType="string" resultMap="BaseResultMap">
+		select t1.*, t2.post_name as postName from t_user_post t1
+		inner join t_sys_post t2 on t1.post_id = t2.post_id
+		<where>
+			and t1.post_id in
+			<foreach collection="array" item="postId" open="(" separator="," close=")">
+				#{postId}
+			</foreach>
+		</where>
+	</select>
 </mapper>
 
