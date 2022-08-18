@@ -1,4 +1,4 @@
-package com.ossbar.modules.sys.vo.post;
+package com.ossbar.modules.sys.dto.post;
 
 import com.ossbar.common.validator.group.AddGroup;
 import com.ossbar.common.validator.group.UpdateGroup;
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @email hujun@creatorblue.com
  * @company 创蓝科技 www.creatorblue.com
  */
-public class SavePostVO implements Serializable {
+public class SavePostDTO implements Serializable {
 
     /**
      * 岗位id
@@ -45,7 +45,7 @@ public class SavePostVO implements Serializable {
      */
     private Integer sort;
 
-    public SavePostVO() {
+    public SavePostDTO() {
     }
 
     public String getPostId() {

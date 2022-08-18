@@ -1,11 +1,11 @@
 package com.ossbar.modules.sys.api;
 
+import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.sys.domain.TsysResource;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.ossbar.core.baseclass.domain.R;
-import com.ossbar.modules.sys.domain.TsysResource;
 
 /**
  * 菜单管理
@@ -56,13 +56,9 @@ public interface TsysResourceService {
 
 	/**
 	 * 角色授权菜单
-	 * 
-	 * @param userId
-	 * @return R
-	 * @author huangwb
-	 * @date 2019-05-06 15:18
+	 * @return
 	 */
-	List<TsysResource> perms(String userId);
+	List<TsysResource> perms();
 
 	/**
 	 * 用户菜单列表

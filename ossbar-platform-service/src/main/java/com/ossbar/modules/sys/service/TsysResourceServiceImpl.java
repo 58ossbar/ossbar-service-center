@@ -2,6 +2,7 @@ package com.ossbar.modules.sys.service;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.ossbar.common.utils.Query;
+import com.ossbar.common.utils.ServiceLoginUtil;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysResourceService;
 import com.ossbar.modules.sys.domain.TsysResource;
@@ -27,6 +28,8 @@ public class TsysResourceServiceImpl implements TsysResourceService {
 	private TsysResourceMapper tsysResourceMapper;
 	@Autowired
 	private TsysUserinfoMapper tsysUserinfoMapper;
+	@Autowired
+	private ServiceLoginUtil loginUtil;
 
 	@Override
 	public R saveOrUpdate(TsysResource tsysResource) {
@@ -52,10 +55,23 @@ public class TsysResourceServiceImpl implements TsysResourceService {
 		return null;
 	}
 
+	/**
+	 * 角色授权菜单
+	 * @return
+	 */
 	@Override
-	public List<TsysResource> perms(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<TsysResource> perms() {
+		String userId = loginUtil.getLoginUserId();
+		// 查询列表数据
+		List<TsysResource> menuList = new ArrayList<>();
+		// 只有超级管理员，才能查看所有管理员列表
+		if (Constant.SUPER_ADMIN.equalsIgnoreCase(userId)) {
+			menuList = tsysResourceMapper.selectAllListByMap(new HashMap<String, Object>());
+		} else {
+			// 方法有问题
+			menuList = tsysResourceMapper.selectUserList(userId);
+		}
+		return menuList;
 	}
 
 	@Override

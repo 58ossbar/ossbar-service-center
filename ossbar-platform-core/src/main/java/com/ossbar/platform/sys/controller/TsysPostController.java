@@ -5,7 +5,7 @@ import com.ossbar.common.validator.group.UpdateGroup;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysPostService;
 import com.ossbar.modules.sys.domain.TsysPost;
-import com.ossbar.modules.sys.vo.post.SavePostVO;
+import com.ossbar.modules.sys.dto.post.SavePostDTO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.BeanUtils;
@@ -65,7 +65,7 @@ public class TsysPostController {
     @PostMapping("/save")
     //@PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
     @SysLog("执行岗位数据新增")
-    public R save(@RequestBody @Validated({AddGroup.class}) SavePostVO vo) {
+    public R save(@RequestBody @Validated({AddGroup.class}) SavePostDTO vo) {
         TsysPost tsysPost = new TsysPost();
         BeanUtils.copyProperties(tsysPost, vo);
         return tsysPostService.save(tsysPost);
@@ -79,7 +79,7 @@ public class TsysPostController {
     @PostMapping("/update")
     //@PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
     @SysLog("执行岗位数据修改")
-    public R update(@RequestBody @Validated({UpdateGroup.class}) SavePostVO vo) {
+    public R update(@RequestBody @Validated({UpdateGroup.class}) SavePostDTO vo) {
         TsysPost tsysPost = new TsysPost();
         BeanUtils.copyProperties(tsysPost, vo);
         return tsysPostService.update(tsysPost);
