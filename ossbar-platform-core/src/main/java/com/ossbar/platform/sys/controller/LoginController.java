@@ -1,19 +1,8 @@
 package com.ossbar.platform.sys.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Base64;
-import java.util.Base64.Encoder;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.alibaba.fastjson.JSONObject;
+import com.google.code.kaptcha.Constants;
+import com.google.code.kaptcha.Producer;
 import com.ossbar.common.constants.ExecStatus;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysLoginLogService;
@@ -24,10 +13,10 @@ import com.ossbar.modules.sys.vo.Oauth2ResponseVO;
 import com.ossbar.modules.sys.vo.SysUserVO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import com.ossbar.platform.core.common.handler.CustomResponseErrorHandler;
+import com.ossbar.platform.core.utils.RSAUtil;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.BeanUtils;
 import com.ossbar.utils.tool.StrUtils;
-import com.ossbar.utils.tool.TicketDesUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Reference;
@@ -39,20 +28,23 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.code.kaptcha.Constants;
-import com.google.code.kaptcha.Producer;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
+import java.util.Base64.Encoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author huj
@@ -86,15 +78,29 @@ public class LoginController {
 	private String clientId;
 	@Value("${security.oauth2.client.client-secret:}")
 	private String clientSecret;
-	public static void main(String[] args) {
-		String val = TicketDesUtil.encryptWithMd5("admin", null);
-		System.out.println(val);
+
+	@RequestMapping("getPublicKey")
+	public R getPublicKey(HttpSession session, HttpServletRequest request) throws Exception {
+		String[] publicKeyString = RSAUtil.getPublicKeyString();
+		Map<String, Object> map = new HashMap<>();
+		map.put("firstParam", publicKeyString[1]);
+		map.put("secondParam", "");
+		map.put("thirdParam", publicKeyString[0]);
+		return R.ok().put(Constant.R_DATA, map);
 	}
+
 	@RequestMapping("login")
-	public R doLogin(@RequestBody(required = false) JSONObject data, HttpSession session, HttpServletRequest request) {
+	public R doLogin(@RequestBody JSONObject data, HttpSession session, HttpServletRequest request) throws Exception {
 		String username = data.getString("username");
 		String password = data.getString("password");
 		String captcha = data.getString("captcha");
+		if (StrUtils.isEmpty(username) || StrUtils.isEmpty(password)) {
+			return R.error("账号或密码不能为空");
+		}
+		// 解密
+		username = RSAUtil.decryptString(username, request.getCharacterEncoding());
+		password = RSAUtil.decryptString(password, request.getCharacterEncoding());
+
 		Object captchaSession = session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
 
 		log.debug("用户输入的验证码:" + captcha);

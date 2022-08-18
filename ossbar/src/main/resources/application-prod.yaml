@@ -1,6 +1,6 @@
 com:
   creatorblue:
-    anno-filter: /druid/**, /user/login, /user/logout, /user/captcha.jpg, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.js, /**/*.css, /**/*.jpg, /doLogin, /logoutRest
+    anno-filter: /druid/**, /user/getPublicKey, /user/login, /user/logout, /user/captcha.jpg, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.js, /**/*.css, /**/*.jpg, /doLogin, /logoutRest
     file-upload-path: /mnt/cbstp/uploads
     redisFlag: false
 publicKey:
