@@ -79,9 +79,12 @@ public class LoginController {
 	@Value("${security.oauth2.client.client-secret:}")
 	private String clientSecret;
 
+	@Autowired
+	private RSAUtil rsaUtil;
+
 	@RequestMapping("getPublicKey")
 	public R getPublicKey(HttpSession session, HttpServletRequest request) throws Exception {
-		String[] publicKeyString = RSAUtil.getPublicKeyString();
+		String[] publicKeyString = rsaUtil.getPublicKeyString();
 		Map<String, Object> map = new HashMap<>();
 		map.put("firstParam", publicKeyString[1]);
 		map.put("secondParam", "");
@@ -98,8 +101,8 @@ public class LoginController {
 			return R.error("账号或密码不能为空");
 		}
 		// 解密
-		username = RSAUtil.decryptString(username, request.getCharacterEncoding());
-		password = RSAUtil.decryptString(password, request.getCharacterEncoding());
+		username = rsaUtil.decryptString(username, request.getCharacterEncoding());
+		password = rsaUtil.decryptString(password, request.getCharacterEncoding());
 
 		Object captchaSession = session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
 

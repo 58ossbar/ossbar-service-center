@@ -2,7 +2,8 @@ package com.ossbar.platform.core.utils;
 
 import com.ossbar.utils.tool.Escape;
 import com.ossbar.utils.tool.HexToBytes;
-import com.ossbar.utils.tool.ResourcesUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import java.io.*;
@@ -19,9 +20,13 @@ import java.security.spec.RSAPublicKeySpec;
  * 需要到http://www.bouncycastle.org下载bcprov-jdk14-123.jar。
  * 
  */
+@Component
 public class RSAUtil {
 
-	private final static String RSA_KEY_TXT = ResourcesUtils.getByName("com.creatorblue.file-upload-path") + "/RSAKey.txt";
+	@Value("${com.creatorblue.key-file-upload-path:}")
+	private String RSA_KEY_TXT;
+
+	//private final static String RSA_KEY_TXT = ResourcesUtils.getByName("com.creatorblue.file-upload-path") + "/RSAKey.txt";
 
 	// 本地测试时，放开这个注释
 	//private static final String RSA_KEY_TXT = "D:/uploads/RSAKey.txt";
@@ -31,7 +36,7 @@ public class RSAUtil {
 	 * @return
      * @throws Exception
 	 */
-	public static KeyPair generateKeyPair() throws Exception {
+	public KeyPair generateKeyPair() throws Exception {
 		try {
 			KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA",
 					new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -46,8 +51,8 @@ public class RSAUtil {
 		}
 	}
 
-	public static KeyPair getKeyPair() throws Exception {
-//		System.out.println("文件地址：" + RSA_KEY_TXT);
+	public KeyPair getKeyPair() throws Exception {
+		System.out.println("文件地址：" + RSA_KEY_TXT);
 		File file = new File(RSA_KEY_TXT);
 		if (!file.exists()) {
 			generateKeyPair();
@@ -60,7 +65,7 @@ public class RSAUtil {
 		return kp;
 	}
 
-	public static void saveKeyPair(KeyPair kp) throws Exception {
+	public void saveKeyPair(KeyPair kp) throws Exception {
 
 		FileOutputStream fos = new FileOutputStream(RSA_KEY_TXT);
 		PrintStream file = new PrintStream(fos, false, "UTF-8");
@@ -134,7 +139,7 @@ public class RSAUtil {
 	/**
 	 * * 加密 *
 	 * 
-	 * @param key
+	 * @param pk
 	 *            加密的密钥 *
 	 * @param data
 	 *            待加密的明文数据 *
@@ -178,7 +183,7 @@ public class RSAUtil {
 	/**
 	 * * 解密 *
 	 * 
-	 * @param key
+	 * @param pk
 	 *            解密的密钥 *
 	 * @param raw
 	 *            已经加密的数据 *
@@ -215,13 +220,13 @@ public class RSAUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String decryptString(String string, String charset)
+	public String decryptString(String string, String charset)
 			throws Exception {
 		if (string == "" || string == null) {
 			return string;
 		}
 		byte[] en_result = HexToBytes.HexString2Bytes(string);
-		byte[] de_test = RSAUtil.decrypt(RSAUtil.getKeyPair().getPrivate(),
+		byte[] de_test = RSAUtil.decrypt(getKeyPair().getPrivate(),
 				en_result);
 		String e = new String(de_test, charset);
 		StringBuffer sb = new StringBuffer();
@@ -237,8 +242,8 @@ public class RSAUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String[] getPublicKeyString() throws Exception {
-		RSAPublicKey rsap = (RSAPublicKey) RSAUtil.getKeyPair().getPublic();
+	public String[] getPublicKeyString() throws Exception {
+		RSAPublicKey rsap = (RSAPublicKey) getKeyPair().getPublic();
 		String module = rsap.getModulus().toString(16);
 		String empoent = rsap.getPublicExponent().toString(16);
 		String[] strings = { module, empoent };
@@ -252,7 +257,7 @@ public class RSAUtil {
 	 *            *
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+/*	public static void main(String[] args) throws Exception {
 		// 获取公钥
 		String[] publicKeyString = RSAUtil.getPublicKeyString();
 		System.out.println(publicKeyString[0]);
@@ -263,5 +268,5 @@ public class RSAUtil {
 		byte[] de_test = decrypt(getKeyPair().getPrivate(), en_test);
 		System.out.println(new String(en_test));
 		System.out.println(new String(de_test));
-	}
+	}*/
 }
