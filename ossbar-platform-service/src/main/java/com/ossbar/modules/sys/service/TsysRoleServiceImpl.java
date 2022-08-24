@@ -157,7 +157,7 @@ public class TsysRoleServiceImpl implements TsysRoleService {
         tsysRoleprivilegeService.saveOrUpdate(tsysRole.getRoleId(), role.getMenuIdList());
         // 保存角色与数据权限关系
         tsysDataprivilegeService.saveOrUpdate(tsysRole.getRoleId(), role.getOrgIdList());
-        return R.ok("新增成功");
+        return R.ok("角色新增成功");
     }
 
     /**
@@ -218,6 +218,19 @@ public class TsysRoleServiceImpl implements TsysRoleService {
         tsysRoleMapper.deleteBatchRoleDataPrivilege(roleIds);
         tsysRoleMapper.deleteBatchRole(roleIds);
         return R.ok("角色删除成功");
+    }
+
+    /**
+     * 分配用户，将角色分配
+     *
+     * @param roleIds
+     * @return
+     * @author huj
+     * @data 2019年5月5日
+     */
+    @Override
+    public R setUser(String[] roleIds) {
+        return null;
     }
 
     /**

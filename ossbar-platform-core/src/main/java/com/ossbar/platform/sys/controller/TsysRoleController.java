@@ -90,4 +90,18 @@ public class TsysRoleController {
     public R delete(@RequestBody(required = false) String[] ids) {
         return tsysRoleService.deleteBatch(ids);
     }
+
+    /**
+     * 分配用户
+     * @author huj
+     * @data 2019年5月13日
+     * @param roleIds
+     * @return
+     */
+    @PostMapping("/setUser")
+    @PreAuthorize("hasAuthority('sys:role:setUser')")
+    @SysLog("分配用户")
+    public R setUser(@RequestBody(required = false) String[] roleIds) {
+        return tsysRoleService.setUser(roleIds);
+    }
 }

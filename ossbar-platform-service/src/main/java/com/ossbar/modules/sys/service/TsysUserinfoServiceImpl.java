@@ -1,17 +1,25 @@
 package com.ossbar.modules.sys.service;
 
-import java.util.List;
-import java.util.Map;
-
-import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
-import org.apache.dubbo.config.annotation.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.github.pagehelper.PageHelper;
+import com.ossbar.common.cbsecurity.dataprivilege.annotation.DataFilter;
+import com.ossbar.common.utils.ConvertUtil;
+import com.ossbar.common.utils.PageUtils;
+import com.ossbar.common.utils.Query;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysUserinfoService;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
+import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
+import com.ossbar.utils.constants.Constant;
+import org.apache.dubbo.config.annotation.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service(version = "1.0.0")
 @RestController
@@ -21,10 +29,29 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	@Autowired
 	private TsysUserinfoMapper tsysUserinfoMapper;
 
+	@Autowired
+	private ConvertUtil convertUtil;
+
 	@Override
+	@GetMapping("/query")
+	@SentinelResource("/sys/userinfo/query")
+	@DataFilter(tableAlias = "oo", customDataAuth = "", selfUser = false)
 	public R query(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+		// 构建查询条件对象Query
+		Query query = new Query(params);
+		PageHelper.startPage(query.getPage(), query.getLimit());
+		List<TsysUserinfo> userList = tsysUserinfoMapper.selectListByMap(query);
+		userList.stream().forEach(item -> {
+			// TODO 处理头像路径
+
+		});
+		Map<String, String> m = new HashMap<>();
+		m.put("sex", "sex");
+		m.put("userType", "userType");
+		m.put("status", "status");
+		convertUtil.convertParam(userList, m);
+		PageUtils pageUtil = new PageUtils(userList, query.getPage(), query.getLimit());
+		return R.ok().put(Constant.R_DATA, pageUtil);
 	}
 
 	@Override

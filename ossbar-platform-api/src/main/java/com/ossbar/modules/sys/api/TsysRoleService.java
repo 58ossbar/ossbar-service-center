@@ -59,4 +59,13 @@ public interface TsysRoleService {
      * @return
      */
     R deleteBatch(String[] roleIds);
+
+    /**
+     * 分配用户，将角色分配
+     * @author huj
+     * @data 2019年5月5日
+     * @param roleIds
+     * @return
+     */
+    R setUser(String[] roleIds);
 }
