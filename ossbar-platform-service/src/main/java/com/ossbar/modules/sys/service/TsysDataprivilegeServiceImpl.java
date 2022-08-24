@@ -1,10 +1,13 @@
 package com.ossbar.modules.sys.service;
 
 import com.ossbar.common.cbsecurity.dataprivilege.annotation.DataFilter;
+import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysDataprivilegeService;
 import com.ossbar.modules.sys.api.TsysOrgService;
+import com.ossbar.modules.sys.domain.TsysDataprivilege;
 import com.ossbar.modules.sys.domain.TsysRole;
 import com.ossbar.modules.sys.persistence.*;
+import com.ossbar.utils.tool.Identities;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.aspectj.lang.JoinPoint;
@@ -16,6 +19,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -127,5 +131,35 @@ public class TsysDataprivilegeServiceImpl implements TsysDataprivilegeService {
         }
         log.debug("数据权限sql：" + sqlFilter);
         return sqlFilter.toString();
+    }
+
+    /**
+     * <p>保存角色与数据权限关系</p>
+     *
+     * @param roleId
+     * @param orgIdList
+     * @return
+     * @author huj
+     * @data 2019年5月6日
+     */
+    @Override
+    public R saveOrUpdate(String roleId, List<String> orgIdList) {
+        // 先删除角色与数据权限关系
+        tsysDataprivilegeMapper.delete(roleId);
+        if (orgIdList == null || orgIdList.size() == 0) {
+            return R.ok();
+        }
+        List<TsysDataprivilege> insertList = new ArrayList<>();
+        orgIdList.stream().forEach(orgId -> {
+            TsysDataprivilege t = new TsysDataprivilege();
+            t.setRoleOrgid(Identities.uuid());
+            t.setRoleId(roleId);
+            t.setOrgId(orgId);
+            insertList.add(t);
+        });
+        if (insertList != null && insertList.size() > 0) {
+            tsysDataprivilegeMapper.insertBatch(insertList);
+        }
+        return R.ok();
     }
 }

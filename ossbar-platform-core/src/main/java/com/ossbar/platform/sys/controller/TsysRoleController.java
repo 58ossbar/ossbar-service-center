@@ -1,6 +1,7 @@
 package com.ossbar.platform.sys.controller;
 
 import com.ossbar.common.validator.group.AddGroup;
+import com.ossbar.common.validator.group.UpdateGroup;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysRoleService;
 import com.ossbar.modules.sys.dto.role.SaveRoleDTO;
@@ -39,6 +40,19 @@ public class TsysRoleController {
     }
 
     /**
+     * 查看
+     * @author huj
+     * @data 2019年5月29日
+     * @param id
+     * @return
+     */
+    @GetMapping("/view/{id}")
+    @PreAuthorize("hasAuthority('sys:role:view')")
+    public R selectObjectById(@PathVariable("id") String id) {
+        return tsysRoleService.view(id);
+    }
+
+    /**
      * 新增角色
      * @param role
      * @return
@@ -48,5 +62,32 @@ public class TsysRoleController {
     @SysLog("执行角色相关数据新增和修改保存")
     public R save(@RequestBody @Validated({AddGroup.class}) SaveRoleDTO role) {
         return tsysRoleService.save(role);
+    }
+
+    /**
+     * 新增角色
+     * @param role
+     * @return
+     */
+    @PostMapping("/update")
+    @PreAuthorize("hasAuthority('sys:role:edit')")
+    @SysLog("执行角色相关数据新增和修改保存")
+    public R update(@RequestBody @Validated({UpdateGroup.class}) SaveRoleDTO role) {
+        return tsysRoleService.update(role);
+    }
+
+    /**
+     * <p>删除</p>
+     * <p>角色表t_sys_role, 用户与角色关系t_user_role, 角色与菜单关系t_sys_roleprivilege, 角色与数据权限关系t_sys_dataprivilege</p>
+     * @author huj
+     * @data 2019年5月13日
+     * @param ids
+     * @return
+     */
+    @RequestMapping("/deletes")
+    @PreAuthorize("hasAuthority('sys:role:remove')")
+    @SysLog("删除角色")
+    public R delete(@RequestBody(required = false) String[] ids) {
+        return tsysRoleService.deleteBatch(ids);
     }
 }

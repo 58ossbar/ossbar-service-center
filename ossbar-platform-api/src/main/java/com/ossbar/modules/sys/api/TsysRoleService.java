@@ -24,6 +24,13 @@ public interface TsysRoleService {
     R query(Map<String, Object> map);
 
     /**
+     * 查看明细
+     * @param roleId
+     * @return
+     */
+    R view(String roleId);
+
+    /**
      * 根据角色id查询记录
      * @param roleId
      * @return
@@ -43,4 +50,13 @@ public interface TsysRoleService {
      * @return
      */
     R update(SaveRoleDTO role);
+
+    /**
+     * 批量删除角色信息
+     * @author huj
+     * @data 2019年5月5日
+     * @param roleIds
+     * @return
+     */
+    R deleteBatch(String[] roleIds);
 }

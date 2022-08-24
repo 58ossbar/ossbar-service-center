@@ -26,5 +26,14 @@
 		select menu_id
 		from t_sys_roleprivilege where role_id = #{value}
 	</select>
-
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into t_sys_roleprivilege
+		( id, role_id, menu_id )
+		values
+		<foreach collection="list" item="obj" separator="," >
+			(
+			    #{obj.id}, #{obj.roleId}, #{obj.menuId}
+			)
+		</foreach>
+	</insert>
 </mapper>

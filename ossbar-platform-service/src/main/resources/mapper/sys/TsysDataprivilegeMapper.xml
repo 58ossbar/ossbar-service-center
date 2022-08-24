@@ -68,5 +68,15 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			#{roleId}
 		</foreach>
 	</select>
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into T_SYS_DATAPRIVILEGE
+		( ROLE_ORGID, ORG_ID, ROLE_ID )
+		values
+		<foreach collection="list" item="obj" separator="," >
+			(
+			#{obj.roleOrgid}, #{obj.orgId}, #{obj.roleId}
+			)
+		</foreach>
+	</insert>
 </mapper>
 
