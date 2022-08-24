@@ -10,9 +10,11 @@ import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysPostService;
 import com.ossbar.modules.sys.domain.TsysPost;
 import com.ossbar.modules.sys.domain.TuserPost;
+import com.ossbar.modules.sys.dto.post.SavePostDTO;
 import com.ossbar.modules.sys.persistence.TsysPostMapper;
 import com.ossbar.modules.sys.persistence.TuserPostMapper;
 import com.ossbar.utils.constants.Constant;
+import com.ossbar.utils.tool.BeanUtils;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
 import com.ossbar.utils.tool.StrUtils;
@@ -95,13 +97,15 @@ public class TsysPostServiceImpl implements TsysPostService {
     /**
      * 新增岗位
      *
-     * @param tsysPost
+     * @param post
      * @return
      */
     @Override
     @PostMapping("/save")
     @SentinelResource("/sys/post/save")
-    public R save(@RequestBody TsysPost tsysPost) {
+    public R save(@RequestBody SavePostDTO post) {
+        TsysPost tsysPost = new TsysPost();
+        BeanUtils.copyProperties(tsysPost, post);
         tsysPost.setPostId(Identities.uuid());
         tsysPost.setCreateUserId(loginUtils.getLoginUserId());
         tsysPost.setCreateTime(DateUtils.getNowTimeStamp());
@@ -112,20 +116,25 @@ public class TsysPostServiceImpl implements TsysPostService {
     /**
      * 修改岗位
      *
-     * @param tsysPost
+     * @param post
      * @return
      */
     @Override
-    public R update(TsysPost tsysPost) {
+    public R update(SavePostDTO post) {
+        TsysPost tsysPost = new TsysPost();
+        BeanUtils.copyProperties(tsysPost, post);
         // 排序号操作
         Map<String, Object> map = new HashMap<String, Object>();
         // 先获取已经存在的排序号
         map.put("sort", tsysPost.getSort());
         List<TsysPost> list = tsysPostMapper.selectListByMap(map);
         if (list != null && list.size() > 0) {
-            TsysPost post = tsysPostMapper.selectObjectById(tsysPost.getPostId());
-            list.get(0).setSort(post.getSort()); // 将修改的这个岗位的排序，赋值给被修改的岗位排序号
-            tsysPostMapper.update(list.get(0));
+            TsysPost existedPost = tsysPostMapper.selectObjectById(tsysPost.getPostId());
+            if (existedPost != null) {
+                // 将修改的这个岗位的排序，赋值给被修改的岗位排序号
+                list.get(0).setSort(post.getSort());
+                tsysPostMapper.update(list.get(0));
+            }
         }
         tsysPost.setUpdateUserId(loginUtils.getLoginUserId());
         tsysPost.setUpdateTime(DateUtils.getNowTimeStamp());

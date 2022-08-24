@@ -130,8 +130,7 @@
 			#{roleId}
 		</foreach>
 	</delete>
-	<select id="selectObjectById" parameterType="java.lang.String"
-		resultMap="BaseResultMap">
+	<select id="selectObjectById" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from T_SYS_ROLE WHERE
@@ -167,5 +166,8 @@
 	<select id="selectRoleListByCreatorUserId" resultType="string">
 		select
 		role_id from t_sys_role where create_user_id = #{createUserId}
+	</select>
+	<select id="checkRoleNameUnique" resultType="string" resultMap="BaseResultMap">
+		select role_id from t_sys_role where role_name = #{roleName} limit 1
 	</select>
 </mapper>

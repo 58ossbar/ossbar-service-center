@@ -1,11 +1,10 @@
 package com.ossbar.modules.sys.persistence;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
-
 import com.ossbar.core.baseclass.persistence.BaseSqlMapper;
 import com.ossbar.modules.sys.domain.TsysRole;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * Title: 角色管理 Description: Copyright: Copyright (c) 2017
@@ -41,4 +40,11 @@ public interface TsysRoleMapper extends BaseSqlMapper<TsysRole> {
 	 * 删除角色对应的数据权限
 	 */
 	int deleteBatchRoleDataPrivilege(Object[] id);
+
+	/**
+	 *
+	 * @param roleName
+	 * @return
+	 */
+	TsysRole checkRoleNameUnique(String roleName);
 }

@@ -5,7 +5,7 @@ com:
     file-upload-path: /mnt/cbstp/uploads
     redisFlag: false
 server:
-  port: 9084
+  port: 19084
   servlet:
     context-path: /console
   tomcat:

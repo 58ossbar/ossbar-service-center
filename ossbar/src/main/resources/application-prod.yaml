@@ -7,7 +7,7 @@ com:
 publicKey:
 password:
 server:
-  port: 9084
+  port: 19084
   servlet:
     context-path: /console
   tomcat:

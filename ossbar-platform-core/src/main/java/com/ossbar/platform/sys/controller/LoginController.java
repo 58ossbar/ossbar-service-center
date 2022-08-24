@@ -13,7 +13,6 @@ import com.ossbar.modules.sys.vo.Oauth2ResponseVO;
 import com.ossbar.modules.sys.vo.SysUserVO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import com.ossbar.platform.core.common.handler.CustomResponseErrorHandler;
-import com.ossbar.platform.core.utils.RSAUtil;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.BeanUtils;
 import com.ossbar.utils.tool.StrUtils;
@@ -43,7 +42,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Base64.Encoder;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -79,19 +77,6 @@ public class LoginController {
 	@Value("${security.oauth2.client.client-secret:}")
 	private String clientSecret;
 
-	@Autowired
-	private RSAUtil rsaUtil;
-
-	@RequestMapping("getPublicKey")
-	public R getPublicKey(HttpSession session, HttpServletRequest request) throws Exception {
-		String[] publicKeyString = rsaUtil.getPublicKeyString();
-		Map<String, Object> map = new HashMap<>();
-		map.put("firstParam", publicKeyString[1]);
-		map.put("secondParam", "");
-		map.put("thirdParam", publicKeyString[0]);
-		return R.ok().put(Constant.R_DATA, map);
-	}
-
 	@RequestMapping("login")
 	public R doLogin(@RequestBody JSONObject data, HttpSession session, HttpServletRequest request) throws Exception {
 		String username = data.getString("username");
@@ -100,18 +85,14 @@ public class LoginController {
 		if (StrUtils.isEmpty(username) || StrUtils.isEmpty(password)) {
 			return R.error("账号或密码不能为空");
 		}
-		// 解密
-		username = rsaUtil.decryptString(username, request.getCharacterEncoding());
-		password = rsaUtil.decryptString(password, request.getCharacterEncoding());
+		// TODO 前面密文传输，可以在这里解密
 
 		Object captchaSession = session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
-
 		log.debug("用户输入的验证码:" + captcha);
 		log.debug("从session中拿验证码：" + session.getAttribute(Constants.KAPTCHA_SESSION_KEY));
-
 		session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);
-		if (StrUtils.isNull(captchaSession) || StrUtils.isNull(captcha)
-				|| !captcha.equalsIgnoreCase(captchaSession.toString())) {
+
+		if (StrUtils.isNull(captchaSession) || StrUtils.isNull(captcha) || !captcha.equalsIgnoreCase(captchaSession.toString())) {
 			//String msg = "验证码错误！";
 			//tsysLoginLogService.saveFailMessage(request, msg);
 			//return R.error(msg);

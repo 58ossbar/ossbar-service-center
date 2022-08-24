@@ -2,6 +2,7 @@ package com.ossbar.modules.sys.api;
 
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.domain.TsysPost;
+import com.ossbar.modules.sys.dto.post.SavePostDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -40,17 +41,17 @@ public interface TsysPostService {
 
     /**
      * 新增岗位
-     * @param tsysPost
+     * @param post
      * @return
      */
-    R save(TsysPost tsysPost);
+    R save(SavePostDTO post);
 
     /**
      * 修改岗位
-     * @param tsysPost
+     * @param post
      * @return
      */
-    R update(TsysPost tsysPost);
+    R update(SavePostDTO post);
 
     /**
      * 批量删除

@@ -134,7 +134,7 @@ public class CreatorblueExceptionAdvice {
 			errorMap.put(fieldError.getField(),fieldError.getDefaultMessage());
 		});
 		//return returnValue(R.error("表单参数校验不通过！"), request, response);
-		return R.error(500, "表单参数校验不通过！").put(Constant.R_DATA, errorMap);
+		return R.error(ExecStatus.COMMIT_DATA_ERROR.getCode(), ExecStatus.COMMIT_DATA_ERROR.getMsg()).put(Constant.R_DATA, errorMap);
 
 	}
 

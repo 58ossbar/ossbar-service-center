@@ -2,6 +2,7 @@ package com.ossbar.modules.sys.api;
 
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.domain.TsysRole;
+import com.ossbar.modules.sys.dto.role.SaveRoleDTO;
 
 import java.util.Map;
 
@@ -29,5 +30,17 @@ public interface TsysRoleService {
      */
     TsysRole selectObjectByRoleId(String roleId);
 
+    /**
+     * 新增角色
+     * @param role
+     * @return
+     */
+    R save(SaveRoleDTO role);
 
+    /**
+     * 修改角色
+     * @param role
+     * @return
+     */
+    R update(SaveRoleDTO role);
 }

@@ -73,16 +73,13 @@
 
 	<!-- 查询用户的所有菜单ID -->
 	<select id="selectAllMenuId" resultType="string">
-		select distinct
-		rm.menu_id from t_user_role ur
-		LEFT JOIN t_sys_roleprivilege rm on
-		ur.role_id = rm.role_id
+		select distinct rm.menu_id from t_user_role ur
+		LEFT JOIN t_sys_roleprivilege rm on ur.role_id = rm.role_id
 		where ur.user_id = #{userId}
 	</select>
 
 	<select id="selectObjectByUserName" resultType="com.ossbar.modules.sys.domain.TsysUserinfo">
-		select * from
-		t_sys_userinfo where username = #{username}
+		select * from t_sys_userinfo where username = #{username}
 	</select>
 	
 	<insert id="insert" parameterType="com.ossbar.modules.sys.domain.TsysUserinfo">

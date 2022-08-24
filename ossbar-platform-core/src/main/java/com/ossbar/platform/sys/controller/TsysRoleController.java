@@ -1,14 +1,14 @@
 package com.ossbar.platform.sys.controller;
 
+import com.ossbar.common.validator.group.AddGroup;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysRoleService;
+import com.ossbar.modules.sys.dto.role.SaveRoleDTO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -36,5 +36,17 @@ public class TsysRoleController {
     @SysLog("根据条件查询角色信息")
     public R query(@RequestParam Map<String, Object> params) {
         return tsysRoleService.query(params);
+    }
+
+    /**
+     * 新增角色
+     * @param role
+     * @return
+     */
+    @PostMapping("/save")
+    @PreAuthorize("hasAuthority('sys:role:add')")
+    @SysLog("执行角色相关数据新增和修改保存")
+    public R save(@RequestBody @Validated({AddGroup.class}) SaveRoleDTO role) {
+        return tsysRoleService.save(role);
     }
 }

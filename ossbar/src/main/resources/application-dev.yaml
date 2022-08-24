@@ -1,7 +1,7 @@
 com:
   creatorblue:
     anno-filter: /druid/**, /user/getPublicKey, /user/login, /user/logout, /index.html, /user/captcha.jpg, /user/querySettings, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.ttf, /**/*.woff, /**/*.js, /**/*.css, /**/*.jpg, /**/*.jpeg, /**/*.png, /**/*.git, /**/*.bmp, /doLogin, /logoutRest, /cbeditor/**
-    key-file-upload-path: D:/uploads/RSAKey.txt
+    key-file-upload-path: E:/uploads/RSAKey.txt
     file-upload-path: D:/uploads
     file-access-path: /uploads
     cb-upload-paths: /default, /dict-img, /sys-user-img, /settings-img, /site-img, /avd-img, /news-img, /teacher-img, /stustar-img, /partner-img
@@ -16,7 +16,7 @@ com:
     schedule-cluster: false
     schedule-autostart: true
 server:
-  port: 9084
+  port: 19084
   servlet:
     context-path: /console
   tomcat:
