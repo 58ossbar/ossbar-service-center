@@ -80,4 +80,23 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			#{userId}
 		</foreach>
 	</delete>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into T_ORG_USER
+		(
+			orguser_id ,
+			ORG_ID ,
+			USER_ID ,
+			IS_MAIN
+		)
+		values
+		<foreach collection="list" item="obj" separator="," >
+			(
+			#{obj.orguserId,jdbcType=VARCHAR},
+			#{obj.orgId,jdbcType=VARCHAR},
+			#{obj.userId,jdbcType=VARCHAR},
+			#{obj.isMain,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
 </mapper>

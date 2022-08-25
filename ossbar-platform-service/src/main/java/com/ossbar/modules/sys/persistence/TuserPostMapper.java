@@ -21,4 +21,10 @@ public interface TuserPostMapper extends BaseSqlMapper<TuserPost> {
 
     List<TuserPost> selectListByPostIds(String[] ids);
 
+    /**
+     * 批量新增
+     * @param list
+     */
+    void insertBatch(List<TuserPost> list);
+
 }

@@ -1,10 +1,11 @@
 package com.ossbar.modules.sys.api;
 
-import java.util.List;
-import java.util.Map;
-
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
+import com.ossbar.modules.sys.dto.user.SaveUserDTO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>系统用户api</p>
@@ -16,6 +17,12 @@ import com.ossbar.modules.sys.domain.TsysUserinfo;
  * @date 2019年5月5日
  */
 public interface TsysUserinfoService {
+
+	/**
+	 * 从参数中获取默认密码
+	 * @return
+	 */
+	String getDefaultPasswordFormParameters();
 
 	/**
 	 * <p>根据条件查询记录(所有用户列表)</p>
@@ -61,7 +68,7 @@ public interface TsysUserinfoService {
 	 * @param user
 	 * @return
 	 */
-	R save(TsysUserinfo user, String attachId);
+	R save(SaveUserDTO user);
 	
 	/**
 	 * <p>修改</p>
@@ -69,7 +76,7 @@ public interface TsysUserinfoService {
 	 * @data 2019年5月7日
 	 * @return
 	 */
-	R update(TsysUserinfo user, String attachId);
+	R update(SaveUserDTO user);
 	
 	/**
 	 * <p>删除</p>

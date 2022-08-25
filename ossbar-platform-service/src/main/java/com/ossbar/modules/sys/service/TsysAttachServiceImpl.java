@@ -6,11 +6,19 @@ import com.ossbar.modules.sys.domain.TsysAttach;
 import com.ossbar.modules.sys.persistence.TsysAttachMapper;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
+import com.ossbar.utils.tool.StrUtils;
 import io.swagger.annotations.Api;
 import org.apache.dubbo.config.annotation.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 附件管理
@@ -23,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/sys/attach")
 public class TsysAttachServiceImpl implements TsysAttachService {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private TsysAttachMapper tsysAttachMapper;
@@ -95,7 +105,20 @@ public class TsysAttachServiceImpl implements TsysAttachService {
      */
     @Override
     public void updateAttachForAdd(String attachId, String pkId, String fileType) {
-
+        if (StrUtils.isEmpty(attachId) || StrUtils.isEmpty(pkId) || StrUtils.isEmpty(fileType)) {
+            return;
+        }
+        TsysAttach attach = tsysAttachMapper.selectObjectById(attachId);
+        if (attach == null) {
+            return;
+        }
+        // 修改attach链接的id
+        attach.setPkid(pkId);
+        // 设置成绑定状态，0未绑定状态，1绑定状态
+        attach.setFileState("1");
+        // 更新入库
+        attach.setUpdateTime(DateUtils.getNowTimeStamp());
+        tsysAttachMapper.update(attach);
     }
 
     /**
@@ -107,6 +130,38 @@ public class TsysAttachServiceImpl implements TsysAttachService {
      */
     @Override
     public void updateAttachForEdit(String attachId, String pkId, String fileType) {
-
+        if (StrUtils.isEmpty(attachId) || StrUtils.isEmpty(pkId) || StrUtils.isEmpty(fileType)) {
+            return;
+        }
+        TsysAttach attach = tsysAttachMapper.selectObjectById(attachId);
+        if (attach == null) {
+            return;
+        }
+        // 修改attach链接的id
+        attach.setPkid(pkId);
+        // 设置成绑定状态，0未绑定状态，1绑定状态
+        attach.setFileState("1");
+        // 更新入库
+        attach.setUpdateTime(DateUtils.getNowTimeStamp());
+        tsysAttachMapper.update(attach);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("pkid", pkId);
+        map.put("fileType", fileType);
+        // 文件状态为绑定状态
+        map.put("fileState", "1");
+        List<TsysAttach> attachs = tsysAttachMapper.selectListByMap(map);
+        attachs.stream().forEach(a -> {
+            if (a.getAttachId().equals(attachId)) {
+                return;
+            }
+            log.debug("被删除的文件：" + a.getFileUrl());
+            if (StrUtils.isNotEmpty(a.getFileUrl())) {
+                File file = new File(a.getFileUrl());
+                if (file.exists() && file.isFile()) {
+                    file.delete();
+                }
+            }
+            tsysAttachMapper.delete(a.getAttachId());
+        });
     }
 }

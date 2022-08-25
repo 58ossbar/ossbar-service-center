@@ -76,5 +76,23 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			</foreach>
 		</where>
 	</select>
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into T_USER_POST
+		(
+		USER_JOBID ,
+		USER_ID ,
+		POST_ID ,
+		IS_MAIN
+		)
+		values
+		<foreach collection="list" item="obj" separator="," >
+			(
+			#{obj.userJobid,jdbcType=VARCHAR},
+			#{obj.userId,jdbcType=VARCHAR},
+			#{obj.postId,jdbcType=VARCHAR},
+			#{obj.isMain,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
 </mapper>
 

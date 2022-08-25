@@ -3,24 +3,29 @@ package com.ossbar.modules.sys.service;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.github.pagehelper.PageHelper;
 import com.ossbar.common.cbsecurity.dataprivilege.annotation.DataFilter;
-import com.ossbar.common.utils.ConvertUtil;
-import com.ossbar.common.utils.PageUtils;
-import com.ossbar.common.utils.Query;
+import com.ossbar.common.constants.ExecStatus;
+import com.ossbar.common.utils.*;
 import com.ossbar.core.baseclass.domain.R;
-import com.ossbar.modules.sys.api.TsysUserinfoService;
+import com.ossbar.modules.sys.api.*;
+import com.ossbar.modules.sys.domain.TsysParameter;
+import com.ossbar.modules.sys.domain.TsysRole;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
+import com.ossbar.modules.sys.dto.user.SaveUserDTO;
+import com.ossbar.modules.sys.persistence.TsysParameterMapper;
+import com.ossbar.modules.sys.persistence.TsysRoleMapper;
 import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
 import com.ossbar.utils.constants.Constant;
+import com.ossbar.utils.tool.BeanUtils;
+import com.ossbar.utils.tool.DateUtils;
+import com.ossbar.utils.tool.Identities;
+import com.ossbar.utils.tool.TicketDesUtil;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service(version = "1.0.0")
 @RestController
@@ -29,10 +34,52 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 
 	@Autowired
 	private TsysUserinfoMapper tsysUserinfoMapper;
+	@Autowired
+	private TsysParameterMapper tsysParameterMapper;
+	@Autowired
+	private TsysRoleMapper tsysRoleMapper;
+
+	@Autowired
+	private TsysAttachService tsysAttachService;
+	@Autowired
+	private TuserRoleService tuserRoleService;
+	@Autowired
+	private TorgUserService torgUserService;
+	@Autowired
+	private TuserPostService tuserPostService;
 
 	@Autowired
 	private ConvertUtil convertUtil;
+	@Autowired
+	private ServiceLoginUtil serviceLoginUtil;
+	@Autowired
+	private UploadUtils uploadUtils;
 
+	/**
+	 * 从参数中获取默认密码
+	 *
+	 * @return
+	 */
+	@Override
+	public String getDefaultPasswordFormParameters() {
+		String password = "123456";
+		Map<String, Object> map = new HashMap<>();
+		map.put("paraname", "系统用户默认密码");
+		//map.put("paraType", "password");
+		List<TsysParameter> list = tsysParameterMapper.selectListByMap(map);
+		if (list.size() > 0 && list != null) {
+			if (list.get(0).getParano() != null && !"".equals(list.get(0).getParano()) && list.get(0).getParano().length() >= 6) {
+				password = list.get(0).getParano();
+			}
+		}
+		return password;
+	}
+
+	/**
+	 * 根据条件分页查询用户
+	 * @param params 查询条件
+	 * @return
+	 */
 	@Override
 	@GetMapping("/query")
 	@SentinelResource("/sys/userinfo/query")
@@ -46,7 +93,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		List<TsysUserinfo> userList = tsysUserinfoMapper.selectListByMap(query);
 		userList.stream().forEach(item -> {
 			// TODO 处理头像路径
-
+			item.setUserimg(uploadUtils.stitchingPath(item.getUserimg(), 2));
 		});
 		Map<String, String> m = new HashMap<>();
 		m.put("sex", "sex");
@@ -75,14 +122,62 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		return null;
 	}
 
+	/**
+	 * 新增用户
+	 * @param user
+	 * @return
+	 */
 	@Override
-	public R save(TsysUserinfo user, String attachId) {
-		// TODO Auto-generated method stub
-		return null;
+	@PostMapping("/save")
+	@SentinelResource("/sys/userinfo/save")
+	@Transactional(rollbackFor = Exception.class)
+	public R save(@RequestBody SaveUserDTO user) {
+		TsysUserinfo tsysUserinfo = new TsysUserinfo();
+		BeanUtils.copyProperties(tsysUserinfo, user);
+		// 验证登陆名是否唯一
+		TsysUserinfo existedUser = tsysUserinfoMapper.selectObjectByUserName(user.getUsername());
+		if (existedUser != null) {
+			return R.error("登陆账号已经存在，需唯一，请重新输入！");
+		}
+		// 验证手机号是否唯一
+		TsysUserinfo existedUser2 = tsysUserinfoMapper.selectObjectByMobile(user.getMobile());
+		if (existedUser2 != null) {
+			return R.error("该手机号码已被绑定，请重新输入");
+		}
+		// 主机构在集合的第一个位置
+		if (user.getOrgId() != null) {
+			user.getOrgIdList().add(0, user.getOrgId());
+		}
+		// 默认密码-从参数表中获取
+		String defautPwd = getDefaultPasswordFormParameters();
+		// 加密
+		String pwd = TicketDesUtil.encryptWithMd5(defautPwd, null);
+		// 组装数据
+		String uuid = Identities.uuid();
+		tsysUserinfo.setUserId(uuid);
+		tsysUserinfo.setCreateUserId(serviceLoginUtil.getLoginUserId());
+		tsysUserinfo.setCreateTime(DateUtils.getNowTimeStamp());
+		tsysUserinfo.setUpdateTime(tsysUserinfo.getCreateTime());
+		// 保存用户信息
+		tsysUserinfoMapper.insert(tsysUserinfo);
+		// 如果上传了资源文件
+		tsysAttachService.updateAttachForAdd(tsysUserinfo.getUserimg(), uuid,  "2");
+		// TODO 保存用户与角色的关系
+		//tuserRoleService.saveOrUpdate(Arrays.asList())
+		// 保存用户与机构的关系
+		torgUserService.saveOrUpdate(tsysUserinfo.getUserId(), user.getOrgIdList());
+		// 保存用户与岗位的关系
+		tuserPostService.saveOrUpdate(tsysUserinfo.getUserId(), Arrays.asList(user.getPostId()));
+		return R.ok("用户新增成功");
 	}
 
+	/**
+	 * 修改用户
+	 * @param user
+	 * @return
+	 */
 	@Override
-	public R update(TsysUserinfo user, String attachId) {
+	public R update(SaveUserDTO user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -101,7 +196,18 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 
 	@Override
 	public R view(String id) {
-		// TODO Auto-generated method stub
+		TsysUserinfo user = tsysUserinfoMapper.selectObjectById(id);
+		if (user == null) {
+			return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
+		}
+		Map<String, Object> map = new HashMap<>();
+		// 获取用户所属的角色列表
+		map.put("userId", user.getUserId());
+		List<TsysRole> roleList = tsysRoleMapper.selectListByMap(map);
+		List<String> roleIds = roleList.stream().map(a -> a.getRoleId()).collect(Collectors.toList());
+		List<String> roleNames = roleList.stream().map(a -> a.getRoleName()).collect(Collectors.toList());
+		// 获取岗位信息
+		//List<TsysPost> postList = tsysPostService.selectListByMap(m);
 		return null;
 	}
 

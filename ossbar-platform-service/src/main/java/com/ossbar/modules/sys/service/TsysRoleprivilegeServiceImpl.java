@@ -62,6 +62,6 @@ public class TsysRoleprivilegeServiceImpl implements TsysRoleprivilegeService {
      */
     @Override
     public List<String> selectMenuListByRoleId(String roleId) {
-        return null;
+        return tsysRoleprivilegeMapper.selectMenuListByRoleId(roleId);
     }
 }

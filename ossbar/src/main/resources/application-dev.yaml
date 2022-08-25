@@ -2,7 +2,8 @@ com:
   creatorblue:
     anno-filter: /druid/**, /user/getPublicKey, /user/login, /user/logout, /index.html, /user/captcha.jpg, /user/querySettings, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.ttf, /**/*.woff, /**/*.js, /**/*.css, /**/*.jpg, /**/*.jpeg, /**/*.png, /**/*.git, /**/*.bmp, /doLogin, /logoutRest, /cbeditor/**
     key-file-upload-path: E:/uploads/RSAKey.txt
-    file-upload-path: E:/uploads
+    # 最后面加个斜杠，不然出不来
+    file-upload-path: E:/uploads/
     file-access-path: /uploads
     cb-upload-paths: /default, /dict-img, /sys-user-img, /settings-img, /site-img, /avd-img, /news-img, /teacher-img, /stustar-img, /partner-img
     cbeditor-image-path: cbeditor-image

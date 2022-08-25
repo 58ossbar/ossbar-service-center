@@ -1,12 +1,11 @@
 package com.ossbar.modules.sys.persistence;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Mapper;
-
 import com.ossbar.core.baseclass.persistence.BaseSqlMapper;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Title: 系统用户 Description: Copyright: Copyright (c) 2017
@@ -42,4 +41,11 @@ public interface TsysUserinfoMapper extends BaseSqlMapper<TsysUserinfo> {
 	 * 查询所有用户
 	 */
 	List<TsysUserinfo> getAllUserinfo();
+
+	/**
+	 * 根据唯一手机号码查询用户信息
+	 * @param mobile
+	 * @return
+	 */
+	TsysUserinfo selectObjectByMobile(String mobile);
 }

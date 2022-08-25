@@ -1,10 +1,10 @@
 package com.ossbar.modules.sys.persistence;
-import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 
 import com.ossbar.core.baseclass.persistence.BaseSqlMapper;
 import com.ossbar.modules.sys.domain.TorgUser;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 /**
  * <p> Title: </p>
  * <p> Description:</p>
@@ -17,6 +17,13 @@ import com.ossbar.modules.sys.domain.TorgUser;
 
 @Mapper
 public interface TorgUserMapper extends BaseSqlMapper<TorgUser> {
+
 	List<String> selectListByUserId(String userId);
+
+	/**
+	 * 批量新增
+	 * @param list
+	 */
+	void insertBatch(List<TorgUser> list);
 	
 }

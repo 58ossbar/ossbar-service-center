@@ -4,6 +4,7 @@ import com.ossbar.common.validator.group.AddGroup;
 import com.ossbar.common.validator.group.UpdateGroup;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysPostService;
+import com.ossbar.modules.sys.domain.TsysPost;
 import com.ossbar.modules.sys.dto.post.SavePostDTO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import com.ossbar.utils.constants.Constant;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -117,5 +119,18 @@ public class TsysPostController {
     @GetMapping("/getMaxSortNum")
     public R getMaxSortNum() {
         return R.ok().put(Constant.R_DATA, tsysPostService.getMaxSortNum());
+    }
+
+    /**
+     * 无分页查询所有岗位
+     * @author huj
+     * @data 2019年5月30日
+     * @return
+     */
+    @GetMapping("/queryAll")
+    @PreAuthorize("hasAuthority('sys:tsyspost:query')")
+    public R queryNoPage(@RequestParam Map<String, Object> params) {
+        List<TsysPost> tsysPostList = tsysPostService.selectListByMap(params);
+        return R.ok().put(Constant.R_DATA, tsysPostList);
     }
 }

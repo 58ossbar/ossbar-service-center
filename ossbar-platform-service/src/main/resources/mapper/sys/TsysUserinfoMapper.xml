@@ -79,9 +79,13 @@
 	</select>
 
 	<select id="selectObjectByUserName" resultType="com.ossbar.modules.sys.domain.TsysUserinfo">
-		select * from t_sys_userinfo where username = #{username}
+		select * from t_sys_userinfo where username = #{username} limit 1
 	</select>
-	
+
+	<select id="selectObjectByMobile" resultType="com.ossbar.modules.sys.domain.TsysUserinfo">
+		select * from t_sys_userinfo where mobile = #{mobile} limit 1
+	</select>
+
 	<insert id="insert" parameterType="com.ossbar.modules.sys.domain.TsysUserinfo">
 	insert into t_sys_userinfo
 	(
