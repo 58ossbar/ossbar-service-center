@@ -14,12 +14,11 @@ import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysDataprivilegeService;
 import com.ossbar.modules.sys.api.TsysRoleService;
 import com.ossbar.modules.sys.api.TsysRoleprivilegeService;
+import com.ossbar.modules.sys.api.TuserRoleService;
 import com.ossbar.modules.sys.domain.TsysRole;
+import com.ossbar.modules.sys.dto.role.SaveRoleAssignUserDTO;
 import com.ossbar.modules.sys.dto.role.SaveRoleDTO;
-import com.ossbar.modules.sys.persistence.TsysDataprivilegeMapper;
-import com.ossbar.modules.sys.persistence.TsysRoleMapper;
-import com.ossbar.modules.sys.persistence.TsysRoleprivilegeMapper;
-import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
+import com.ossbar.modules.sys.persistence.*;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.BeanUtils;
 import com.ossbar.utils.tool.DateUtils;
@@ -33,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,12 +50,16 @@ public class TsysRoleServiceImpl implements TsysRoleService {
     @Autowired
     private TsysRoleMapper tsysRoleMapper;
     @Autowired
+    private TuserRoleMapper tuserRoleMapper;
+    @Autowired
     private TsysUserinfoMapper tsysUserinfoMapper;
 
     @Autowired
     private TsysRoleprivilegeService tsysRoleprivilegeService;
     @Autowired
     private TsysDataprivilegeService tsysDataprivilegeService;
+    @Autowired
+    private TuserRoleService tuserRoleService;
     @Autowired
     private TsysRoleprivilegeMapper tsysRoleprivilegeMapper;
     @Autowired
@@ -229,8 +233,46 @@ public class TsysRoleServiceImpl implements TsysRoleService {
      * @data 2019年5月5日
      */
     @Override
+    @RequestMapping("/sys/role/setUser")
+    @SentinelResource("/sys/role/setUser")
+    @CacheEvict(value = "authorization_cache", allEntries = true)
     public R setUser(String[] roleIds) {
-        return null;
+        if (roleIds == null || roleIds.length == 0) {
+            return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
+        }
+        // 获取角色信息
+        Map<String, Object> map = new HashMap<>();
+        map.put("roleIdArray", roleIds);
+        List<TsysRole> list = tsysRoleMapper.selectListByMap(map);
+        // 查询角色用户
+        list.stream().forEach(tsysRole -> {
+            tsysRole.setUserIdList(tuserRoleMapper.selectUserListByRoleId(tsysRole.getRoleId()));
+        });
+        if (roleIds.length >= 2) {
+            for (int i = 0; i < list.size(); i++) {
+                if (i > 0) {
+                    list.get(i).getUserIdList().retainAll(list.get(i-1).getUserIdList());
+                }
+            }
+        }
+        return R.ok().put(Constant.R_DATA, list).put("intersection", list.get(list.size()-1).getUserIdList());
+    }
+
+    /**
+     * 保存-分配用户
+     *
+     * @param role
+     * @return
+     * @author huj
+     * @data 2019年5月6日
+     */
+    @Override
+    @RequestMapping("/saveRoleUser")
+    @SentinelResource("/sys/role/saveRoleUser")
+    @CacheEvict(value = "authorization_cache", allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    public R saveRoleUser(SaveRoleAssignUserDTO role) {
+        return tuserRoleService.saveOrUpdate(role.getRoleIdList(), role.getUserIdList());
     }
 
     /**

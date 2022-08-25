@@ -51,4 +51,15 @@
 			#{userId}
 		</foreach>
 	</delete>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into t_user_role
+		( id, user_id, role_id )
+		values
+		<foreach collection="list" item="obj" separator="," >
+			(
+			#{obj.id}, #{obj.userId}, #{obj.roleId}
+			)
+		</foreach>
+	</insert>
 </mapper>

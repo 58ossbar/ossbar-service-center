@@ -4,6 +4,7 @@ import com.ossbar.common.validator.group.AddGroup;
 import com.ossbar.common.validator.group.UpdateGroup;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysRoleService;
+import com.ossbar.modules.sys.dto.role.SaveRoleAssignUserDTO;
 import com.ossbar.modules.sys.dto.role.SaveRoleDTO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import org.apache.dubbo.config.annotation.Reference;
@@ -92,7 +93,7 @@ public class TsysRoleController {
     }
 
     /**
-     * 分配用户
+     * 分配用户，获取拥有相关角色的用户，用于回显选中数据
      * @author huj
      * @data 2019年5月13日
      * @param roleIds
@@ -101,7 +102,22 @@ public class TsysRoleController {
     @PostMapping("/setUser")
     @PreAuthorize("hasAuthority('sys:role:setUser')")
     @SysLog("分配用户")
-    public R setUser(@RequestBody(required = false) String[] roleIds) {
+    public R setUser(@RequestBody String[] roleIds) {
         return tsysRoleService.setUser(roleIds);
+    }
+
+    /**
+     * 分配用户，保存用户角色，表t_user_role
+     * @author huj
+     * @data 2019年5月16日
+     * @param role
+     * @param role
+     * @return
+     */
+    @RequestMapping("/saveRoleUser")
+    @PreAuthorize("hasAuthority('sys:role:save')")
+    @SysLog("分配用户-保存用户与角色关系")
+    public R saveRoleUser(@RequestBody SaveRoleAssignUserDTO role) {
+        return tsysRoleService.saveRoleUser(role);
     }
 }

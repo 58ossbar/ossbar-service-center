@@ -1,11 +1,10 @@
 package com.ossbar.modules.sys.persistence;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
-
 import com.ossbar.core.baseclass.persistence.BaseSqlMapper;
 import com.ossbar.modules.sys.domain.TuserRole;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * Title: 用户与角色对应关系 Description: Copyright: Copyright (c) 2017
@@ -29,4 +28,10 @@ public interface TuserRoleMapper extends BaseSqlMapper<TuserRole> {
 	 * 根据角色ID删除角色与用户关系数据
 	 */
 	int deleteByRole(String roleId);
+
+	/**
+	 * 批量新增
+	 * @param list
+	 */
+	void insertBatch(List<TuserRole> list);
 }

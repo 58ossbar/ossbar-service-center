@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	@SentinelResource("/sys/userinfo/query")
 	@DataFilter(tableAlias = "oo", customDataAuth = "", selfUser = false)
 	public R query(Map<String, Object> params) {
+		// 处理前端传递的机构id
+		handleQueryParams(params);
 		// 构建查询条件对象Query
 		Query query = new Query(params);
 		PageHelper.startPage(query.getPage(), query.getLimit());
@@ -191,4 +194,21 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		return 0;
 	}
 
+	/**
+	 * 处理一些查询条件
+	 * @param params
+	 */
+	private void handleQueryParams(Map<String, Object> params) {
+		if (params != null) {
+			if (params.get("orgIds") != null && !"".equals(params.get("orgIds"))) {
+				String ids = params.get("orgIds").toString();
+				List<String> list = new ArrayList<>();
+				String[] orgIds = ids.split(",");
+				for (String string : orgIds) {
+					list.add(string);
+				}
+				params.put("orgIds", list);
+			}
+		}
+	}
 }

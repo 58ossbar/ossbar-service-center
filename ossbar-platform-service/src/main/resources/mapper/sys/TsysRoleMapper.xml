@@ -140,11 +140,20 @@
 	<select id="selectListByMap" resultType="com.ossbar.modules.sys.domain.TsysRole">
 		select * from t_sys_role
 		<where>
+			<if test="roleIdArray != null and roleIdArray.length > 0">
+				and role_id in
+				<foreach collection="roleIdArray" item="roleId" open="(" separator="," close=")">
+					#{roleId}
+				</foreach>
+			</if>
 			<if test="roleName != null and roleName.trim() != ''">
 				and role_name like concat('%',#{roleName},'%')
 			</if>
 			<if test="orgId != null and orgId.trim() != ''">
 				and org_id like concat('%',#{orgId},'%')
+			</if>
+			<if test="status != null and status.trim() != ''">
+				and status = #{status}
 			</if>
 			<if test="createUserId != null">
 				and create_user_id = #{createUserId}

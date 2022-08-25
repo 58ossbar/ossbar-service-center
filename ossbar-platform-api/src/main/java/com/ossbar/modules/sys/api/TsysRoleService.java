@@ -2,6 +2,7 @@ package com.ossbar.modules.sys.api;
 
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.domain.TsysRole;
+import com.ossbar.modules.sys.dto.role.SaveRoleAssignUserDTO;
 import com.ossbar.modules.sys.dto.role.SaveRoleDTO;
 
 import java.util.Map;
@@ -68,4 +69,13 @@ public interface TsysRoleService {
      * @return
      */
     R setUser(String[] roleIds);
+
+    /**
+     * 保存-分配用户
+     * @author huj
+     * @data 2019年5月6日
+     * @param role
+     * @return
+     */
+    R saveRoleUser(SaveRoleAssignUserDTO role);
 }
