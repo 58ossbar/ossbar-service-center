@@ -1,5 +1,6 @@
 package com.ossbar.modules.sys.service;
 
+import com.ossbar.common.utils.ServiceLoginUtil;
 import com.ossbar.modules.sys.api.TsysAttachService;
 import com.ossbar.modules.sys.domain.TsysAttach;
 import com.ossbar.modules.sys.persistence.TsysAttachMapper;
@@ -25,49 +26,64 @@ public class TsysAttachServiceImpl implements TsysAttachService {
 
     @Autowired
     private TsysAttachMapper tsysAttachMapper;
+    @Autowired
+    private ServiceLoginUtil serviceLoginUtil;
 
     /**
      * 文件上传时候保存附件记录，根据前端组件的特性,需要在实际点击保存的时候获取attach对象进行id的绑定。
      *
-     * @param oldNamePc      原始名称
+     * @param contentType     原始名称
      * @param fileSize       文件大小
-     * @param extensionPc    文件后缀
-     * @param imgNamePc      链接地址
-     * @param longNamePc     文件名称
-     * @param fileType       文件类型 1、字典
-     * @param uploadUserId 上传人名称
+     * @param newFileName    链接地址，存新生成的uuid名称，示例值：296096de-dbd5-4c32-b897-d46fb91dc885.jpeg
+     * @param longNameAbsolutePath     文件名称，完整的路径，示例值：D:/uploads/avd-img/296096de-dbd5-4c32-b897-d46fb91dc885.jpeg /mnt/cbstp/uploads/teacher-img/912e6cae-13b6-46c3-b6b6-12981f1c6370.jpeg
+     * @param fileType       文件类型 对应属性文件中com.creatorblue.cb-upload-paths的下标
      * @return attachId 附件id
      * @author huangwb
      * @data 2019年5月30日
      */
     @Override
-    public String uploadFileInsertAttach(String oldNamePc, String fileSize, String extensionPc, String imgNamePc, String longNamePc, String fileType, String uploadUserId) {
+    public String uploadFileInsertAttach(String contentType, Long fileSize, String newFileName, String longNameAbsolutePath, String fileType) {
         try {
             TsysAttach tsysAttach = new TsysAttach();
+            String uuid = Identities.uuid();
+            tsysAttach.setAttachId(uuid);
+            // 文件原始名称类型
+            tsysAttach.setFileName(contentType);
             // 文件后缀
-            tsysAttach.setFileSuffix(extensionPc);
-            // 文件名称
-            tsysAttach.setFileUrl(longNamePc);
-            // 链接地址
-            tsysAttach.setLjUrl(imgNamePc);
+            tsysAttach.setFileSuffix(handleFileSuffixByContentType(contentType));
+            // 文件名称，绝对路径
+            tsysAttach.setFileUrl(longNameAbsolutePath);
+            // 链接地址，uuid新文件名称
+            tsysAttach.setLjUrl(newFileName);
             // 文件大小
-            tsysAttach.setFileSize(fileSize);
+            tsysAttach.setFileSize(String.valueOf(fileSize));
             // 文件状态 0未绑定
             tsysAttach.setFileState("0");
-            // 文件原始名称
-            tsysAttach.setFileName(oldNamePc);
             // 设置文件为字典类型
             tsysAttach.setFileType(fileType);
             // 创建用户ID
-            tsysAttach.setCreateUserId(uploadUserId);
+            tsysAttach.setCreateUserId(serviceLoginUtil.getLoginUserId());
             tsysAttach.setCreateTime(DateUtils.getNowTimeStamp());
-            String uuid = Identities.uuid();
-            tsysAttach.setAttachId(uuid);
+            // 入库
             tsysAttachMapper.insert(tsysAttach);
             return uuid;
         } catch (Exception e) {
         }
         return null;
+    }
+
+    /**
+     * 根据这种值：image/jpeg、image/jpg、image/png等获取后缀名
+     * @param contentType 必传参数，示例值：image/jpeg、image/jpg、image/png
+     * @return
+     */
+    private String handleFileSuffixByContentType(String contentType) {
+        if (contentType == null || "".equals(contentType)) {
+            return "";
+        }
+        // 获取图片后缀格式
+        String extensionPc = "." + contentType.substring(contentType.lastIndexOf("/") + 1);
+        return extensionPc;
     }
 
     /**

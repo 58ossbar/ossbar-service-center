@@ -1,28 +1,24 @@
 package com.ossbar.platform.core.common.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysAttachService;
 import com.ossbar.utils.tool.Identities;
 import com.ossbar.utils.tool.StrUtils;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.dubbo.config.annotation.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import net.coobird.thumbnailator.Thumbnails;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 图片上传工具类
@@ -33,6 +29,9 @@ import net.coobird.thumbnailator.Thumbnails;
 @Component
 @RefreshScope
 public class UploadFileUtils {
+
+	private Logger log = LoggerFactory.getLogger(getClass());
+
 	@Reference(version = "1.0.0")
 	private TsysAttachService tsysAttachService;
 
@@ -43,9 +42,6 @@ public class UploadFileUtils {
 	public String creatorblueFieUploadPath;
 	@Value("${com.creatorblue.cb-upload-paths:default}")
 	private String cbUploadPaths;
-	
-	@Autowired
-	private UploadFileUtils uploadFileUtils;
 
 	// 匹配后缀图片格式
 	private final List<String> imgSuffixList = Arrays.asList(".JPEG", ".PNG", ".JPG", ".GIF", ".BMP");
@@ -68,7 +64,7 @@ public class UploadFileUtils {
 			if (audioSuffixList.contains(extension.toUpperCase())) {
 				try {
 					if(StrUtils.isEmpty(fileDir)) {
-						fileDir = uploadFileUtils.getPathByParaNo(fileType);
+						fileDir = getPathByParaNo(fileType);
 					}
 					newFileName = Identities.uuid() + extension;
 					// 判断目录是否存在 不存在则创建指定的目录
@@ -81,9 +77,7 @@ public class UploadFileUtils {
 					// 生成文件
 					file.transferTo(new File(longName));
 					// 上传成功之后保存在附件中添加一条数据
-					String atachId = tsysAttachService.uploadFileInsertAttach(oldName, extension,
-							String.valueOf(file.getSize()), newFileName, longName, fileType,
-							loginUtils.getLoginUserId());
+					String atachId = tsysAttachService.uploadFileInsertAttach(oldName, file.getSize(), newFileName, longName, fileType);
 					// 返回给前端参数
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("fileName", newFileName);
@@ -99,58 +93,80 @@ public class UploadFileUtils {
 		}
 		return R.ok();
 	}
-	
+
+	/**
+	 * 上传文件
+	 * @author huj
+	 * @param multipartFile 必传参数
+	 * @param fileType
+	 * @return
+	 */
+	public R uploadImage(MultipartFile multipartFile, String fileType) {
+		return uploadImage(multipartFile, null, fileType, 0, 0);
+	}
+
+	/**
+	 * 上传文件
+	 * @author huj
+	 * @param multipartFile 必传参数
+	 * @param fileDir
+	 * @param fileType
+	 * @return
+	 */
+	public R uploadImage(MultipartFile multipartFile, String fileDir, String fileType) {
+		return uploadImage(multipartFile, fileDir, fileType, 0, 0);
+	}
+
 	/**
 	 * 单图片上传保存附件
-	 * 
-	 * @param dictIcon  上传文件
-	 * @param fileDir   文件目录 例如：/dict
-	 * @param maxWidth  图片最大长度
-	 * @param maxHeight 图片最大宽度
+	 * @param multipartFile 媒体文件
+	 * @param fileDir 文件目录 例如：/dict
+	 * @param fileType
+	 * @param maxWidth 图片最大长度
+	 * @param maxHeigth 图片最大宽度
 	 * @return
 	 * @author huangwb
 	 * @data 2019年06月04日 下午2:27:40
 	 */
-	public R uploadImage(MultipartFile dictIcon, String fileDir, String fileType, int maxWidth, int maxHeigth) {
-		if (!dictIcon.isEmpty()) {
-			String oldNamePc = dictIcon.getContentType();
-			// 获取图片后缀格式
-			String extensionPc = "." + oldNamePc.substring(oldNamePc.lastIndexOf("/") + 1);
-			String imgNamePc = null;
-			// 如果图片格式正确
-			if (imgSuffixList.contains(extensionPc.toUpperCase())) {
-				try {
-					if(StrUtils.isEmpty(fileDir)) {
-						fileDir = getPathByParaNo(fileType);
-					}
-					// 图片名称
-					imgNamePc = UUID.randomUUID() + extensionPc;
-					// 判断目录是否存在 不存在则创建指定的目录
-					File file = new File(creatorblueFieUploadPath + fileDir);
-					if (!file.exists()) {
-						file.mkdir();
-					}
-					// 保存图片地址
-					String longNamePc = creatorblueFieUploadPath + fileDir + "/" + imgNamePc;
-					// 调用图片压缩上传操作
-					uploadImgThread(dictIcon, longNamePc, maxWidth, maxHeigth);
-					// 上传成功之后保存在附件中添加一条数据
-					String atachId = tsysAttachService.uploadFileInsertAttach(oldNamePc, extensionPc,
-							String.valueOf(dictIcon.getSize()), imgNamePc, longNamePc, fileType,
-							loginUtils.getLoginUserId());
-					// 返回给前端参数
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("imgNamePc", imgNamePc);
-					map.put("attachId", atachId);
-					return R.ok().put("data", map);
-				} catch (IllegalStateException e) {
-					return R.error(e.getMessage()).put("data", imgNamePc);
-				}
-			} else {
-				return R.error("图片格式不对,请上传正确的图片");
-			}
+	public R uploadImage(MultipartFile multipartFile, String fileDir, String fileType, int maxWidth, int maxHeigth) {
+		if (multipartFile == null || multipartFile.isEmpty()) {
+			return R.error("您暂未选择任何文件上传！");
 		}
-		return R.error("您暂未选择任何图片上传");
+		String oldNamePc = multipartFile.getContentType();
+		// 获取图片后缀格式
+		String extensionPc = "." + oldNamePc.substring(oldNamePc.lastIndexOf("/") + 1);
+		String imgNamePc = null;
+		// 如果图片格式不正确
+		if (!imgSuffixList.contains(extensionPc.toUpperCase())) {
+			return R.error("仅允许" + imgSuffixList + "格式，请上传正确的图片");
+		}
+		try {
+			if(StrUtils.isEmpty(fileDir)) {
+				fileDir = getPathByParaNo(fileType);
+			}
+			// 图片名称
+			imgNamePc = UUID.randomUUID() + extensionPc;
+			// 判断目录是否存在 不存在则创建指定的目录
+			File file = new File(creatorblueFieUploadPath + fileDir);
+			if (!file.exists()) {
+				file.mkdir();
+			}
+			// 保存图片地址
+			String longNamePc = creatorblueFieUploadPath + fileDir + "/" + imgNamePc;
+			// 调用图片压缩上传操作
+			uploadImgThread(multipartFile, longNamePc, maxWidth, maxHeigth);
+			// 上传成功之后保存在附件中添加一条数据
+			String atachId = tsysAttachService.uploadFileInsertAttach(oldNamePc, multipartFile.getSize(), imgNamePc, longNamePc, fileType);
+			// 返回给前端参数
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("attachId", atachId);
+			map.put("fileName", imgNamePc);
+			map.put("imgNamePc", imgNamePc);
+			return R.ok().put("data", map);
+		} catch (IllegalStateException e) {
+			log.error("图片上传失败", e);
+			return R.error("上传失败");
+		}
 	}
 
 	/**
@@ -233,7 +249,7 @@ public class UploadFileUtils {
 
 	/**
 	 * 根据附件参数类型获取对应的附件存放路径
-	 * @param ParaNo
+	 * @param paraNo
 	 * @return
 	 */
 	public String getPathByParaNo(String paraNo) {
@@ -243,4 +259,5 @@ public class UploadFileUtils {
 		}
 		return paths[Integer.parseInt(paraNo)].trim();
 	}
+
 }

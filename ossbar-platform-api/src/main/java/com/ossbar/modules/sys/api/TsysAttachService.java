@@ -13,17 +13,14 @@ public interface TsysAttachService {
      *
      * @author huangwb
      * @data 2019年5月30日
-     * @param oldNamePc      原始名称
-     * @param extensionPc    文件后缀
+     * @param contentType     原始名称，示例值：image/jpeg、image/jpg、image/png
      * @param fileSize       文件大小
-     * @param imgNamePc      链接地址
+     * @param newFileName    链接地址，uuid与后缀名组成的新文件名称，示例值：151254efdc8d4c08865d17a4862b1739.jpeg
      * @param longNamePc     文件名称
      * @param fileType       文件类型 1、字典
-     * @param uploadUserId 上传人
      * @return attachId 附件id
      */
-    String uploadFileInsertAttach(String oldNamePc, String fileSize, String extensionPc, String imgNamePc,
-                                  String longNamePc, String fileType, String uploadUserId);
+    String uploadFileInsertAttach(String contentType, Long fileSize, String newFileName, String longNamePc, String fileType);
 
     /**
      * （绑定操作）资源上传成功后保存时修改文件绑定关联状态
