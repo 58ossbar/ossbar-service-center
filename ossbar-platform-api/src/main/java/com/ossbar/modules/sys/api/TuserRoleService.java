@@ -22,4 +22,40 @@ public interface TuserRoleService {
      */
     R saveOrUpdate(List<String> roleIdList, List<String> userIdList);
 
+    /**
+     * 根据用户ID，获取角色ID列表
+     * @author huj
+     * @data 2019年5月6日
+     * @param userId
+     * @return
+     */
+    List<String> selectRoleIdListByUserId(String userId);
+
+    /**
+     * 根据角色ID,查询用户ID列表
+     * @author huj
+     * @data 2019年5月6日
+     * @param roleId
+     * @return
+     */
+    List<String> selectUserIdListByRoleId(String roleId);
+
+    /**
+     * <p>根据用户ID,删除用户角色关系</p>
+     * @author huj
+     * @data 2019年5月6日
+     * @param userId
+     * @return
+     */
+    R delete(String userId);
+
+    /**
+     * 根据用户ID,批量删除用户角色关系
+     * @author huj
+     * @data 2019年5月6日
+     * @param userIds
+     * @return
+     */
+    R deleteBatch(String[] userIds);
+
 }

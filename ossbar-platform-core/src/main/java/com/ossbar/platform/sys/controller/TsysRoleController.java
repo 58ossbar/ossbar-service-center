@@ -35,9 +35,21 @@ public class TsysRoleController {
      */
     @GetMapping("/query")
     @PreAuthorize("hasAuthority('sys:role:query')")
-    @SysLog("根据条件查询角色信息")
+    @SysLog("根据条件分页查询角色信息")
     public R query(@RequestParam Map<String, Object> params) {
         return tsysRoleService.query(params);
+    }
+
+    /**
+     * 根据条件查询角色列表记录
+     * @param params
+     * @return
+     */
+    @GetMapping("/queryAll")
+    @PreAuthorize("hasAuthority('sys:role:query')")
+    @SysLog("根据条件查询角色信息")
+    public R queryAll(@RequestParam Map<String, Object> params) {
+        return tsysRoleService.queryAll(params);
     }
 
     /**

@@ -94,5 +94,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			)
 		</foreach>
 	</insert>
+	<select id="selectRoleListByUserId" resultType="string">
+		select post_id from t_user_post where user_id = #{userId} order by IS_MAIN desc
+	</select>
 </mapper>
 

@@ -25,6 +25,15 @@ public interface TsysRoleService {
     R query(Map<String, Object> map);
 
     /**
+     * 根据条件查询记录
+     * @author huj
+     * @data 2019年5月5日
+     * @param map
+     * @return
+     */
+    R queryAll(Map<String, Object> map);
+
+    /**
      * 查看明细
      * @param roleId
      * @return

@@ -18,7 +18,12 @@ import java.util.List;
 @Mapper
 public interface TorgUserMapper extends BaseSqlMapper<TorgUser> {
 
-	List<String> selectListByUserId(String userId);
+	/**
+	 * 根据用户id，查询机构id
+	 * @param userId
+	 * @return
+	 */
+	List<String> selectOrgIdListByUserId(String userId);
 
 	/**
 	 * 批量新增

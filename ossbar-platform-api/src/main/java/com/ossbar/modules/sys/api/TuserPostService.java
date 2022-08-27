@@ -13,7 +13,7 @@ import java.util.List;
 public interface TuserPostService {
 
     /**
-     * <p>保存用户与岗位之间的关系</p>
+     * 保存用户与岗位之间的关系
      * @author huj
      * @data 2019年5月29日
      * @param userId
@@ -22,4 +22,10 @@ public interface TuserPostService {
      */
     R saveOrUpdate(String userId, List<String> postIds);
 
+    /**
+     * 根据用户id，查询岗位id
+     * @param userId
+     * @return
+     */
+    List<String> selectPostIdListByUserId(String userId);
 }

@@ -122,6 +122,8 @@ public class SaveUserDTO implements Serializable {
      */
     private List<String> orgIdList;
 
+    private List<String> roleIdList;
+
     public SaveUserDTO() {
     }
 
@@ -277,6 +279,14 @@ public class SaveUserDTO implements Serializable {
         this.orgIdList = orgIdList;
     }
 
+    public List<String> getRoleIdList() {
+        return roleIdList;
+    }
+
+    public void setRoleIdList(List<String> roleIdList) {
+        this.roleIdList = roleIdList;
+    }
+
     @Override
     public String toString() {
         return "SaveUserDTO{" +
@@ -299,6 +309,7 @@ public class SaveUserDTO implements Serializable {
                 ", postId='" + postId + '\'' +
                 ", postIdList=" + postIdList +
                 ", orgIdList=" + orgIdList +
+                ", roleIdList=" + roleIdList +
                 '}';
     }
 }

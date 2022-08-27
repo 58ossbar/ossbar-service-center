@@ -97,6 +97,6 @@ public class TsysUserinfoController {
     @PreAuthorize("hasAuthority('sys:tsysuserinfo:edit')")
     @SysLog("执行用户相关数据新增和修改保存")
     public R update(@RequestBody @Validated SaveUserDTO user) {
-        return R.ok();
+        return tsysUserinfoService.update(user);
     }
 }

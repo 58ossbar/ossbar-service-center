@@ -28,6 +28,6 @@ public interface TorgUserService {
      * @param userId
      * @return
      */
-    List<String> selectListByUserId(String userId);
+    List<String> selectOrgIdListByUserId(String userId);
 
 }

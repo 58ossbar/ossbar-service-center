@@ -68,9 +68,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			and USER_ID = #{userId}
 		</if>
 	</select>
-	<select id="selectListByUserId" parameterType="java.lang.String"
-		resultType="string">
-		select ORG_ID from T_ORG_USER where USER_ID = #{value}
+	<select id="selectOrgIdListByUserId" parameterType="java.lang.String" resultType="string">
+		select ORG_ID from T_ORG_USER where USER_ID = #{value} order by is_main desc
 	</select>
 
 	<delete id="deleteBatch">

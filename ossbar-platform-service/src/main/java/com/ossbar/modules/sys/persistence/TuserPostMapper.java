@@ -27,4 +27,8 @@ public interface TuserPostMapper extends BaseSqlMapper<TuserPost> {
      */
     void insertBatch(List<TuserPost> list);
 
+    /**
+     * 根据用户ID，获取岗位ID列表
+     */
+    List<String> selectPostIdListByUserId(String userId);
 }

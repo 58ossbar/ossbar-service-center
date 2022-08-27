@@ -72,7 +72,7 @@ public class TorgUserServiceImpl implements TorgUserService {
      * @data 2019年5月13日
      */
     @Override
-    public List<String> selectListByUserId(String userId) {
-        return torgUserMapper.selectListByUserId(userId);
+    public List<String> selectOrgIdListByUserId(String userId) {
+        return torgUserMapper.selectOrgIdListByUserId(userId);
     }
 }

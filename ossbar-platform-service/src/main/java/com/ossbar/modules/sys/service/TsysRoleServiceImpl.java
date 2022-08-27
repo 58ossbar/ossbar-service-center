@@ -93,6 +93,25 @@ public class TsysRoleServiceImpl implements TsysRoleService {
     }
 
     /**
+     * 根据条件查询记录
+     *
+     * @param map
+     * @return
+     * @author huj
+     * @data 2019年5月5日
+     */
+    @Override
+    @RequestMapping("/queryAll")
+    @SentinelResource("/sys/role/queryAll")
+    @DataFilter(tableAlias = "o", customDataAuth = "", selfUser = false)
+    public R queryAll(Map<String, Object> map) {
+        map.put("status", "1");
+        Query query = new Query(map);
+        List<TsysRole> list = tsysRoleMapper.selectListByMap(query);
+        return R.ok().put(Constant.R_DATA, list);
+    }
+
+    /**
      * 查看明细
      *
      * @param roleId

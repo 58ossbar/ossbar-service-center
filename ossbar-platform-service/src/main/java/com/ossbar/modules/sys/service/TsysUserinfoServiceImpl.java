@@ -8,24 +8,18 @@ import com.ossbar.common.utils.*;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.*;
 import com.ossbar.modules.sys.domain.TsysParameter;
-import com.ossbar.modules.sys.domain.TsysRole;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
 import com.ossbar.modules.sys.dto.user.SaveUserDTO;
 import com.ossbar.modules.sys.persistence.TsysParameterMapper;
-import com.ossbar.modules.sys.persistence.TsysRoleMapper;
 import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
 import com.ossbar.utils.constants.Constant;
-import com.ossbar.utils.tool.BeanUtils;
-import com.ossbar.utils.tool.DateUtils;
-import com.ossbar.utils.tool.Identities;
-import com.ossbar.utils.tool.TicketDesUtil;
+import com.ossbar.utils.tool.*;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service(version = "1.0.0")
 @RestController
@@ -36,8 +30,6 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	private TsysUserinfoMapper tsysUserinfoMapper;
 	@Autowired
 	private TsysParameterMapper tsysParameterMapper;
-	@Autowired
-	private TsysRoleMapper tsysRoleMapper;
 
 	@Autowired
 	private TsysAttachService tsysAttachService;
@@ -92,7 +84,6 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		PageHelper.startPage(query.getPage(), query.getLimit());
 		List<TsysUserinfo> userList = tsysUserinfoMapper.selectListByMap(query);
 		userList.stream().forEach(item -> {
-			// TODO 处理头像路径
 			item.setUserimg(uploadUtils.stitchingPath(item.getUserimg(), 2));
 		});
 		Map<String, String> m = new HashMap<>();
@@ -155,6 +146,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		// 组装数据
 		String uuid = Identities.uuid();
 		tsysUserinfo.setUserId(uuid);
+		tsysUserinfo.setPassword(pwd);
 		tsysUserinfo.setCreateUserId(serviceLoginUtil.getLoginUserId());
 		tsysUserinfo.setCreateTime(DateUtils.getNowTimeStamp());
 		tsysUserinfo.setUpdateTime(tsysUserinfo.getCreateTime());
@@ -162,12 +154,14 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		tsysUserinfoMapper.insert(tsysUserinfo);
 		// 如果上传了资源文件
 		tsysAttachService.updateAttachForAdd(tsysUserinfo.getUserimg(), uuid,  "2");
-		// TODO 保存用户与角色的关系
-		//tuserRoleService.saveOrUpdate(Arrays.asList())
+		// 保存用户与角色的关系
+		tuserRoleService.saveOrUpdate(user.getRoleIdList(), Arrays.asList(tsysUserinfo.getUserId()));
 		// 保存用户与机构的关系
 		torgUserService.saveOrUpdate(tsysUserinfo.getUserId(), user.getOrgIdList());
 		// 保存用户与岗位的关系
-		tuserPostService.saveOrUpdate(tsysUserinfo.getUserId(), Arrays.asList(user.getPostId()));
+		if (StrUtils.isNotEmpty(user.getPostId())) {
+			tuserPostService.saveOrUpdate(tsysUserinfo.getUserId(), Arrays.asList(user.getPostId()));
+		}
 		return R.ok("用户新增成功");
 	}
 
@@ -177,9 +171,50 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	 * @return
 	 */
 	@Override
+	@PostMapping("/update")
+	@SentinelResource("/sys/userinfo/update")
+	@Transactional(rollbackFor = Exception.class)
 	public R update(SaveUserDTO user) {
-		// TODO Auto-generated method stub
-		return null;
+		TsysUserinfo obj = tsysUserinfoMapper.selectObjectById(user.getUserId());
+		if (obj == null) {
+			return R.error("该用户不存在");
+		}
+		TsysUserinfo tsysUserinfo = new TsysUserinfo();
+		BeanUtils.copyProperties(tsysUserinfo, user);
+		// 验证登陆名是否唯一
+		TsysUserinfo existedUser = tsysUserinfoMapper.selectObjectByUserName(user.getUsername());
+		if (existedUser != null && !existedUser.getUserId().equals(user.getUserId())) {
+			return R.error("登陆账号已经存在，需唯一，请重新输入！");
+		}
+		// 验证手机号是否唯一
+		TsysUserinfo existedUser2 = tsysUserinfoMapper.selectObjectByMobile(user.getMobile());
+		if (existedUser2 != null && !existedUser2.getUserId().equals(user.getUserId())) {
+			return R.error("该手机号码已被绑定，请重新输入");
+		}
+		// 主机构在集合的第一个位置
+		if (user.getOrgId() != null) {
+			user.getOrgIdList().add(0, user.getOrgId());
+		}
+		// 更新用户信息
+		tsysUserinfo.setUpdateUserId(serviceLoginUtil.getLoginUserId());
+		tsysUserinfo.setUpdateTime(DateUtils.getNowTimeStamp());
+		tsysUserinfoMapper.update(tsysUserinfo);
+		// 如果上传了资源文件
+		tsysAttachService.updateAttachForEdit(tsysUserinfo.getUserimg(), tsysUserinfo.getUserId(),  "2");
+		// 保存用户与角色的关系
+		// 如果没有选择，则表示是清空
+		if (user.getRoleIdList() == null || user.getRoleIdList().isEmpty()) {
+			tuserRoleService.delete(user.getUserId());
+		}  else {
+			tuserRoleService.saveOrUpdate(user.getRoleIdList(), Arrays.asList(tsysUserinfo.getUserId()));
+		}
+		// 保存用户与机构的关系
+		torgUserService.saveOrUpdate(tsysUserinfo.getUserId(), user.getOrgIdList());
+		// 保存用户与岗位的关系
+		if (StrUtils.isNotEmpty(user.getPostId())) {
+			tuserPostService.saveOrUpdate(tsysUserinfo.getUserId(), Arrays.asList(user.getPostId()));
+		}
+		return R.ok("用户修改成功");
 	}
 
 	@Override
@@ -194,21 +229,33 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		return null;
 	}
 
+	/**
+	 * 明细
+	 * @param id
+	 * @return
+	 */
 	@Override
 	public R view(String id) {
 		TsysUserinfo user = tsysUserinfoMapper.selectObjectById(id);
 		if (user == null) {
 			return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
 		}
-		Map<String, Object> map = new HashMap<>();
-		// 获取用户所属的角色列表
-		map.put("userId", user.getUserId());
-		List<TsysRole> roleList = tsysRoleMapper.selectListByMap(map);
-		List<String> roleIds = roleList.stream().map(a -> a.getRoleId()).collect(Collectors.toList());
-		List<String> roleNames = roleList.stream().map(a -> a.getRoleName()).collect(Collectors.toList());
-		// 获取岗位信息
-		//List<TsysPost> postList = tsysPostService.selectListByMap(m);
-		return null;
+		// 处理图片路径
+		user.setUserimg(uploadUtils.stitchingPath(user.getUserimg(), 2));
+		// 获取用户拥有的角色
+		List<String> roleIds = tuserRoleService.selectRoleIdListByUserId(user.getUserId());
+		user.setRoleIdList(roleIds);
+		// 获取用户的岗位
+		List<String> postIds = tuserPostService.selectPostIdListByUserId(user.getUserId());
+		user.setPostIdList(postIds == null ? new ArrayList<>() : postIds);
+		// 获取用户机构信息
+		List<String> orgIds = torgUserService.selectOrgIdListByUserId(user.getUserId());
+		user.setOrgIdList(orgIds == null ? new ArrayList<>() : orgIds);
+		// 设置主机构
+		if (orgIds != null && !orgIds.isEmpty()) {
+			user.setOrgId(orgIds.get(0));
+		}
+		return R.ok().put(Constant.R_DATA, user);
 	}
 
 	@Override

@@ -52,4 +52,62 @@ public class TuserRoleServiceImpl implements TuserRoleService {
         });
         return R.ok("保存成功");
     }
+
+    /**
+     * 根据用户ID，获取角色ID列表
+     *
+     * @param userId
+     * @return
+     * @author huj
+     * @data 2019年5月6日
+     */
+    @Override
+    public List<String> selectRoleIdListByUserId(String userId) {
+        return tuserRoleMapper.selectRoleListByUserId(userId);
+    }
+
+    /**
+     * 根据角色ID,查询用户ID列表
+     *
+     * @param roleId
+     * @return
+     * @author huj
+     * @data 2019年5月6日
+     */
+    @Override
+    public List<String> selectUserIdListByRoleId(String roleId) {
+        return tuserRoleMapper.selectUserListByRoleId(roleId);
+    }
+
+    /**
+     * <p>根据用户ID,删除用户角色关系</p>
+     *
+     * @param userId
+     * @return
+     * @author huj
+     * @data 2019年5月6日
+     */
+    @Override
+    public R delete(String userId) {
+        int i = tuserRoleMapper.delete(userId);
+        return R.ok();
+    }
+
+    /**
+     * 根据用户ID,批量删除用户角色关系
+     *
+     * @param userIds
+     * @return
+     * @author huj
+     * @data 2019年5月6日
+     */
+    @Override
+    public R deleteBatch(String[] userIds) {
+        if (userIds == null || userIds.length == 0) {
+            return R.error();
+        }
+        tuserRoleMapper.deleteBatch(userIds);
+        return R.ok();
+    }
+
 }

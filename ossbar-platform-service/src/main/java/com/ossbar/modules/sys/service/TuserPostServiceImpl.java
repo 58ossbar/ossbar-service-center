@@ -60,4 +60,15 @@ public class TuserPostServiceImpl implements TuserPostService {
         }
         return R.ok();
     }
+
+    /**
+     * 根据用户id，查询岗位id
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<String> selectPostIdListByUserId(String userId) {
+        return null;
+    }
 }

@@ -91,7 +91,7 @@ public class TsysDataprivilegeServiceImpl implements TsysDataprivilegeService {
                     orgIdList.addAll(allOrgIdList);
                 }
                 // 2：所在机构及以下数据
-                List<String> org = torgUserMapper.selectListByUserId(userId);
+                List<String> org = torgUserMapper.selectOrgIdListByUserId(userId);
                 for (String orgid : org) {
                     // 用户查询本部门及子部门数据
                     if (dataFilter.selfAndSubOrg() || datascope.equalsIgnoreCase("2")) {
