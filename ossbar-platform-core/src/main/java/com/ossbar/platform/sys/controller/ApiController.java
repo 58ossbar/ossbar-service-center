@@ -1,10 +1,5 @@
 package com.ossbar.platform.sys.controller;
 
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysResourceService;
 import com.ossbar.modules.sys.domain.TsysResource;
@@ -12,19 +7,23 @@ import com.ossbar.modules.sys.domain.TsysUserinfo;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import com.ossbar.platform.core.common.utils.LoginUtils;
 import com.ossbar.utils.constants.Constant;
-import org.apache.dubbo.config.annotation.Reference;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.dubbo.config.annotation.Reference;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Api(tags = "测试api")
 @RestController
@@ -35,6 +34,13 @@ public class ApiController {
 	private TsysResourceService tsysResourceService;
 	@Autowired
 	private LoginUtils loginUtils;
+
+	@RequestMapping("menu/findNavTree")
+	public R findNavTree() {
+		List<TsysResource> menuList = tsysResourceService.getUserMenuList(loginUtils.getLoginUserId(), "19c786f2bfbf46398e3b495f6c7014b1");
+		Set<String> set = tsysResourceService.getUserPermissions(loginUtils.getLoginUserId());
+		return R.ok().put(Constant.R_DATA, menuList).put("permissionList", set);
+	}
 
 	@ApiOperation(value = "保存用户", notes = "<b>参数说明<b>:<br/>" + "&emsp;id:用户id<br/>" + "&emsp;name:用户姓名<br/>"
 			+ "&emsp;age:用户年龄<br/>" + "<b>返回值说明</b>:<br/>" + "&emsp;code:服务状态，-1：失败，0：成功<br/>"
@@ -49,12 +55,6 @@ public class ApiController {
 								HttpServletRequest request) {
 		TsysUserinfo user = loginUtils.getLoginUser(request);
 		return user;
-	}
-
-	@RequestMapping("menu/findNavTree")
-	public R findNavTree() {
-		List<TsysResource> menuList = tsysResourceService.getUserMenuList(loginUtils.getLoginUserId(), "19c786f2bfbf46398e3b495f6c7014b1");
-		return R.ok().put(Constant.R_DATA, menuList);
 	}
 
 	@ApiOperation(value = "保存用户2", notes = "<b>参数说明<b>:<br/>" + "&emsp;id:用户id<br/>" + "&emsp;name:用户姓名<br/>"
