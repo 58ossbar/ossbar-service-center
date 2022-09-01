@@ -12,10 +12,12 @@ import com.ossbar.modules.sys.domain.TsysUserinfo;
 import com.ossbar.modules.sys.dto.user.SaveUserDTO;
 import com.ossbar.modules.sys.persistence.TsysParameterMapper;
 import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
+import com.ossbar.modules.sys.persistence.TsysUserprivilegeMapper;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.*;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +41,8 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	private TorgUserService torgUserService;
 	@Autowired
 	private TuserPostService tuserPostService;
+	@Autowired
+	private TsysUserprivilegeMapper tsysUserprivilegeMapper;
 
 	@Autowired
 	private ConvertUtil convertUtil;
@@ -235,7 +239,9 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	 * @return
 	 */
 	@Override
-	public R view(String id) {
+	@RequestMapping("/view/{id}")
+	@SentinelResource("sys/userinfo/view")
+	public R view(@PathVariable("id") String id) {
 		TsysUserinfo user = tsysUserinfoMapper.selectObjectById(id);
 		if (user == null) {
 			return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
@@ -276,21 +282,54 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		return null;
 	}
 
+	/**
+	 * 重置密码
+	 * @param userIdList
+	 * @return
+	 */
 	@Override
-	public R resetPassword(String[] userIds, String loginUserId) {
-		// TODO Auto-generated method stub
-		return null;
+	@RequestMapping("/resetPassword")
+	@SentinelResource("sys/userinfo/resetPassword")
+	@Transactional(rollbackFor = Exception.class)
+	public R resetPassword(List<String> userIdList) {
+		if (userIdList == null || userIdList.isEmpty()) {
+			return R.error("没有要重置密码的用户");
+		}
+		// 超级管理员不能被非法修改密码
+		if (!Constant.SUPER_ADMIN.equals(serviceLoginUtil.getLoginUserId()) && userIdList.contains(Constant.SUPER_ADMIN)) {
+			userIdList.remove(Constant.SUPER_ADMIN);
+		}
+		if (userIdList.size() > 20) {
+			return R.error("一次性不能重置超过20个用户的密码！");
+		}
+		// 删除当前登录用户，当前登录用户不能重置密码
+		userIdList.remove(serviceLoginUtil.getLoginUserId());
+		int count = doResetPassword(userIdList);
+		if (count < userIdList.size()) {
+			return R.error("部分用户密码重置失败");
+		}
+		return R.ok("密码重置成功");
 	}
 
 	@Override
-	public R clearPermissions(String[] userIds, String loginUserId) {
-		// TODO Auto-generated method stub
-		return null;
+	@CacheEvict(value = "menu_list_cache", allEntries = true)
+	@Transactional(rollbackFor = Exception.class)
+	public R clearPermissions(List<String> userIds) {
+		if (userIds == null || userIds.isEmpty()) {
+			return R.error("没有要清空权限的用户");
+		}
+		// 移出当前登录用户，当前登录用户不能清除权限
+		userIds.remove(serviceLoginUtil.getLoginUserId());
+		// 清除用户与角色关系
+		tuserRoleService.deleteBatch(userIds.toArray(new String[userIds.size()]));
+		// 清除用户菜单权限
+		tsysUserprivilegeMapper.deleteBatch(userIds.toArray(new String[userIds.size()]));
+		return R.ok("成功清除权限");
 	}
 
 	@Override
 	public R grantPerms(String[] userIds, String[] menuIds, String loginUserId) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
@@ -363,5 +402,42 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 				params.put("orgIds", list);
 			}
 		}
+	}
+
+	/**
+	 * 重置密码(如果参数表中没有配置密码，则密码会被重置为123456)
+	 * @author huj
+	 * @data 2019年5月8日
+	 * @param userIds 用户ID 多个以逗号隔开
+	 * @return
+	 */
+	private int doResetPassword(List<String> userIds) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userIds", userIds);
+		List<TsysUserinfo> userList = tsysUserinfoMapper.selectListByMap(map);
+		// 默认密码-从参数表中获取
+		int count = 0;
+		String newPwd = TicketDesUtil.encryptWithMd5(getDefaultPasswordFormParameters(), null);
+		for (TsysUserinfo user : userList) {
+			count += doUpdatePassword(user.getUserId(), user.getPassword(), newPwd);
+		}
+		return count;
+	}
+
+	/**
+	 * 实际修改密码的方法，暂勿删除
+	 * @author huj
+	 * @data 2019年5月8日
+	 * @param userId      用户ID
+	 * @param password    旧密码
+	 * @param newPassword 新密码
+	 * @return int
+	 */
+	private int doUpdatePassword(String userId, String password, String newPassword) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", userId);
+		map.put("password", password);
+		map.put("newPassword", newPassword);
+		return tsysUserinfoMapper.updatePassword(map);
 	}
 }

@@ -192,7 +192,7 @@ public class TsysRoleServiceImpl implements TsysRoleService {
     @Override
     @PostMapping("/update")
     @SentinelResource("/sys/role/update")
-    @CacheEvict(value = "authorization_cache", allEntries = true)
+    @CacheEvict(value = {"menu_list_cache", "authorization_cache"}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public R update(SaveRoleDTO role) {
         TsysRole tsysRole = new TsysRole();
@@ -215,6 +215,7 @@ public class TsysRoleServiceImpl implements TsysRoleService {
         tsysRoleprivilegeService.saveOrUpdate(tsysRole.getRoleId(), role.getMenuIdList());
         // 保存角色与数据权限关系
         tsysDataprivilegeService.saveOrUpdate(tsysRole.getRoleId(), role.getOrgIdList());
+
         return R.ok("角色修改成功");
     }
 
@@ -231,7 +232,7 @@ public class TsysRoleServiceImpl implements TsysRoleService {
     @SentinelResource("/sys/role/remove")
     @Transactional
     @SysLog("删除角色信息")
-    @CacheEvict(value = "authorization_cache", allEntries = true)
+    @CacheEvict(value = {"menu_list_cache", "authorization_cache"}, allEntries = true)
     public R deleteBatch(@RequestBody String[] roleIds) {
         if (roleIds == null || roleIds.length == 0) {
             return R.ok("没有要删除的角色");
@@ -254,7 +255,7 @@ public class TsysRoleServiceImpl implements TsysRoleService {
     @Override
     @RequestMapping("/sys/role/setUser")
     @SentinelResource("/sys/role/setUser")
-    @CacheEvict(value = "authorization_cache", allEntries = true)
+    @CacheEvict(value = {"menu_list_cache", "authorization_cache"}, allEntries = true)
     public R setUser(String[] roleIds) {
         if (roleIds == null || roleIds.length == 0) {
             return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
@@ -288,7 +289,7 @@ public class TsysRoleServiceImpl implements TsysRoleService {
     @Override
     @RequestMapping("/saveRoleUser")
     @SentinelResource("/sys/role/saveRoleUser")
-    @CacheEvict(value = "authorization_cache", allEntries = true)
+    @CacheEvict(value = {"menu_list_cache", "authorization_cache"}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public R saveRoleUser(SaveRoleAssignUserDTO role) {
         return tuserRoleService.saveOrUpdate(role.getRoleIdList(), role.getUserIdList());

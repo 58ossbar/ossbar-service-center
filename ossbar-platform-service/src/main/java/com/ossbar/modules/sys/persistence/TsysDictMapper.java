@@ -1,11 +1,13 @@
 package com.ossbar.modules.sys.persistence;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Mapper;
 
 import com.ossbar.core.baseclass.persistence.BaseSqlMapper;
 import com.ossbar.modules.sys.domain.TsysDict;
+import com.ossbar.modules.sys.vo.dict.TsysDictVO;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.cache.annotation.Cacheable;
+
+import java.util.List;
+import java.util.Map;
 /**
  * <p> Title: </p>
  * <p> Description:</p>
@@ -18,9 +20,17 @@ import com.ossbar.modules.sys.domain.TsysDict;
 
 @Mapper
 public interface TsysDictMapper extends BaseSqlMapper<TsysDict> {
-	public List<TsysDict> selectListByMapNotZero(Map<String, Object> map);
 
-	public List<TsysDict> selectListParentId(String parentId);
-	public List<TsysDict> selectAllTsysDict();
+	//@Cacheable(value="dict_cache")
+	List<TsysDict> selectListByMapNotZero(Map<String, Object> map);
+
+	@Cacheable(value="dict_cache", key="'selectListParentId_'+#parentId")
+	List<TsysDict> selectListParentId(String parentId);
+
+	@Cacheable(value="dict_cache")
+	List<TsysDict> selectAllTsysDict();
+
+	@Cacheable(value="dict_cache", key = "'selectVoListByMap'")
+	List<TsysDictVO> selectVoListByMap(Map<String, Object> map);
 
 }

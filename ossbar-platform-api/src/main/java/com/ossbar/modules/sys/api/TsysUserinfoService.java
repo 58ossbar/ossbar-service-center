@@ -144,26 +144,19 @@ public interface TsysUserinfoService {
 	 * <p>重置用户密码,自动忽略当前登录用户</p>
 	 * @author huj
 	 * @data 2019年5月6日
-	 * @param userIds 用户ID 多个以逗号隔开
-	 * @param loginUserId 当前登陆用户ID
+	 * @param userIdList
 	 * @return
 	 */
-	R resetPassword(String[] userIds, String loginUserId);
-	
-	
-	//R saveorupdate(TsysUserinfo user,String orgList,String roleList,String postList,@RequestPart(value="file",required=false) MultipartFile picture);
-	
-	
-	
+	R resetPassword(List<String> userIdList);
+
 	/**
-	 * <p>清除用户的所有权限，忽略当前登录用户</p>
+	 * 清除用户的所有权限，忽略当前登录用户
 	 * @author huj
 	 * @data 2019年5月6日
-	 * @param userIds 用户ID 多个以逗号隔开
-	 * @param loginUserId 当前登陆用户ID
+	 * @param userIds
 	 * @return
 	 */
-	R clearPermissions(String[] userIds, String loginUserId);
+	R clearPermissions(List<String> userIds);
 	
 	/**
 	 * <p>用户分配权限，当前登录用户不能分配权限</p>

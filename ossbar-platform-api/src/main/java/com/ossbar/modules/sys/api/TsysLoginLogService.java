@@ -31,7 +31,7 @@ public interface TsysLoginLogService {
      * @param map
      * @return
      */
-    R selectAllByMap(Map<String, Object> map);
+    R query(Map<String, Object> map);
 
     /**
      * 登录失败时，记录下日志

@@ -8,6 +8,7 @@ import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysLoginLogService;
 import com.ossbar.modules.sys.domain.TsysLoginLog;
 import com.ossbar.modules.sys.persistence.TsysLoginLogMapper;
+import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.IPUtils;
 import com.ossbar.utils.tool.Identities;
@@ -72,13 +73,13 @@ public class TsysLoginLogServiceImpl implements TsysLoginLogService {
      * @date 2019-05-08 17:30
      */
     @Override
-    public R selectAllByMap(Map<String, Object> map) {
+    public R query(Map<String, Object> map) {
         // 构建查询条件对象Query
         Query query = new Query(map);
         PageHelper.startPage(query.getPage(), query.getLimit());
         List<TsysLoginLog> loginLogs = tsysLoginLogMapper.selectListByMap(map);
         PageUtils pageUtil = new PageUtils(loginLogs, query.getPage(), query.getLimit());
-        return R.ok().put("data", pageUtil);
+        return R.ok().put(Constant.R_DATA, pageUtil);
     }
 
     /**

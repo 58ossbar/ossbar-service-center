@@ -206,7 +206,7 @@ public class TsysResourceServiceImpl implements TsysResourceService {
 	public Set<String> getUserPermissions(String userId) {
 		List<String> permsList;
 		// 系统管理员，拥有最高权限
-		if (userId.equalsIgnoreCase(Constant.SUPER_ADMIN)) {
+		if (Constant.SUPER_ADMIN.equalsIgnoreCase(userId)) {
 			List<TsysResource> menuList = tsysResourceMapper.selectListByMap(new HashMap<>());
 			permsList = new ArrayList<>(menuList.size());
 			for (TsysResource menu : menuList) {
