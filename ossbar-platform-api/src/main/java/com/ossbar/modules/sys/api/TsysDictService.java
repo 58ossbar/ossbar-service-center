@@ -1,6 +1,7 @@
 package com.ossbar.modules.sys.api;
 
 import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.sys.dto.dict.SaveDictTypeDTO;
 import com.ossbar.modules.sys.vo.dict.TsysDictVO;
 
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.Map;
  * @company 创蓝科技 www.creatorblue.com
  */
 public interface TsysDictService {
-
 
     /**
      * 获取字典表中parentType!=0的字典信息
@@ -31,13 +31,46 @@ public interface TsysDictService {
     R selectListByMapNotZero(Map<String, Object> map);
 
     /**
-     *
      * 查询操作
-     *
      * @author huangwb
      * @param params (page页码,limit显示条数)
-     *
      * @return R
      */
     R query(Map<String, Object> params);
+
+    /**
+     * 获取字典详情信息
+     * @author huangwb
+     * @param dictId
+     * @return R
+     */
+    R view(String dictId);
+
+    /**
+     * 查询指定父字典id的所有数据
+     * @param parentId
+     * @return
+     */
+    R selectListParentId(String parentId);
+
+    /**
+     * 根据条件查询数据
+     * @return
+     * @throws Exception
+     */
+    R dicttree(String dictname);
+
+    /**
+     * 新增字典分类
+     * @param dict
+     * @return
+     */
+    R saveType(SaveDictTypeDTO dict);
+
+    /**
+     * 修改字典分类
+     * @param dict
+     * @return
+     */
+    R updateType(SaveDictTypeDTO dict);
 }

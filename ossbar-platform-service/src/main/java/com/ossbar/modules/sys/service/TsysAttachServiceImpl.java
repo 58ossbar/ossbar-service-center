@@ -1,9 +1,16 @@
 package com.ossbar.modules.sys.service;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.github.pagehelper.PageHelper;
+import com.ossbar.common.utils.ConvertUtil;
+import com.ossbar.common.utils.PageUtils;
+import com.ossbar.common.utils.Query;
 import com.ossbar.common.utils.ServiceLoginUtil;
+import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysAttachService;
 import com.ossbar.modules.sys.domain.TsysAttach;
 import com.ossbar.modules.sys.persistence.TsysAttachMapper;
+import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
 import com.ossbar.utils.tool.StrUtils;
@@ -12,10 +19,11 @@ import org.apache.dubbo.config.annotation.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +46,47 @@ public class TsysAttachServiceImpl implements TsysAttachService {
     private TsysAttachMapper tsysAttachMapper;
     @Autowired
     private ServiceLoginUtil serviceLoginUtil;
+    @Autowired
+    private ConvertUtil convertUtil;
+
+    /**
+     * 根据条件分页查询记录
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    @RequestMapping("/query")
+    @SentinelResource("/sys/attach/query")
+    public R query(@RequestParam Map<String, Object> params) {
+        params.put("sidx", "create_time");
+        params.put("order", "desc");
+        Query query = new Query(params);
+        PageHelper.startPage(query.getPage(), query.getLimit());
+        List<TsysAttach> tsysDictList = tsysAttachMapper.selectListByMap(params);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("fileType", "fileType");
+        map.put("fileState", "fileState");
+        convertUtil.convertParam(tsysDictList, map);
+        convertUtil.convertUserId2RealName(tsysDictList, "createUserId");
+        PageUtils pageUtil = new PageUtils(tsysDictList, query.getPage(), query.getLimit());
+        return R.ok().put(Constant.R_DATA, pageUtil);
+    }
+
+    /**
+     * 查看明细
+     *
+     * @param id
+     * @return
+     * @author huj
+     * @data 2019年5月9日
+     */
+    @Override
+    @RequestMapping("/view/{id}")
+    @SentinelResource("/sys/attach/view")
+    public R view(@PathVariable("id") String id) {
+        return R.ok().put(Constant.R_DATA, tsysAttachMapper.selectObjectById(id));
+    }
 
     /**
      * 文件上传时候保存附件记录，根据前端组件的特性,需要在实际点击保存的时候获取attach对象进行id的绑定。
@@ -80,6 +129,29 @@ public class TsysAttachServiceImpl implements TsysAttachService {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param ids
+     * @return
+     * @author huj
+     * @data 2019年5月9日
+     */
+    @Override
+    @RequestMapping("/remove")
+    @SentinelResource("/sys/attach/remove")
+    @Transactional
+    public R deleteBatch(@RequestBody String[] ids) {
+        Arrays.stream(ids).forEach(a -> {
+            TsysAttach attach = tsysAttachMapper.selectObjectById(a);
+            if (attach.getFileUrl() != null && StrUtils.isNotEmpty(attach.getFileUrl())) {
+                new File(attach.getFileUrl()).delete();
+            }
+        });
+        tsysAttachMapper.deleteBatch(ids);
+        return R.ok();
     }
 
     /**

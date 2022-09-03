@@ -15,6 +15,7 @@ import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
 import com.ossbar.modules.sys.persistence.TsysUserprivilegeMapper;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.*;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -157,7 +158,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		// 保存用户信息
 		tsysUserinfoMapper.insert(tsysUserinfo);
 		// 如果上传了资源文件
-		tsysAttachService.updateAttachForAdd(tsysUserinfo.getUserimg(), uuid,  "2");
+		tsysAttachService.updateAttachForAdd(user.getUserimgAttachId(), uuid,  "2");
 		// 保存用户与角色的关系
 		tuserRoleService.saveOrUpdate(user.getRoleIdList(), Arrays.asList(tsysUserinfo.getUserId()));
 		// 保存用户与机构的关系
@@ -204,7 +205,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		tsysUserinfo.setUpdateTime(DateUtils.getNowTimeStamp());
 		tsysUserinfoMapper.update(tsysUserinfo);
 		// 如果上传了资源文件
-		tsysAttachService.updateAttachForEdit(tsysUserinfo.getUserimg(), tsysUserinfo.getUserId(),  "2");
+		tsysAttachService.updateAttachForEdit(user.getUserimgAttachId(), tsysUserinfo.getUserId(),  "2");
 		// 保存用户与角色的关系
 		// 如果没有选择，则表示是清空
 		if (user.getRoleIdList() == null || user.getRoleIdList().isEmpty()) {
@@ -228,9 +229,23 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	}
 
 	@Override
-	public R deleteBatch(String[] ids, String loginUserId) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional(rollbackFor = Exception.class)
+	public R deleteBatch(String[] userIds) {
+		if (ArrayUtils.contains(userIds, Constant.SUPER_ADMIN)) {
+			return R.error("系统管理员不能删除");
+		}
+		if (ArrayUtils.contains(userIds, serviceLoginUtil.getLoginUserId())) {
+			return R.error("当前登录用户不能删除");
+		}
+		// 删除用户与角色关系
+		tuserRoleService.deleteBatch(userIds);
+		// 删除机构用户
+		torgUserService.deleteBatch(userIds);
+		// 删除岗位用户
+		tuserPostService.deleteBatch(userIds);
+		// 删除用户信息
+		tsysUserinfoMapper.deleteBatch(userIds);
+		return R.ok("删除成功");
 	}
 
 	/**

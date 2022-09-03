@@ -92,11 +92,10 @@ public interface TsysUserinfoService {
 	 * <p>批量删除用户</p>
 	 * @author huj
 	 * @data 2019年5月6日
-	 * @param ids 被删除用户的ID
-	 * @param loginUserId 当前登陆用户ID
+	 * @param userIds 被删除用户的ID
 	 * @return
 	 */
-	R deleteBatch(String[] ids, String loginUserId);
+	R deleteBatch(String[] userIds);
 	
 	/**
 	 * <p>详细信息</p>
@@ -106,9 +105,7 @@ public interface TsysUserinfoService {
 	 * @return
 	 */
 	R view(String id);
-	
-	//R saveOrUpdate(TsysUserinfo user, String orgList, String roleList);
-	
+
 	/**
 	 * <p>分配角色，当前登录用户不能给自己分配角色</p>
 	 * @author huj

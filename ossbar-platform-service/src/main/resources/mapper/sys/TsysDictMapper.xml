@@ -278,5 +278,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			</otherwise>
 		</choose>
 	</select>
+	<select id="getMaxSortNum" parameterType="string" resultType="INTEGER">
+		select ifnull(max(t1.sort_num), 0) + 1 from t_sys_dict t1 where t1.parent_type = #{parentType}
+	</select>
 </mapper>
 

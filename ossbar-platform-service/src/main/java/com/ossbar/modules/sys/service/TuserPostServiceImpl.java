@@ -69,6 +69,22 @@ public class TuserPostServiceImpl implements TuserPostService {
      */
     @Override
     public List<String> selectPostIdListByUserId(String userId) {
-        return null;
+        return tuserPostMapper.selectPostIdListByUserId(userId);
+    }
+
+    /**
+     * <p>批量删除</p>
+     *
+     * @param ids
+     * @return
+     * @author huj
+     * @data 2019年5月29日
+     */
+    @Override
+    public R deleteBatch(String[] ids) {
+        if (ids != null && ids.length > 0) {
+            tuserPostMapper.deleteBatch(ids);
+        }
+        return R.ok();
     }
 }

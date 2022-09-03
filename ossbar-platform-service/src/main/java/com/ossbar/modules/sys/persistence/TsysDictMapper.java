@@ -4,6 +4,7 @@ import com.ossbar.core.baseclass.persistence.BaseSqlMapper;
 import com.ossbar.modules.sys.domain.TsysDict;
 import com.ossbar.modules.sys.vo.dict.TsysDictVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
@@ -33,4 +34,9 @@ public interface TsysDictMapper extends BaseSqlMapper<TsysDict> {
 	@Cacheable(value="dict_cache", key = "'selectVoListByMap'")
 	List<TsysDictVO> selectVoListByMap(Map<String, Object> map);
 
+	/**
+	 * 获取最大排序号
+	 * @return
+	 */
+	Integer getMaxSortNum(@Param("parentType") String parentType);
 }

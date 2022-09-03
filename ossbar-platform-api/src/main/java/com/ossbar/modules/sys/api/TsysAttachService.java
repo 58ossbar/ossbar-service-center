@@ -1,5 +1,9 @@
 package com.ossbar.modules.sys.api;
 
+import com.ossbar.core.baseclass.domain.R;
+
+import java.util.Map;
+
 /**
  * 附件管理
  * @author huj
@@ -7,6 +11,31 @@ package com.ossbar.modules.sys.api;
  * @email hujun@creatorblue.com
  */
 public interface TsysAttachService {
+
+    /**
+     * 根据条件分页查询记录
+     * @param params
+     * @return
+     */
+    R query(Map<String, Object> params);
+
+    /**
+     * 批量删除
+     * @author huj
+     * @data 2019年5月9日
+     * @param ids
+     * @return
+     */
+    R deleteBatch(String[] ids);
+
+    /**
+     * 查看明细
+     * @author huj
+     * @data 2019年5月9日
+     * @param id
+     * @return
+     */
+    R view(String id);
 
     /**
      * 文件上传时候保存附件记录，根据前端组件的特性,需要在实际点击保存的时候获取attach对象进行id的绑定。

@@ -75,4 +75,20 @@ public class TorgUserServiceImpl implements TorgUserService {
     public List<String> selectOrgIdListByUserId(String userId) {
         return torgUserMapper.selectOrgIdListByUserId(userId);
     }
+
+    /**
+     * <p>批量删除</p>
+     *
+     * @param ids
+     * @return
+     * @author huj
+     * @data 2019年5月13日
+     */
+    @Override
+    public R deleteBatch(String[] ids) {
+        if (ids != null && ids.length > 0) {
+            torgUserMapper.deleteBatch(ids);
+        }
+        return R.ok();
+    }
 }

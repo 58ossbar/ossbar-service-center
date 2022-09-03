@@ -30,4 +30,13 @@ public interface TorgUserService {
      */
     List<String> selectOrgIdListByUserId(String userId);
 
+    /**
+     * <p>批量删除</p>
+     * @author huj
+     * @data 2019年5月13日
+     * @param ids
+     * @return
+     */
+    R deleteBatch(String[] ids);
+
 }

@@ -122,11 +122,11 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<if test="fileNo != null and fileNo.trim() != ''">
 			FILE_NO = #{fileNo,jdbcType=VARCHAR},
 		</if>
-		<if test="fileState != null and fileState.trim() != ''">
-			FILE_STATE = #{fileState,jdbcType=INTEGER},
-		</if>
 		<if test="fileOrerno != null and fileOrerno.trim() != ''">
-			FILE_ORERNO = #{fileOrerno,jdbcType=INTEGER}
+			FILE_ORERNO = #{fileOrerno,jdbcType=INTEGER},
+		</if>
+		<if test="fileState != null and fileState.trim() != ''">
+			FILE_STATE = #{fileState,jdbcType=INTEGER}
 		</if>
 		WHERE
 		ATTACH_ID = #{attachId,jdbcType=VARCHAR}

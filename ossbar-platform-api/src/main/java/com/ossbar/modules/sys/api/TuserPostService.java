@@ -28,4 +28,13 @@ public interface TuserPostService {
      * @return
      */
     List<String> selectPostIdListByUserId(String userId);
+
+    /**
+     * <p>批量删除</p>
+     * @author huj
+     * @data 2019年5月29日
+     * @param ids
+     * @return
+     */
+    R deleteBatch(String[] ids);
 }
