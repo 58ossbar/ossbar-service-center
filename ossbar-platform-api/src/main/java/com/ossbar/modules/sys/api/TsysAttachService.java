@@ -2,6 +2,7 @@ package com.ossbar.modules.sys.api;
 
 import com.ossbar.core.baseclass.domain.R;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,5 +67,21 @@ public interface TsysAttachService {
      * @param fileType 下标位置，属性文件中，com.creatorblue.cb-upload-paths对应的下标
      */
     void updateAttachForEdit(String attachId, String pkId, String fileType);
+
+    /**
+     * 解绑关系，未绑定的附件，就可以直接物理删除了
+     * @param pkId
+     * @param fileType
+     * @return
+     */
+    boolean unBind(String pkId, String fileType);
+
+    /**
+     * 解绑关系，未绑定的附件，就可以直接物理删除了
+     * @param pkIdList
+     * @param fileType
+     * @return
+     */
+    boolean unBind(List<String> pkIdList, String fileType);
 
 }

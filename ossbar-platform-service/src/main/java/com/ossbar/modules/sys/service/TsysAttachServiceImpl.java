@@ -236,4 +236,31 @@ public class TsysAttachServiceImpl implements TsysAttachService {
             tsysAttachMapper.delete(a.getAttachId());
         });
     }
+
+    /**
+     * 解绑关系，未绑定的附件，就可以直接物理删除了
+     *
+     * @param pkId
+     * @param fileType
+     * @return
+     */
+    @Override
+    public boolean unBind(String pkId, String fileType) {
+        return unBind(Arrays.asList(pkId), fileType);
+    }
+
+    /**
+     * 解绑关系，未绑定的附件，就可以直接物理删除了
+     *
+     * @param pkIdList
+     * @param fileType
+     * @return
+     */
+    @Override
+    public boolean unBind(List<String> pkIdList, String fileType) {
+        if (pkIdList == null || pkIdList.isEmpty() || StrUtils.isEmpty(fileType)) {
+            return false;
+        }
+        return true;
+    }
 }
