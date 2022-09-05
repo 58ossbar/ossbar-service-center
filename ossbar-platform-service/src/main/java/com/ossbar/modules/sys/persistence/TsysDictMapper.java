@@ -45,4 +45,11 @@ public interface TsysDictMapper extends BaseSqlMapper<TsysDict> {
 	 * @param list
 	 */
 	void updateBatchByCaseWhen(List<TsysDict> list);
+
+	/**
+	 * 修改
+	 * @param record
+	 * @return
+	 */
+	int updateByPrimaryKeySelective(TsysDict record);
 }

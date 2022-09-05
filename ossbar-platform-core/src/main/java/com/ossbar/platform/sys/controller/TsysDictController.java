@@ -159,4 +159,11 @@ public class TsysDictController {
     public R update(@RequestBody @Validated SaveDictDTO dto) {
         return tsysDictService.update(dto);
     }
+
+    @GetMapping("/getMaxSortNum")
+    @PreAuthorize("hasAuthority('sys:tsysdict:add') and hasAuthority('sys:tsysdict:edit')")
+    @SysLog("获取字典信息的详情")
+    public R getMaxSortNum(String parentType) {
+        return R.ok().put(Constant.R_DATA, tsysDictService.getMaxSortNum(parentType));
+    }
 }

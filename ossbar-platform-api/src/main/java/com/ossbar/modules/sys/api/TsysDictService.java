@@ -99,4 +99,11 @@ public interface TsysDictService {
      */
     R deleteType(String[] ids);
 
+    /**
+     * 根据条件获取排序号，已+1
+     * @param parentType
+     * @return
+     */
+    Integer getMaxSortNum(String parentType);
+
 }

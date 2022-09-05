@@ -239,7 +239,7 @@ public class TsysDictServiceImpl implements TsysDictService {
         // 更新
         tsysDict.setUpdateTime(time);
         tsysDict.setUpdateUserId(userId);
-        tsysDictMapper.update(tsysDict);
+        tsysDictMapper.updateByPrimaryKeySelective(tsysDict);
         // 更新子数据
         if (updateList.size() > 0) {
             tsysDictMapper.updateBatchByCaseWhen(updateList);
@@ -286,7 +286,11 @@ public class TsysDictServiceImpl implements TsysDictService {
      * @return
      */
     @Override
-    public R update(SaveDictDTO dto) {
+    @PostMapping("update")
+    @SentinelResource("/sys/dict/update")
+    @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "dict_cache", allEntries = true)
+    public R update(@RequestBody SaveDictDTO dto) {
         R r = checkData(dto);
         if (!r.get("code").equals(0)) {
             return r;
@@ -295,6 +299,7 @@ public class TsysDictServiceImpl implements TsysDictService {
         BeanUtils.copyProperties(tsysDict, dto);
         tsysDict.setUpdateTime(DateUtils.getNowTimeStamp());
         tsysDict.setUpdateUserId(serviceLoginUtil.getLoginUserId());
+        tsysDictMapper.updateByPrimaryKeySelective(tsysDict);
         // 如果上传了资源文件
         tsysAttachService.updateAttachForEdit(dto.getDictUrlAttachId(), tsysDict.getDictId(),  INDEX_DICT);
         return R.ok("字典修改成功");
@@ -336,6 +341,17 @@ public class TsysDictServiceImpl implements TsysDictService {
         // 解绑附件
         tsysAttachService.unBind(ids, INDEX_DICT);
         return R.ok("删除成功");
+    }
+
+    /**
+     * 根据条件获取排序号，已+1
+     *
+     * @param parentType
+     * @return
+     */
+    @Override
+    public Integer getMaxSortNum(String parentType) {
+        return tsysDictMapper.getMaxSortNum(parentType);
     }
 
 }

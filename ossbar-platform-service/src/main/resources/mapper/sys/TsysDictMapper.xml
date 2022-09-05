@@ -314,5 +314,68 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			#{item.dictId}
 		</foreach>
 	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ossbar.modules.sys.domain.TsysDict">
+		update t_sys_dict
+		<set>
+			<if test="dictType != null">
+				DICT_TYPE = #{dictType,jdbcType=VARCHAR},
+			</if>
+			<if test="dictName != null">
+				DICT_NAME = #{dictName,jdbcType=VARCHAR},
+			</if>
+			<if test="dictValue != null">
+				DICT_VALUE = #{dictValue,jdbcType=VARCHAR},
+			</if>
+			<if test="dictCode != null">
+				DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="dictSort != null">
+				DICT_SORT = #{dictSort,jdbcType=VARCHAR},
+			</if>
+			<if test="sortNum != null">
+				SORT_NUM = #{sortNum,jdbcType=INTEGER},
+			</if>
+			<if test="parentType != null">
+				PARENT_TYPE = #{parentType,jdbcType=VARCHAR},
+			</if>
+			<if test="displaySort != null">
+				DISPLAY_SORT = #{displaySort,jdbcType=VARCHAR},
+			</if>
+			<if test="dictClass != null">
+				DICT_CLASS = #{dictClass,jdbcType=INTEGER},
+			</if>
+			<if test="multiType != null">
+				MULTI_TYPE = #{multiType,jdbcType=VARCHAR},
+			</if>
+			<if test="orgId != null">
+				ORG_ID = #{orgId,jdbcType=VARCHAR},
+			</if>
+			<if test="isdefault != null">
+				ISDEFAULT = #{isdefault,jdbcType=VARCHAR},
+			</if>
+			<if test="displaying != null">
+				displaying = #{displaying,jdbcType=VARCHAR},
+			</if>
+			<if test="createUserId != null">
+				create_user_id = #{createUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUserId != null">
+				update_user_id = #{updateUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="dictUrl != null">
+				dict_url = #{dictUrl,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where DICT_ID = #{dictId,jdbcType=VARCHAR}
+	</update>
 </mapper>
 
