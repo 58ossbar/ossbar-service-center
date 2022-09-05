@@ -2,12 +2,14 @@ package com.ossbar.platform.sys.controller;
 
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysDictService;
+import com.ossbar.modules.sys.dto.dict.SaveDictDTO;
 import com.ossbar.modules.sys.dto.dict.SaveDictTypeDTO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import com.ossbar.utils.constants.Constant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -95,8 +97,7 @@ public class TsysDictController {
     @PreAuthorize("hasAuthority('sys:tsysdict:remove')")
     @SysLog("删除字典")
     public R deleteType(@RequestBody String[] ids) {
-        //return tsysDictService.deleteType(ids);
-        return null;
+        return tsysDictService.deleteType(ids);
     }
 
     /**
@@ -110,7 +111,52 @@ public class TsysDictController {
     @PostMapping("saveType")
     @PreAuthorize("hasAuthority('sys:tsysdict:add') and hasAuthority('sys:tsysdict:edit')")
     @SysLog("字典的新增或修改")
-    public R saveType(@RequestBody SaveDictTypeDTO dict) {
+    public R saveType(@RequestBody @Validated SaveDictTypeDTO dict) {
         return tsysDictService.saveType(dict);
+    }
+
+    /**
+     *
+     * 修改字典分类
+     * @param dict
+     * @return R
+     * @author huangwb
+     * @date 2019-05-20 15:18
+     */
+    @PostMapping("updateType")
+    @PreAuthorize("hasAuthority('sys:tsysdict:add') and hasAuthority('sys:tsysdict:edit')")
+    @SysLog("字典的新增或修改")
+    public R updateType(@RequestBody @Validated SaveDictTypeDTO dict) {
+        return tsysDictService.updateType(dict);
+    }
+
+    /**
+     *
+     * 新增字典
+     * @param dto
+     * @return R
+     * @author huangwb
+     * @date 2019-05-20 15:18
+     */
+    @PostMapping("save")
+    @PreAuthorize("hasAuthority('sys:tsysdict:add') and hasAuthority('sys:tsysdict:edit')")
+    @SysLog("新增字典")
+    public R save(@RequestBody @Validated SaveDictDTO dto) {
+        return tsysDictService.save(dto);
+    }
+
+    /**
+     *
+     * 修改字典
+     * @param dto
+     * @return R
+     * @author huangwb
+     * @date 2019-05-20 15:18
+     */
+    @PostMapping("update")
+    @PreAuthorize("hasAuthority('sys:tsysdict:add') and hasAuthority('sys:tsysdict:edit')")
+    @SysLog("修改字典")
+    public R update(@RequestBody @Validated SaveDictDTO dto) {
+        return tsysDictService.update(dto);
     }
 }

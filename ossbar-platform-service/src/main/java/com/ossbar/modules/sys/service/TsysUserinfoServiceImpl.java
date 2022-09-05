@@ -29,6 +29,8 @@ import java.util.*;
 @RequestMapping("/sys/userinfo")
 public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 
+	private final static String INDEX_USER = "2";
+
 	@Autowired
 	private TsysUserinfoMapper tsysUserinfoMapper;
 	@Autowired
@@ -89,7 +91,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		PageHelper.startPage(query.getPage(), query.getLimit());
 		List<TsysUserinfo> userList = tsysUserinfoMapper.selectListByMap(query);
 		userList.stream().forEach(item -> {
-			item.setUserimg(uploadUtils.stitchingPath(item.getUserimg(), 2));
+			item.setUserimg(uploadUtils.stitchingPath(item.getUserimg(), INDEX_USER));
 		});
 		Map<String, String> m = new HashMap<>();
 		m.put("sex", "sex");
@@ -158,7 +160,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		// 保存用户信息
 		tsysUserinfoMapper.insert(tsysUserinfo);
 		// 如果上传了资源文件
-		tsysAttachService.updateAttachForAdd(user.getUserimgAttachId(), uuid,  "2");
+		tsysAttachService.updateAttachForAdd(user.getUserimgAttachId(), uuid,  INDEX_USER);
 		// 保存用户与角色的关系
 		tuserRoleService.saveOrUpdate(user.getRoleIdList(), Arrays.asList(tsysUserinfo.getUserId()));
 		// 保存用户与机构的关系
@@ -205,7 +207,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		tsysUserinfo.setUpdateTime(DateUtils.getNowTimeStamp());
 		tsysUserinfoMapper.update(tsysUserinfo);
 		// 如果上传了资源文件
-		tsysAttachService.updateAttachForEdit(user.getUserimgAttachId(), tsysUserinfo.getUserId(),  "2");
+		tsysAttachService.updateAttachForEdit(user.getUserimgAttachId(), tsysUserinfo.getUserId(),  INDEX_USER);
 		// 保存用户与角色的关系
 		// 如果没有选择，则表示是清空
 		if (user.getRoleIdList() == null || user.getRoleIdList().isEmpty()) {
@@ -222,12 +224,21 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		return R.ok("用户修改成功");
 	}
 
+	/**
+	 * 删除用户
+	 * @param id 被删除用户的ID
+	 * @return
+	 */
 	@Override
-	public R delete(String id, String loginUserId) {
-		// TODO Auto-generated method stub
-		return null;
+	public R delete(String id) {
+		return deleteBatch(new String[]{ id });
 	}
 
+	/**
+	 * 批量删除用户
+	 * @param userIds 被删除用户的ID
+	 * @return
+	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public R deleteBatch(String[] userIds) {
@@ -245,6 +256,8 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		tuserPostService.deleteBatch(userIds);
 		// 删除用户信息
 		tsysUserinfoMapper.deleteBatch(userIds);
+		// 解绑附件
+		tsysAttachService.unBind(userIds, INDEX_USER);
 		return R.ok("删除成功");
 	}
 
@@ -262,7 +275,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 			return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
 		}
 		// 处理图片路径
-		user.setUserimg(uploadUtils.stitchingPath(user.getUserimg(), 2));
+		user.setUserimg(uploadUtils.stitchingPath(user.getUserimg(), INDEX_USER));
 		// 获取用户拥有的角色
 		List<String> roleIds = tuserRoleService.selectRoleIdListByUserId(user.getUserId());
 		user.setRoleIdList(roleIds);
@@ -326,6 +339,11 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		return R.ok("密码重置成功");
 	}
 
+	/**
+	 * 清除权限
+	 * @param userIds
+	 * @return
+	 */
 	@Override
 	@CacheEvict(value = "menu_list_cache", allEntries = true)
 	@Transactional(rollbackFor = Exception.class)
@@ -344,20 +362,20 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 
 	@Override
 	public R grantPerms(String[] userIds, String[] menuIds, String loginUserId) {
-
+		List<String> userIdList = Arrays.asList(userIds);
+		userIdList.remove(loginUserId);
+		// TODO
 		return null;
 	}
 
 	@Override
 	public List<String> selectAllPerms(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return tsysUserinfoMapper.selectAllPerms(userId);
 	}
 
 	@Override
 	public List<String> selectAllMenuId(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return tsysUserinfoMapper.selectAllMenuId(userId);
 	}
 
 	/**
@@ -373,14 +391,12 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 
 	@Override
 	public TsysUserinfo selectObjectByUserId(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return tsysUserinfoMapper.selectObjectById(userId);
 	}
 
 	@Override
 	public List<TsysUserinfo> getAllUserinfo() {
-		// TODO Auto-generated method stub
-		return null;
+		return tsysUserinfoMapper.getAllUserinfo();
 	}
 
 	@Override
@@ -397,7 +413,6 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 
 	@Override
 	public int getMaxSort() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

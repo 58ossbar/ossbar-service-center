@@ -54,7 +54,7 @@ public interface TsysAttachService {
 
     /**
      * （绑定操作）资源上传成功后保存时修改文件绑定关联状态
-     * @param attachId 附件表t_sys_attach主键id
+     * @param attachId 附件表t_sys_attach主键id，该值前端会传递过来
      * @param pkId 关联id，被关联对象表的主键id，示例：假如是新增学员时，且上传了附件，该值就是学员表主键id
      * @param fileType 下标位置，属性文件中，com.creatorblue.cb-upload-paths对应的下标
      */
@@ -62,7 +62,7 @@ public interface TsysAttachService {
 
     /**
      * （绑定新的，解绑旧的）资源上传成功后保存时修改文件绑定关联状态
-     * @param attachId 附件表t_sys_attach主键id
+     * @param attachId 附件表t_sys_attach主键id，该值前端会传递过来
      * @param pkId 关联id，被关联对象表的主键id，示例：假如是新增学员时，且上传了附件，该值就是学员表主键id
      * @param fileType 下标位置，属性文件中，com.creatorblue.cb-upload-paths对应的下标
      */
@@ -83,5 +83,13 @@ public interface TsysAttachService {
      * @return
      */
     boolean unBind(List<String> pkIdList, String fileType);
+
+    /**
+     * 解绑关系，未绑定的附件，就可以直接物理删除了
+     * @param pkIds
+     * @param fileType
+     * @return
+     */
+    boolean unBind(String[] pkIds, String fileType);
 
 }

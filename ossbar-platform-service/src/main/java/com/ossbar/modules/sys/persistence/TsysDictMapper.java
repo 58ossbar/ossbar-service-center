@@ -39,4 +39,10 @@ public interface TsysDictMapper extends BaseSqlMapper<TsysDict> {
 	 * @return
 	 */
 	Integer getMaxSortNum(@Param("parentType") String parentType);
+
+	/**
+	 * 批量更新部分数据
+	 * @param list
+	 */
+	void updateBatchByCaseWhen(List<TsysDict> list);
 }

@@ -25,7 +25,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="Base_Column_List">
-		DICT_ID,DICT_TYPE,DICT_NAME,DICT_VALUE,DICT_CODE,REMARK,DICT_SORT,SORT_NUM,PARENT_TYPE,DISPLAY_SORT,DICT_CLASS,MULTI_TYPE,ORG_ID,displaying,dict_url
+		DICT_ID,DICT_TYPE,DICT_NAME,DICT_VALUE,DICT_CODE,REMARK,DICT_SORT,SORT_NUM,PARENT_TYPE,DISPLAY_SORT,DICT_CLASS,MULTI_TYPE,ORG_ID,displaying,dict_url,isdefault
 	</sql>
 	<insert id="insert" parameterType="com.ossbar.modules.sys.domain.TsysDict">
 		INSERT INTO T_SYS_DICT (
@@ -129,8 +129,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		</if>
 		<if test="orgId != null and orgId.trim() != ''">ORG_ID = #{orgId,jdbcType=VARCHAR},</if>
 		<if test="displaying != null and displaying.trim() != ''">displaying = #{displaying,jdbcType=VARCHAR},</if>
-		<if test="dictUrl != null and dictUrl.trim() != ''" > dict_url = #{dictUrl,jdbcType=VARCHAR},</if>
-		<if test="isdefault != null and isdefault.trim() != ''"> isdefault = #{isdefault,jdbcType=VARCHAR}</if>
+		<if test="isdefault != null and isdefault.trim() != ''"> isdefault = #{isdefault,jdbcType=VARCHAR},</if>
+		<if test="dictUrl != null and dictUrl.trim() != ''" > dict_url = #{dictUrl,jdbcType=VARCHAR}</if>
 
 		WHERE
 		DICT_ID =
@@ -198,7 +198,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</select>
 	<!-- 实际业务需要增加的SQL语句 -->
 	<select id="selectListByMapNotZero" parameterType="map" resultMap="BaseResultMap">
-		select dict_id, dict_code, dict_value, dict_url from T_SYS_DICT where PARENT_TYPE != '0'
+		select * from T_SYS_DICT where PARENT_TYPE != '0'
 		<if test="dictType != null and dictType.trim() != ''">
 			and DICT_TYPE =#{dictType,jdbcType=VARCHAR}
 		</if>
@@ -222,6 +222,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         </if>
 		<if test="displaying != null and displaying.trim() != ''">
 			and displaying =#{displaying,jdbcType=VARCHAR}
+		</if>
+		<if test="parentType != null and parentType.trim() != ''">
+			and PARENT_TYPE =#{parentType,jdbcType=VARCHAR}
 		</if>
 		<choose>
 			<when test="sidx != null and sidx.trim() != ''">
@@ -269,6 +272,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<if test="displaying != null and displaying.trim() != ''">
 			and displaying =#{displaying,jdbcType=VARCHAR}
 		</if>
+		<if test="parentType != null and parentType.trim() != ''">
+			and PARENT_TYPE =#{parentType,jdbcType=VARCHAR}
+		</if>
 		<choose>
 			<when test="sidx != null and sidx.trim() != ''">
 				order by ${sidx} ${order}
@@ -281,5 +287,32 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	<select id="getMaxSortNum" parameterType="string" resultType="INTEGER">
 		select ifnull(max(t1.sort_num), 0) + 1 from t_sys_dict t1 where t1.parent_type = #{parentType}
 	</select>
+	<update id="updateBatchByCaseWhen" parameterType="java.util.List">
+		UPDATE t_sys_dict
+		SET dict_type = CASE dict_id
+		<foreach collection="list" item="item" open="" separator="" close="">
+			when #{item.dictId} then #{item.dictType}
+		</foreach>
+		END,
+		dict_name = case dict_id
+		<foreach collection="list" item="item" open="" separator="" close="">
+			when #{item.dictId} then #{item.dictName}
+		</foreach>
+		END,
+		update_time = case dict_id
+		<foreach collection="list" item="item" open="" separator="" close="">
+			when #{item.dictId} then #{item.updateTime}
+		</foreach>
+		END,
+		update_user_id = case dict_id
+		<foreach collection="list" item="item" open="" separator="" close="">
+			when #{item.dictId} then #{item.updateUserId}
+		</foreach>
+		END
+		WHERE dict_id IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item.dictId}
+		</foreach>
+	</update>
 </mapper>
 

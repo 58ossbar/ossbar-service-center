@@ -83,10 +83,9 @@ public interface TsysUserinfoService {
 	 * @author huj
 	 * @data 2019年5月8日
 	 * @param id 被删除用户的ID
-	 * @param loginUserId 当前登陆用户ID
 	 * @return 
 	 */
-	R delete(String id, String loginUserId);
+	R delete(String id);
 	
 	/**
 	 * <p>批量删除用户</p>

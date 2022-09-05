@@ -10,6 +10,7 @@ import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysAttachService;
 import com.ossbar.modules.sys.domain.TsysAttach;
 import com.ossbar.modules.sys.persistence.TsysAttachMapper;
+import com.ossbar.modules.sys.query.AttachQuery;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
@@ -27,6 +28,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 附件管理
@@ -261,6 +264,26 @@ public class TsysAttachServiceImpl implements TsysAttachService {
         if (pkIdList == null || pkIdList.isEmpty() || StrUtils.isEmpty(fileType)) {
             return false;
         }
+        AttachQuery query = new AttachQuery();
+        query.setPkIds(pkIdList);
+        query.setFileType(fileType);
+        List<String> attachIds = tsysAttachMapper.findAttachIds(query);
+        if (attachIds != null && !attachIds.isEmpty()) {
+            tsysAttachMapper.unBind(attachIds);
+        }
         return true;
+    }
+
+    /**
+     * 解绑关系，未绑定的附件，就可以直接物理删除了
+     *
+     * @param pkIds
+     * @param fileType
+     * @return
+     */
+    @Override
+    public boolean unBind(String[] pkIds, String fileType) {
+        List<String> collect = Stream.of(pkIds).collect(Collectors.toList());
+        return unBind(collect, fileType);
     }
 }

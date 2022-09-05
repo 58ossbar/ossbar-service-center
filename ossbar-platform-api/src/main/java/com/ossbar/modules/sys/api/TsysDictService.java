@@ -1,6 +1,7 @@
 package com.ossbar.modules.sys.api;
 
 import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.sys.dto.dict.SaveDictDTO;
 import com.ossbar.modules.sys.dto.dict.SaveDictTypeDTO;
 import com.ossbar.modules.sys.vo.dict.TsysDictVO;
 
@@ -73,4 +74,29 @@ public interface TsysDictService {
      * @return
      */
     R updateType(SaveDictTypeDTO dict);
+
+    /**
+     * 新增字典
+     * @param dto
+     * @return
+     */
+    R save(SaveDictDTO dto);
+
+    /**
+     * 修改字典
+     * @param dto
+     * @return
+     */
+    R update(SaveDictDTO dto);
+
+    /**
+     *
+     * 删除
+     *
+     * @author huangwb
+     * @param ids
+     * @return R
+     */
+    R deleteType(String[] ids);
+
 }

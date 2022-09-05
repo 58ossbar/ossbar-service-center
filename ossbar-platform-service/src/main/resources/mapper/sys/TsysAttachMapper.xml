@@ -208,5 +208,20 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			</otherwise>
 		</choose>
 	</select>
+	<select id="findAttachIds" parameterType="com.ossbar.modules.sys.query.AttachQuery" resultType="java.lang.String">
+		SELECT attach_id FROM t_sys_attach WHERE file_type = #{fileType}
+		<if test="pkIds != null and pkIds.size() > 0">
+			AND PKID IN
+			<foreach collection="pkIds" item="pkId" open="(" separator="," close=")">#{pkId}</foreach>
+		</if>
+	</select>
+	<update id="unBind" parameterType="java.util.List">
+		<if test="attachIdList != null and attachIdList.size() > 0">
+			UPDATE t_sys_attach SET file_state = '0'
+			WHERE attach_id IN (
+				<foreach collection="attachIdList" item="attachId" separator=",">#{attachId}</foreach>
+			)
+		</if>
+	</update>
 </mapper>
 

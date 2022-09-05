@@ -137,7 +137,7 @@ public class LoginController {
 			return R.ok().put(Constant.R_DATA, vo);
 		} catch (Exception e) {
 			log.error("系统出现了问题！", e);
-			return R.error("系统出现了问题，请联系管理员！");
+			return R.error("系统开了小差，请重新试一下！");
 		}
 	}
 
