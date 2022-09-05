@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -97,6 +94,56 @@ public class TsysOrgServiceImpl implements TsysOrgService {
             });
         }
         return R.ok().put(Constant.R_DATA, tsysOrgList);
+    }
+
+    /**
+     * 根据条件查询机构列表
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    @RequestMapping("/queryByMap")
+    @SentinelResource("/sys/org/queryByMap")
+    @DataFilter(tableAlias = "o", customDataAuth = "", selfUser = false)
+    public R queryByMap(Map<String, Object> map) {
+        Query query = new Query(map);
+        List<TsysOrg> tsysOrgList = tsysOrgMapper.selectListByMap(query);
+        Map<String, TsysOrg> dataMap = new HashMap<String, TsysOrg>();
+        for (TsysOrg tsysOrg : tsysOrgList) {
+            dataMap.put(tsysOrg.getOrgId(), tsysOrg);
+        }
+        // 排序操作
+        Map<String, TsysOrg> sortMap = new TreeMap<String, TsysOrg>(new MapValueComparaor(dataMap));
+        sortMap.putAll(dataMap);
+        // 充分利用对象引用之间的关系 即便已经是Map集合 但数据来源引用还是collect的数据
+        sortMap.forEach((k, v) -> {
+            // 如果不是根节点
+            if (!v.getParentId().equals("-1")) {
+                sortMap.get(v.getParentId()).getChildren().add(v);
+            }
+        });
+        List<TsysOrg> list = tsysOrgList.stream().filter(a -> a.getParentId().equals("-1")).collect(Collectors.toList());
+        return R.ok().put(Constant.R_DATA, list);
+    }
+
+    class MapValueComparaor implements Comparator<String> {
+        Map<String, TsysOrg> map;
+
+        public MapValueComparaor(Map<String, TsysOrg> map) {
+            this.map = map;
+        }
+
+        @Override
+        public int compare(String o1, String o2) {
+            if (map.get(map.get(o1).getParentId()) == null) {
+                map.get(o1).setParentId("-1");
+            } else if (map.get(map.get(o2).getParentId()) == null) {
+                map.get(o2).setParentId("-1");
+            }
+            return map.get(o1).getOrgCode().compareTo(map.get(o2).getOrgCode());
+        }
+
     }
 
     /**

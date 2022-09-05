@@ -5,10 +5,14 @@ import com.ossbar.modules.sys.api.TsysOrgService;
 import com.ossbar.modules.sys.api.TsysRoleService;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import org.apache.dubbo.config.annotation.Reference;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 机构管理
@@ -37,5 +41,18 @@ public class TsysOrgController {
         return tsysOrgService.getOrgTree(new HashMap<String, Object>());
     }
 
-
+    /**
+     * 查询机构列表
+     *
+     * @param parentId 父机构节点ID orgName机构名称模糊查询条件 type=1代表树形菜单展开否则模糊查询情况
+     * @return
+     * @author huangwb
+     * @date 2019-5-16 11:30
+     */
+    @GetMapping(value = "/query")
+    @PreAuthorize("hasAuthority('sys:tsysorg:query')")
+    @SysLog("查询机构列表")
+    public R query(@RequestParam(required = false) Map<String, Object> map) {
+        return tsysOrgService.queryByMap(map);
+    }
 }

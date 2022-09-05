@@ -30,4 +30,11 @@ public interface TsysOrgService {
      */
     R getOrgTree(Map<String, Object> map);
 
+    /**
+     * 根据条件查询机构列表
+     * @param map
+     * @return
+     */
+    R queryByMap(Map<String, Object> map);
+
 }
