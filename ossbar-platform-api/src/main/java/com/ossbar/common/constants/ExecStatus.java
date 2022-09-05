@@ -10,6 +10,7 @@ public enum ExecStatus {
     FAIL(-1, "操作失败"),
     //-----参数问题
     INVALID_PARAM(1000, "参数不合法"),
+    ILLEGAL_OPERATION(1001, "非法操作"),
     //-----数据验证问题
     VALIDATION_FAIL(2000, "数据验证失败，请检查数据是否满足约束条件。"),
     USER_EXITS(2001, "用户已注册"),
