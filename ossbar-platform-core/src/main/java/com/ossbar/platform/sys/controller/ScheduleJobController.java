@@ -6,6 +6,7 @@ import com.ossbar.modules.sys.domain.ScheduleJobEntity;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -61,7 +62,7 @@ public class ScheduleJobController {
     @PostMapping("/save")
     @PreAuthorize("hasAuthority('sys:job:add')")
     @SysLog("执行定时任务数据新增")
-    public R save(@RequestBody ScheduleJobEntity scheduleJob) {
+    public R save(@RequestBody @Validated ScheduleJobEntity scheduleJob) {
         return scheduleJobService.save(scheduleJob);
     }
 
@@ -73,7 +74,7 @@ public class ScheduleJobController {
     @PostMapping("/update")
     @PreAuthorize("hasAuthority('sys:job:edit')")
     @SysLog("执行定时任务数据修改")
-    public R update(@RequestBody ScheduleJobEntity scheduleJob) {
+    public R update(@RequestBody @Validated ScheduleJobEntity scheduleJob) {
         return scheduleJobService.update(scheduleJob);
     }
 

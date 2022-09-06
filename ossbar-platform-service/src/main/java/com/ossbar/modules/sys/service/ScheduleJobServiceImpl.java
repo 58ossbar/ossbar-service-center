@@ -1,6 +1,7 @@
 package com.ossbar.modules.sys.service;
 
 import com.github.pagehelper.PageHelper;
+import com.ossbar.common.constants.ExecStatus;
 import com.ossbar.common.utils.PageUtils;
 import com.ossbar.common.utils.Query;
 import com.ossbar.core.baseclass.domain.R;
@@ -12,6 +13,7 @@ import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
 import org.apache.dubbo.config.annotation.Service;
+import org.quartz.CronExpression;
 import org.quartz.CronTrigger;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,13 +100,17 @@ public class ScheduleJobServiceImpl implements ScheduleJobService, CommandLineRu
     @Override
     @Transactional(rollbackFor = Exception.class)
     public R save(ScheduleJobEntity scheduleJob) {
+        boolean validExpression = CronExpression.isValidExpression(scheduleJob.getCronExpression());
+        if (!validExpression) {
+            return R.error("请输入正确的cron表达式！");
+        }
         scheduleJob.setCreateTime(DateUtils.getNowTimeStamp());
         scheduleJob.setUpdateTime(scheduleJob.getCreateTime());
         scheduleJob.setJobId(Identities.uuid());
         scheduleJob.setStatus(Constant.ScheduleStatus.NORMAL.getValue());
         scheduleJobMapper.insert(scheduleJob);
         ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
-        return R.ok();
+        return R.ok("新增成功");
     }
 
     /**
@@ -116,10 +122,14 @@ public class ScheduleJobServiceImpl implements ScheduleJobService, CommandLineRu
     @Override
     @Transactional(rollbackFor = Exception.class)
     public R update(ScheduleJobEntity scheduleJob) {
+        boolean validExpression = CronExpression.isValidExpression(scheduleJob.getCronExpression());
+        if (!validExpression) {
+            return R.error("请输入正确的cron表达式！");
+        }
         ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
         scheduleJob.setUpdateTime(DateUtils.getNowTimeStamp());
         scheduleJobMapper.update(scheduleJob);
-        return R.ok();
+        return R.ok("修改成功");
     }
 
     /**
@@ -131,12 +141,15 @@ public class ScheduleJobServiceImpl implements ScheduleJobService, CommandLineRu
     @Override
     @Transactional(rollbackFor = Exception.class)
     public R deleteBatch(String[] jobIds) {
+        if (jobIds == null || jobIds.length == 0) {
+            return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
+        }
         for (String jobId : jobIds) {
             ScheduleUtils.deleteScheduleJob(scheduler, jobId);
         }
         // 删除数据
         scheduleJobMapper.deleteBatch(jobIds);
-        return R.ok();
+        return R.ok("删除成功");
     }
 
     /**
@@ -148,6 +161,9 @@ public class ScheduleJobServiceImpl implements ScheduleJobService, CommandLineRu
     @Override
     @Transactional(rollbackFor = Exception.class)
     public R runTask(String[] jobIds) {
+        if (jobIds == null || jobIds.length == 0) {
+            return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
+        }
         for (String jobId : jobIds) {
             ScheduleJobEntity scheduleJobEntity = scheduleJobMapper.selectObjectById(jobId);
             ScheduleUtils.run(scheduler, scheduleJobEntity);
@@ -162,12 +178,16 @@ public class ScheduleJobServiceImpl implements ScheduleJobService, CommandLineRu
      * @return R
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public R pause(String[] jobIds) {
+        if (jobIds == null || jobIds.length == 0) {
+            return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
+        }
         for (String jobId : jobIds) {
             ScheduleUtils.pauseJob(scheduler, jobId);
         }
         updateBatch(jobIds, Constant.ScheduleStatus.PAUSE.getValue());
-        return R.ok();
+        return R.ok("暂停成功");
     }
 
     /**
@@ -179,11 +199,14 @@ public class ScheduleJobServiceImpl implements ScheduleJobService, CommandLineRu
     @Override
     @Transactional(rollbackFor = Exception.class)
     public R resume(String[] jobIds) {
+        if (jobIds == null || jobIds.length == 0) {
+            return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
+        }
         for (String jobId : jobIds) {
             ScheduleUtils.resumeJob(scheduler, jobId);
         }
         updateBatch(jobIds, Constant.ScheduleStatus.NORMAL.getValue());
-        return R.ok();
+        return R.ok("恢复成功");
     }
 
     private int updateBatch(String[] jobIds, int status) {

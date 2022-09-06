@@ -143,4 +143,11 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 			</otherwise>
 		</choose>
 	</select>
+	<select id="selectDistinctList" resultMap="BaseResultMap">
+		select p1.* from
+		t_sys_parameter p1 where p1.PARAID in (select
+		min(p2.PARAID) from
+		t_sys_parameter p2 GROUP BY p2.PARANAME)
+		order by p1.paraorder asc
+	</select>
 </mapper>

@@ -1,7 +1,13 @@
 package com.ossbar.modules.sys.domain;
 
 
+import com.ossbar.common.validator.group.AddGroup;
+import com.ossbar.common.validator.group.UpdateGroup;
 import com.ossbar.core.baseclass.domain.BaseDomain;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * Title:定时器 Copyright: Copyright (c) 2017 Company:creatorblue.co.,ltd
@@ -20,18 +26,20 @@ public class ScheduleJobEntity extends BaseDomain<Object> {
 	/**
 	 * 任务id
 	 */
+	@NotNull(message = "修改必须指定id", groups = {UpdateGroup.class})
+	@Null(message = "新增不能指定id，请不传或传null", groups = {AddGroup.class})
 	private String jobId;
 
 	/**
 	 * spring bean名称
 	 */
-	// @NotBlank(message = "bean名称不能为空")
+	@NotBlank(message = "bean名称不能为空")
 	private String beanName;
 
 	/**
 	 * 方法名
 	 */
-	// @NotBlank(message = "方法名称不能为空")
+	@NotBlank(message = "方法名称不能为空")
 	private String methodName;
 
 	/**
@@ -42,7 +50,7 @@ public class ScheduleJobEntity extends BaseDomain<Object> {
 	/**
 	 * cron表达式
 	 */
-	// @NotBlank(message = "cron表达式不能为空")
+	@NotBlank(message = "cron表达式不能为空")
 	private String cronExpression;
 
 	/**
