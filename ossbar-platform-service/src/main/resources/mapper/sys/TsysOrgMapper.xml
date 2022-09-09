@@ -180,6 +180,13 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		DELETE FROM T_SYS_ORG WHERE
 		ORG_ID = #{orgId,jdbcType=VARCHAR}
 	</delete>
+	<delete id="deleteBatch">
+		delete from T_SYS_ORG where ORG_ID in
+		<foreach item="orgId" collection="array" open="("
+				 separator="," close=")">
+			#{orgId}
+		</foreach>
+	</delete>
 	<select id="selectObjectById" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
@@ -233,6 +240,27 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		resultType="java.lang.String">
 		select max(ORG_CODE) from T_SYS_ORG where PARENT_ID =
 		#{value}
+	</select>
+	<select id="selectCountParentId" resultType="int"
+			parameterType="java.lang.String">
+		select count(org_id)
+		from
+		T_SYS_ORG where PARENT_ID =
+		#{parentId}
+	</select>
+	<select id="selectMaxOrderSnByParentId"
+			parameterType="java.lang.String" resultType="int">
+		select
+		IFNULL(max(org_sn),0) from
+		T_SYS_ORG where PARENT_ID =
+		#{parentId}
+	</select>
+	<select id="selectListByParentId"
+			parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from
+		T_SYS_ORG
+		where PARENT_ID =
+		#{parentId} order by org_code
 	</select>
 </mapper>
 

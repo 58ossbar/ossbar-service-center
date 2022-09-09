@@ -1,6 +1,8 @@
 package com.ossbar.modules.sys.api;
 
 import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.sys.domain.TsysOrg;
+import com.ossbar.modules.sys.dto.org.SaveOrgDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -37,4 +39,57 @@ public interface TsysOrgService {
      */
     R queryByMap(Map<String, Object> map);
 
+    /**
+     * 新增
+     * @param dto
+     * @return
+     */
+    R save(SaveOrgDTO dto);
+
+    /**
+     * 新增
+     * @param dto
+     * @return
+     */
+    R update(SaveOrgDTO dto);
+
+    /**
+     * 修改
+     * @param tsysOrg
+     * @return
+     */
+    R update(TsysOrg tsysOrg);
+
+    /**
+     * 批量删除
+     *
+     * @param ids
+     * @author huangwb
+     * @date 2019-05-05 15:18
+     */
+    R deleteBatch(String[] ids);
+
+    /**
+     * 移动资源菜单操作
+     *
+     *
+     * @param moveId   移动对象的id
+     * @param targetId 目标对象的id
+     * @param moveType 移动的类型
+     * @return
+     * @author huangwb
+     * @date 2019-06-03 17:18
+     */
+    R drag(String moveId, String targetId, String moveType);
+
+    /**
+     * 点击上下按钮移动机构管理节点操作
+     *
+     * @param moveId   移动对象的id
+     * @param targetId 目标对象的id
+     * @return
+     * @author huangwb
+     * @date 2019-06-17 14:18
+     */
+    R clickDrag(String moveId, String targetId);
 }

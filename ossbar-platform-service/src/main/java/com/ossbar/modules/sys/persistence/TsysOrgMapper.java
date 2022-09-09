@@ -1,10 +1,10 @@
 package com.ossbar.modules.sys.persistence;
 
-import java.util.List;
-import org.apache.ibatis.annotations.Mapper;
-
 import com.ossbar.core.baseclass.persistence.BaseSqlMapper;
 import com.ossbar.modules.sys.domain.TsysOrg;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -43,4 +43,28 @@ public interface TsysOrgMapper extends BaseSqlMapper<TsysOrg> {
 	 * 上级部门ID
 	 */
 	List<String> selectOrgIdList(String parentId);
+
+	/**
+	 * 查询指定节点下的节点总数
+	 *
+	 * @param parentId
+	 * @return
+	 */
+	int selectCountParentId(String parentId);
+
+	/**
+	 * 查询指定节点下的最大排序号
+	 *
+	 * @param parentId
+	 * @return
+	 */
+	int selectMaxOrderSnByParentId(String parentId);
+
+	/**
+	 * 根据parentId 查询子元素
+	 *
+	 * @param parentId
+	 * @return
+	 */
+	List<TsysOrg> selectListByParentId(String parentId);
 }
