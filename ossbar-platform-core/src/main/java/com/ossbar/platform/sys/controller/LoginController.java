@@ -88,14 +88,12 @@ public class LoginController {
 		// TODO 前面密文传输，可以在这里解密
 
 		Object captchaSession = session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
-		log.debug("用户输入的验证码:" + captcha);
-		log.debug("从session中拿验证码：" + session.getAttribute(Constants.KAPTCHA_SESSION_KEY));
 		session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);
 
 		if (StrUtils.isNull(captchaSession) || StrUtils.isNull(captcha) || !captcha.equalsIgnoreCase(captchaSession.toString())) {
-			//String msg = "验证码错误！";
-			//tsysLoginLogService.saveFailMessage(request, msg);
-			//return R.error(msg);
+			String msg = "验证码错误！";
+			tsysLoginLogService.saveFailMessage(request, msg);
+			return R.error(msg);
 		}
 		TsysUserinfo userInfo = tsysUserinfoService.selectObjectByUserName(username);
 		if (userInfo == null) {
