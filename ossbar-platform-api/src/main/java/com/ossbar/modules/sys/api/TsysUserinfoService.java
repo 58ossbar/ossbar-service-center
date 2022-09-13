@@ -42,26 +42,7 @@ public interface TsysUserinfoService {
 	 * @return 
 	 */
 	List<TsysUserinfo> queryList(String[] orgIds);
-	
-	
-	/**
-	 * <p>注:原ModelAndView下的用户信息编辑页</p>
-	 * @author huj
-	 * @data 2019年5月6日
-	 * @param map
-	 * @return HashMap集合,通过key: data获取数据
-	 */
-	R add(Map<String, Object> map);
-	
-	/**
-	 * <p>注:原ModelAndView下的用户信息编辑页</p>
-	 * @author huj
-	 * @data 2019年5月6日
-	 * @param userId 被修改的用户ID
-	 * @return
-	 */
-	R edit(String userId);
-	
+
 	/**
 	 * <p>新增</p>
 	 * @author huj
@@ -152,20 +133,7 @@ public interface TsysUserinfoService {
 	 * @return
 	 */
 	R clearPermissions(List<String> userIds);
-	
-	/**
-	 * <p>用户分配权限，当前登录用户不能分配权限</p>
-	 * @author huj
-	 * @data 2019年5月6日
-	 * @param userIds 用户ID 多个以逗号隔开
-	 * @param menuIds 菜单ID 多个以逗号隔开
-	 * @param loginUserId 当前登陆用户ID
-	 * @return
-	 */
-	R grantPerms(String[] userIds,String[] menuIds, String loginUserId);
-	
-	
-	
+
 	/**
 	 * <p>查询用户的所有权限</p>
 	 * @author huj

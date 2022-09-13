@@ -113,18 +113,6 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		return null;
 	}
 
-	@Override
-	public R add(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public R edit(String userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	/**
 	 * 新增用户
 	 * @param user
@@ -306,7 +294,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	@RequestMapping("/grantrole")
 	@SentinelResource("sys/userinfo/grantrole")
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value = "authorization_cache", allEntries = true)
+	@CacheEvict(value = {"authorization_cache", "menu_list_cache"}, allEntries = true)
 	public R grantRole(SaveUserRoleDTO dto) {
 		List<String> roleIds = dto.getRoleIds();
 		List<String>  userIds = dto.getUserIds();
@@ -415,14 +403,6 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		// 清除用户菜单权限
 		tsysUserprivilegeMapper.deleteBatch(userIds.toArray(new String[userIds.size()]));
 		return R.ok("成功清除权限");
-	}
-
-	@Override
-	public R grantPerms(String[] userIds, String[] menuIds, String loginUserId) {
-		List<String> userIdList = Arrays.asList(userIds);
-		userIdList.remove(loginUserId);
-		// TODO
-		return null;
 	}
 
 	@Override

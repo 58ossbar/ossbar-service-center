@@ -20,21 +20,22 @@
 	<cache name="parameter_cache" maxElementsInMemory="30" eternal="false"
 		timeToIdleSeconds="1800" overflowToDisk="true"
 		memoryStoreEvictionPolicy="LRU" />
+	<!-- 字典管理缓存 -->
 	<cache name="dict_cache" maxElementsInMemory="30" eternal="false"
 		timeToIdleSeconds="1800" overflowToDisk="true"
 		memoryStoreEvictionPolicy="LRU" />
 
-	<!--活动session缓存 -->
+	<!-- 活动session缓存 -->
 	<cache name="shiro_active_session_cache" maxElementsInMemory="10000"
 		overflowToDisk="true" eternal="true" timeToLiveSeconds="0"
 		timeToIdleSeconds="0" diskPersistent="true"
 		diskExpiryThreadIntervalSeconds="600" />
-	<!--授权信息 -->
+	<!-- 授权信息 -->
 	<cache name="authorization_cache" maxElementsInMemory="10000"
 		timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false"
 		overflowToDisk="true" />
 
-	<!--菜单 -->
+	<!-- 菜单管理缓存 -->
 	<cache name="menu_list_cache" maxElementsInMemory="10000"
 		overflowToDisk="true" eternal="true" timeToLiveSeconds="0"
 		timeToIdleSeconds="0" diskPersistent="true"
