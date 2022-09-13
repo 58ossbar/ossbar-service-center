@@ -63,7 +63,7 @@ public class TsysPostController {
      * @return
      */
     @PostMapping("/save")
-    //@PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
+    @PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
     @SysLog("执行岗位数据新增")
     public R save(@RequestBody @Validated({AddGroup.class}) SavePostDTO post) {
         return tsysPostService.save(post);
@@ -75,7 +75,7 @@ public class TsysPostController {
      * @return
      */
     @PostMapping("/update")
-    //@PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
+    @PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
     @SysLog("执行岗位数据修改")
     public R update(@RequestBody @Validated({UpdateGroup.class}) SavePostDTO post) {
         return tsysPostService.update(post);

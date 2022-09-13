@@ -155,7 +155,6 @@ public class LoginController {
 		BufferedImage image = producer.createImage(text);
 		// 保存到shiro session
 		session.setAttribute(Constants.KAPTCHA_SESSION_KEY, text);
-		log.debug("存入session的验证码: " + session.getAttribute(Constants.KAPTCHA_SESSION_KEY));
 		ServletOutputStream out = response.getOutputStream();
 		ImageIO.write(image, "jpg", out);
 		IOUtils.closeQuietly(out);
