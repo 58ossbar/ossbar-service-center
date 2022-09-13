@@ -4,6 +4,7 @@ import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysResourceService;
 import com.ossbar.modules.sys.api.TsysUserinfoService;
 import com.ossbar.modules.sys.dto.user.SaveUserDTO;
+import com.ossbar.modules.sys.dto.user.SaveUserRoleDTO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -120,6 +121,30 @@ public class TsysUserinfoController {
     @SysLog("重置用户密码")
     public R resetPassword(@RequestBody List<String> ids) {
         return tsysUserinfoService.resetPassword(ids);
+    }
 
+    /**
+     * 获取用户已分配的角色
+     * @author huj
+     * @data 2019年6月14日
+     * @param ids
+     * @return
+     */
+    @PostMapping("/toGrantRole")
+    public R toGrantRole(@RequestBody String[] ids) {
+        return tsysUserinfoService.toGrantRole(ids);
+    }
+
+    /**
+     * 分配角色
+     * @author huj
+     * @data 2019年5月14日
+     * @param dto
+     * @return
+     */
+    @PostMapping("/grantRole")
+    @SysLog("分配角色")
+    public R grantRole(@RequestBody SaveUserRoleDTO dto) {
+        return tsysUserinfoService.grantRole(dto);
     }
 }

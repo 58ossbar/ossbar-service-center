@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -275,7 +276,11 @@ public class TsysRoleServiceImpl implements TsysRoleService {
                 }
             }
         }
-        return R.ok().put(Constant.R_DATA, list).put("intersection", list.get(list.size()-1).getUserIdList());
+        List<String> userIdList = new ArrayList<>();
+        if (list.size() > 0) {
+            userIdList = list.get(list.size() - 1).getUserIdList();
+        }
+        return R.ok().put(Constant.R_DATA, list).put("intersection", userIdList);
     }
 
     /**

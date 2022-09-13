@@ -62,4 +62,13 @@
 			)
 		</foreach>
 	</insert>
+
+	<select id="selectRoleIntersectionByUserId" resultType="com.ossbar.modules.sys.domain.TuserRole">
+		select role_id, count(1) id from t_user_role where user_id in
+		<foreach item="userId" collection="array" open="(" separator=","
+				 close=")">
+			#{userId}
+		</foreach>
+		group by role_id
+	</select>
 </mapper>

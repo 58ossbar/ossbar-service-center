@@ -3,6 +3,7 @@ package com.ossbar.modules.sys.api;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
 import com.ossbar.modules.sys.dto.user.SaveUserDTO;
+import com.ossbar.modules.sys.dto.user.SaveUserRoleDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -109,15 +110,13 @@ public interface TsysUserinfoService {
 	 * <p>分配角色，当前登录用户不能给自己分配角色</p>
 	 * @author huj
 	 * @data 2019年5月6日
-	 * @param userIds 用户ID 多个以逗号分隔
-	 * @param roleIds 角色ID 多个以逗号分隔
-	 * @param loginUserId 当前登陆用户ID
+	 * @param dto
 	 * @return
 	 */
-	R grantRole(String[] userIds,String[] roleIds, String loginUserId);
-	
+	R grantRole(SaveUserRoleDTO dto);
+
 	/**
-	 * <p>进入分配角色界面</p>
+	 * 获取用户已分配的角色
 	 * @author huj
 	 * @data 2019年6月14日
 	 * @param ids

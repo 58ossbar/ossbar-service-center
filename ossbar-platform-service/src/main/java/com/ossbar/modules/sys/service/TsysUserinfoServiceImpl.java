@@ -8,11 +8,12 @@ import com.ossbar.common.utils.*;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.*;
 import com.ossbar.modules.sys.domain.TsysParameter;
+import com.ossbar.modules.sys.domain.TsysRole;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
+import com.ossbar.modules.sys.domain.TuserRole;
 import com.ossbar.modules.sys.dto.user.SaveUserDTO;
-import com.ossbar.modules.sys.persistence.TsysParameterMapper;
-import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
-import com.ossbar.modules.sys.persistence.TsysUserprivilegeMapper;
+import com.ossbar.modules.sys.dto.user.SaveUserRoleDTO;
+import com.ossbar.modules.sys.persistence.*;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.*;
 import org.apache.commons.lang3.ArrayUtils;
@@ -35,6 +36,12 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	private TsysUserinfoMapper tsysUserinfoMapper;
 	@Autowired
 	private TsysParameterMapper tsysParameterMapper;
+	@Autowired
+	private TsysUserprivilegeMapper tsysUserprivilegeMapper;
+	@Autowired
+	private TsysRoleMapper tsysRoleMapper;
+	@Autowired
+	private TuserRoleMapper tuserRoleMapper;
 
 	@Autowired
 	private TsysAttachService tsysAttachService;
@@ -44,8 +51,6 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	private TorgUserService torgUserService;
 	@Autowired
 	private TuserPostService tuserPostService;
-	@Autowired
-	private TsysUserprivilegeMapper tsysUserprivilegeMapper;
 
 	@Autowired
 	private ConvertUtil convertUtil;
@@ -292,16 +297,68 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		return R.ok().put(Constant.R_DATA, user);
 	}
 
+	/**
+	 * 分配角色
+	 * @param dto
+	 * @return
+	 */
 	@Override
-	public R grantRole(String[] userIds, String[] roleIds, String loginUserId) {
-		// TODO Auto-generated method stub
-		return null;
+	@RequestMapping("/grantrole")
+	@SentinelResource("sys/userinfo/grantrole")
+	@Transactional(rollbackFor = Exception.class)
+	@CacheEvict(value = "authorization_cache", allEntries = true)
+	public R grantRole(SaveUserRoleDTO dto) {
+		List<String> roleIds = dto.getRoleIds();
+		List<String>  userIds = dto.getUserIds();
+		if (userIds == null || userIds.isEmpty()) {
+			return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
+		}
+		String loginUserId = serviceLoginUtil.getLoginUserId();
+		for (String userId : userIds) {
+			// 不给超级管理员分配角色
+			if (Constant.SUPER_ADMIN.equals(userId)) {
+				continue;
+			}
+			// 当前登录用户不能给自己分配角色
+			if (userId.equals(loginUserId)) {
+				continue;
+			}
+			tuserRoleService.saveOrUpdate(roleIds, Arrays.asList(userId));
+		}
+		return R.ok("角色分配成功");
 	}
 
+	/**
+	 * 获取用户已分配的角色
+	 * @author huj
+	 * @data 2019年6月14日
+	 * @param ids
+	 * @return
+	 */
 	@Override
 	public R toGrantRole(String[] ids) {
-		// TODO Auto-generated method stub
-		return null;
+		if (ids == null || ids.length == 0) {
+			return R.error(ExecStatus.INVALID_PARAM.getCode(), ExecStatus.INVALID_PARAM.getMsg());
+		}
+		List<TsysRole> data = new ArrayList<>();
+		if (ids.length == 1) { // 单个用户的时候
+			Map<String, Object> map = new HashMap<>();
+			map.put("userId", ids[0]);
+			map.put("status", 1);
+			data = tsysRoleMapper.selectListByMap(map);
+		} else if(ids.length >= 2){ // 多选用户的时候
+			List<TuserRole> list = tuserRoleMapper.selectRoleIntersectionByUserId(ids);
+			if (list.size() > 0) {
+				for (TuserRole tuserRole : list) {
+					//log.debug(tuserRole.getRoleId() + "\t" + tuserRole.getId());
+					// tuserRole.getId() 为 mybatis中count(1) id
+					if (Integer.valueOf(tuserRole.getId()) == ids.length) {
+						data.add(tsysRoleMapper.selectObjectById(tuserRole.getRoleId()));
+					}
+				}
+			}
+		}
+		return R.ok().put(Constant.R_DATA, data);
 	}
 
 	@Override

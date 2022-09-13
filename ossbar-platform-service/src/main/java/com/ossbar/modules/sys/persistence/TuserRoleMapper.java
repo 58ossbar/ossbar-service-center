@@ -34,4 +34,13 @@ public interface TuserRoleMapper extends BaseSqlMapper<TuserRole> {
 	 * @param list
 	 */
 	void insertBatch(List<TuserRole> list);
+
+	/**
+	 * <p>根据用户ID查询角色的交集</p>
+	 * @author huj
+	 * @data 2019年6月17日
+	 * @param userIds
+	 * @return
+	 */
+	List<TuserRole> selectRoleIntersectionByUserId(String[] userIds);
 }

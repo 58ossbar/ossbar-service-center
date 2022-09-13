@@ -34,21 +34,24 @@ public class TuserRoleServiceImpl implements TuserRoleService {
      */
     @Override
     public R saveOrUpdate(List<String> roleIdList, List<String> userIdList) {
-        roleIdList.stream().forEach(roleId -> {
+        userIdList.stream().forEach(userId -> {
             // 先删除用户与角色关系
-            tuserRoleMapper.deleteByRole(roleId);
+            tuserRoleMapper.delete(userId);
             // 批量保存
-            List<TuserRole> insertList = new ArrayList<>();
-            userIdList.stream().forEach(userId -> {
-                TuserRole t = new TuserRole();
-                t.setId(Identities.uuid());
-                t.setRoleId(roleId);
-                t.setUserId(userId);
-                insertList.add(t);
+            roleIdList.stream().forEach(roleId -> {
+                if (!roleId.trim().isEmpty()) {
+                    // 批量保存
+                    List<TuserRole> insertList = new ArrayList<>();
+                    TuserRole t = new TuserRole();
+                    t.setId(Identities.uuid());
+                    t.setRoleId(roleId);
+                    t.setUserId(userId);
+                    insertList.add(t);
+                    if (insertList.size() > 0) {
+                        tuserRoleMapper.insertBatch(insertList);
+                    }
+                }
             });
-            if (insertList.size() > 0) {
-                tuserRoleMapper.insertBatch(insertList);
-            }
         });
         return R.ok("保存成功");
     }

@@ -152,7 +152,7 @@
 			<if test="orgId != null and orgId.trim() != ''">
 				and org_id like concat('%',#{orgId},'%')
 			</if>
-			<if test="status != null and status.trim() != ''">
+			<if test="status != null and status != ''">
 				and status = #{status}
 			</if>
 			<if test="createUserId != null">
