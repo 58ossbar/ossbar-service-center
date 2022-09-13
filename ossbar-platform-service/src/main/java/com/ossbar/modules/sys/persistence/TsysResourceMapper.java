@@ -1,12 +1,12 @@
 package com.ossbar.modules.sys.persistence;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Mapper;
-
 import com.ossbar.core.baseclass.persistence.BaseSqlMapper;
 import com.ossbar.modules.sys.domain.TsysResource;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Title: 系统资源配置 Description: Copyright: Copyright (c) 2017
@@ -53,4 +53,41 @@ public interface TsysResourceMapper extends BaseSqlMapper<TsysResource> {
 	 * 
 	 */
 	List<TsysResource> selectSubSysList();
+
+
+	/**
+	 * 查出所有显示的子系统
+	 *
+	 */
+	List<TsysResource> selectSubSysListByDisplay(String display);
+
+	/**
+	 * 查询指定节点下的显示的节点总数
+	 *
+	 * @param parentId
+	 * @return
+	 */
+	int selectCountParentIdAndDisplay(@Param("parentId") String parentId, @Param("display") String display);
+
+	/**
+	 * 查询指定节点下的节点总数
+	 *
+	 * @param parentId
+	 * @return
+	 */
+	int selectCountParentId(String parentId);
+
+	/**
+	 * 查询指定节点下的最大排序号
+	 *
+	 * @param parentId
+	 * @return
+	 */
+	int selectMaxOrderNumByParentId(String parentId);
+
+	/**
+	 * 查出出所有显示的所有子系统
+	 *
+	 */
+	List<TsysResource> selectListParentIdAndDisplay(@Param("parentId") String parentId, @Param("display") String display);
 }

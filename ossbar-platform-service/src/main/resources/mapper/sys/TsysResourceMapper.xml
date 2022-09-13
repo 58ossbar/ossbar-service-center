@@ -188,4 +188,32 @@
 		</foreach>
 	</delete>
 
+	<select id="selectSubSysListByDisplay" resultType="com.ossbar.modules.sys.domain.TsysResource">
+		select * from
+		t_sys_resource where type = -1 and display =
+		#{display} order by
+		order_num asc
+	</select>
+
+	<select id="selectCountParentIdAndDisplay" resultType="int">
+		select
+		count(menu_id) from
+		t_sys_resource where type &lt;=
+		2 and
+		parent_id =
+		#{parentId} and display = #{display}
+	</select>
+	<select id="selectCountParentId" resultType="int" parameterType="java.lang.String">
+		select
+		count(menu_id) from
+		t_sys_resource where type &lt;=
+		2 and
+		parent_id =
+		#{parentId}
+	</select>
+	<select id="selectMaxOrderNumByParentId" parameterType="string" resultType="int">
+		select IFNULL(max(order_num),0) from t_sys_resource where
+		parent_id =
+		#{parentId,jdbcType=VARCHAR}
+	</select>
 </mapper>
