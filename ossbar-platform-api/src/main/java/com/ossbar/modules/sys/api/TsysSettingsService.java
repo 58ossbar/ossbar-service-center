@@ -4,6 +4,7 @@ import com.ossbar.core.baseclass.api.IBaseService;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.domain.TsysSettings;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,4 +22,15 @@ public interface TsysSettingsService extends IBaseService<TsysSettings> {
      */
     R querySetting(Map<String, Object> map);
 
+    /**
+     * 批量修改
+     *
+     * @param settings
+     * @return
+     */
+    R updateBatchSettings(List<TsysSettings> settings);
+
+    TsysSettings selectObjectById(String id);
+
+    List<TsysSettings> selectListByMap(Map<String, Object> map);
 }

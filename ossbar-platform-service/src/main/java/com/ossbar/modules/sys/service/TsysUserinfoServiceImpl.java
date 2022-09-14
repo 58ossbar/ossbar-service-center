@@ -214,7 +214,9 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		if (StrUtils.isNotEmpty(user.getPostId())) {
 			tuserPostService.saveOrUpdate(tsysUserinfo.getUserId(), Arrays.asList(user.getPostId()));
 		}
-		return R.ok("用户修改成功");
+		// 处理图片路径
+		user.setUserimg(uploadUtils.stitchingPath(user.getUserimg(), INDEX_USER));
+		return R.ok("用户修改成功").put(Constant.R_DATA, user);
 	}
 
 	/**

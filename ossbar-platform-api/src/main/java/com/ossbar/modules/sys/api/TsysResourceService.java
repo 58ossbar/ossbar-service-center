@@ -28,7 +28,7 @@ public interface TsysResourceService {
 	/**
 	 * 删除操作
 	 * 
-	 * @param menuId
+	 * @param id
 	 * @return R
 	 * @author huangwb
 	 * @date 2019-05-06 15:18
@@ -74,7 +74,7 @@ public interface TsysResourceService {
 	/**
 	 * 获取菜单列表
 	 * 
-	 * @param map 判断需要查询的是子菜单还是父级菜单
+	 * @param menuId 判断需要查询的是子菜单还是父级菜单
 	 * @return R
 	 * @author huangwb
 	 * @date 2019-05-06 15:18
@@ -84,7 +84,7 @@ public interface TsysResourceService {
 	/**
 	 * 用户菜单列表
 	 * 
-	 * @param userId
+	 * @param username
 	 * @param systemId 默认业务基础平台的menuid
 	 * @return R
 	 * @author huangwb
@@ -123,7 +123,6 @@ public interface TsysResourceService {
 	 * 根据父菜单，查询子菜单
 	 * 
 	 * @param parentId 父菜单ID
-	 * @param userId
 	 * @return R
 	 * @author huangwb
 	 * @date 2019-05-06 15:18
@@ -183,7 +182,7 @@ public interface TsysResourceService {
 	/**
 	 * 根据前端map参数获取display显示的菜单列表
 	 * 
-	 * @param parentId 判断需要查询的是子菜单还是父级菜单 type判断是否是展开树还是模糊查询的操作 name模糊查询参数
+	 * @param map parentId 判断需要查询的是子菜单还是父级菜单 type判断是否是展开树还是模糊查询的操作 name模糊查询参数
 	 * @return R
 	 * @author huangwb
 	 * @date 2019-06-17 15:18
