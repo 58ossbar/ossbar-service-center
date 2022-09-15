@@ -42,7 +42,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 			<scope>provided</scope>
@@ -51,7 +51,7 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
@@ -147,10 +147,10 @@
 			</resource>
 		</resources>
 		<plugins>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -181,33 +181,16 @@
 						<configuration>
 							<excludes>
 								<!--排除一些不需要打包的class文件,避免出现多个应用程序入口 -->
-								<!--<exclude>application.properties</exclude>-->
+								<exclude>application.properties</exclude>
+								<exclude>bootstrap.yaml</exclude>
+								<exclude>banner.txt</exclude>
+								<exclude>logback-spring.xml</exclude>
+								<exclude>Dockerfile</exclude>
 							</excludes>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			<!--<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>1.0.0</version>
-				<configuration>
-					<dockerHost>http://192.168.1.100:2375</dockerHost>
-					<imageName>creatorblue/creatorblue-platform-core</imageName>
-					<imageTags>
-						<imageTag>latest</imageTag>
-					</imageTags>
-					<forceTags>false</forceTags>
-					<dockerDirectory>${project.basedir}/src/main/resources</dockerDirectory>
-					<resources>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>${project.build.directory}</directory>
-							<include>${project.build.finalName}.jar</include>
-						</resource>
-					</resources>
-				</configuration>
-			</plugin>-->
 		</plugins>
 	</build>
 </project>
