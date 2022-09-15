@@ -43,7 +43,7 @@ public class UploadFileUtils {
 	private String creatorblueFieAccessPath;
 	// 上传地址
 	@Value("${com.creatorblue.file-upload-path}")
-	public String creatorblueFieUploadPath;
+	private String creatorblueFieUploadPath;
 	@Value("${com.creatorblue.cb-upload-paths:default}")
 	private String cbUploadPaths;
 
