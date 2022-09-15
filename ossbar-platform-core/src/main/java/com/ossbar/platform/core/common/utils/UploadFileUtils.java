@@ -38,10 +38,15 @@ public class UploadFileUtils {
 	@Autowired
 	private LoginUtils loginUtils;
 
+	// 访问地址
+	@Value("${com.creatorblue.file-access-path}")
+	private String creatorblueFieAccessPath;
+	// 上传地址
 	@Value("${com.creatorblue.file-upload-path}")
 	public String creatorblueFieUploadPath;
 	@Value("${com.creatorblue.cb-upload-paths:default}")
 	private String cbUploadPaths;
+
 
 	// 匹配后缀图片格式
 	private final List<String> imgSuffixList = Arrays.asList(".JPEG", ".PNG", ".JPG", ".GIF", ".BMP");
@@ -258,6 +263,44 @@ public class UploadFileUtils {
 			return paths[0];
 		}
 		return paths[Integer.parseInt(paraNo)].trim();
+	}
+
+	/**
+	 * 拼接附件路径（不为空，不为字符串的null，不为https或http开头的才去拼接）
+	 * @param sourceName 假设传入值为：creatorblue.jpg
+	 * @param type 可选参数，从属性文件中获取的对应的文件目录名，默认为0：default
+	 * @return 示例返回结果： /uploads/default/creatorblue.jpg
+	 */
+	public String stitchingPath(Object sourceName, Integer type) {
+		if (StrUtils.isNull(sourceName)) {
+			return "";
+		}
+		return doStitchingPath(sourceName.toString(), String.valueOf(type));
+	}
+
+	/**
+	 * 实际拼接
+	 * @param sourceName
+	 * @param type
+	 * @return
+	 */
+	private String doStitchingPath(String sourceName, String type) {
+		String result = sourceName;
+		type = StrUtils.isEmpty(type) ? "0" : type;
+		if (StrUtils.isNotEmpty(sourceName) && !"null".equals(sourceName)) {
+			if (sourceName.length() > 5) {
+				String name = sourceName.substring(0, 5);
+				// 如果不是网络头像,则拼接地址
+				if (name.indexOf("https") == -1 && name.indexOf("http") == -1) {
+					// 已经拼接过的不再拼接，没拼接的才拼
+					if (sourceName.indexOf("uploads") == -1) {
+						result = creatorblueFieAccessPath + getPathByParaNo(type) + "/" + sourceName;
+					}
+				}
+			}
+
+		}
+		return result;
 	}
 
 }
