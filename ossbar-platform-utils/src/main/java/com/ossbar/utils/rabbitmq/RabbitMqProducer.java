@@ -7,13 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * rabbitmq消息队列生产者
  * @author zhuq
  *
  */
-//@Component
+@Component
 public class RabbitMqProducer {
 	Logger log = LoggerFactory.getLogger(getClass());
 	
