@@ -3,9 +3,10 @@
 <configuration scan="true" scanPeriod="10 seconds">
 	<!--继承spring boot提供的logback配置:注解，避免打印重复日志 -->
 <!--  	<include resource="org/springframework/boot/logging/logback/base.xml"/>  -->
-	<property name="log_path" value="D:/logs" />
+	<property name="log_path" value="/logs" />
 	<!--设置系统日志目录 -->
-	<springProperty scope="context" name="project-name" source="spring.application.name" defaultValue="ossbar-platform-service"/>
+	<springProperty scope="context" name="project-name" source="spring.application.name" defaultValue="creatorblue-stp"/>
+	<springProperty scope="context" name="log-level" source="com.creatorblue.log-level" defaultValue="debug"/>
 	<property name="app_dir" value="${project-name}" />
 
 	<!-- c -->
@@ -182,7 +183,7 @@
 	<logger
 		name="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor"
 		level="info" />
-	<logger name="com.ossbar" level="debug" />
+	<logger name="com.creatorblue" level="${log-level}" />
 
 	<root level="info">
 		<appender-ref ref="console" />
