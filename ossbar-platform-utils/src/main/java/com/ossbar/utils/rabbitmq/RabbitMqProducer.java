@@ -1,20 +1,19 @@
 package com.ossbar.utils.rabbitmq;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.ossbar.utils.tool.StrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.ossbar.utils.tool.StrUtils;
 
 /**
  * rabbitmq消息队列生产者
  * @author zhuq
  *
  */
-@Component
+//@Component
 public class RabbitMqProducer {
 	Logger log = LoggerFactory.getLogger(getClass());
 	
