@@ -279,6 +279,19 @@ public class UploadFileUtils {
 	}
 
 	/**
+	 * 拼接附件路径（不为空，不为字符串的null，不为https或http开头的才去拼接）
+	 * @param sourceName 假设传入值为：creatorblue.jpg
+	 * @param type 可选参数，从属性文件中获取的对应的文件目录名，默认为0：default
+	 * @return 示例返回结果： /uploads/default/creatorblue.jpg
+	 */
+	public String stitchingPath(Object sourceName, String type) {
+		if (StrUtils.isNull(sourceName)) {
+			return "";
+		}
+		return doStitchingPath(sourceName.toString(), String.valueOf(type));
+	}
+
+	/**
 	 * 实际拼接
 	 * @param sourceName
 	 * @param type
