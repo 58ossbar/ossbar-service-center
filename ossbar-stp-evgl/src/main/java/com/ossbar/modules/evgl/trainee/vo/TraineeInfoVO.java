@@ -140,6 +140,8 @@ public class TraineeInfoVO implements Serializable {
 
     private Boolean ifTeacher;
 
+    private String isBind;
+
     public TraineeInfoVO() {
     }
 
@@ -357,6 +359,14 @@ public class TraineeInfoVO implements Serializable {
 
     public void setIfTeacher(Boolean ifTeacher) {
         this.ifTeacher = ifTeacher;
+    }
+
+    public String getIsBind() {
+        return isBind;
+    }
+
+    public void setIsBind(String isBind) {
+        this.isBind = isBind;
     }
 
     @Override

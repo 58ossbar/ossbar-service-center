@@ -90,8 +90,9 @@ public class ThirdLoginController {
         TevglTraineeInfo info = (TevglTraineeInfo)traineeInfo;
         String isBind = StrUtils.toString(session.getAttribute(EvglGlobal.LOGIN_SESSION_ISBIND));
         TraineeInfoVO vo = new TraineeInfoVO();
-        BeanUtils.copyProperties(info, vo);
+        BeanUtils.copyProperties(vo, info);
         handleSomeData(vo, info);
+        vo.setIsBind(isBind);
         return R.ok().put(Constant.R_DATA, vo);
     }
 
@@ -119,6 +120,7 @@ public class ThirdLoginController {
     private void handleSomeData(TraineeInfoVO vo, TevglTraineeInfo user) {
         // 判断身份
         TevglTchTeacher tevglTchTeacher = tevglTchTeacherService.selectObjectByTraineeId(user.getTraineeId());
+        System.out.println("tevglTchTeacher" + tevglTchTeacher);
         vo.setIfTeacher((tevglTchTeacher == null || !"Y".equals(tevglTchTeacher.getState())) ? false : true);
         // 处理头像
         if (tevglTchTeacher != null) {

@@ -183,7 +183,7 @@
 	<logger
 		name="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor"
 		level="info" />
-	<logger name="com.creatorblue" level="${log-level}" />
+	<logger name="com.ossbar" level="${log-level}" />
 
 	<root level="info">
 		<appender-ref ref="console" />

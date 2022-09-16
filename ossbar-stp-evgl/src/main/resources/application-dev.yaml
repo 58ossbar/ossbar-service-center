@@ -2,7 +2,7 @@ com:
   creatorblue:
     anno-filter: /druid/**, /user/login, /user/logout, /index.html, /user/captcha.jpg, /user/querySettings, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.ttf, /**/*.woff, /**/*.js, /**/*.css, /**/*.jpg, /**/*.jpeg, /**/*.png, /**/*.git, /**/*.bmp, /doLogin, /logoutRest, /login-api/**, /index-api/**, /subject-api/**, /major-api/**, /pkginfo-api/**, /teacher-api/**, /trainee-story/**, /partner-api/**, /news-api/**, /cbeditor/**, /resourceCenter-api/**, /teachingCenter-api/**, /classroom-api/**, /dict-api/**, /questions-api/**, /examCenter-api/**, /testPaper-api/**, /paperExamine/**, /managementPanel-api/**, /activity/**, /site/**, /cloud-api/**
     baseUrl: http://locahost:9084/console
-    file-upload-path: d:/uploads
+    file-upload-path: d:/uploads/
     file-access-path: /uploads
     file-upload-path-cloud-pan: d:/uploads/cloud-pan
     file-access-path-cloud-pan: /uploads/cloud-pan
@@ -31,7 +31,7 @@ com:
     wxAppKey:
     gitUrl: 
     gitTicket: 
-    log-level: 
+    log-level: debug
 #微信支付配置
 weixin:
   #小程序appid
@@ -65,6 +65,11 @@ server:
   tomcat:
     uri-encoding: UTF-8
 spring:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin
   redis:
     database: 0
     host: 127.0.0.1
