@@ -260,6 +260,20 @@ public class TevglBookMajorServiceImpl implements TevglBookMajorService {
     }
 
     /**
+     * <p>根据条件查询记录，无分页</p>
+     *
+     * @param map
+     * @return
+     * @author huj
+     * @data 2019年8月20日
+     */
+    @Override
+    public List<TevglBookMajor> selectListByMap(Map<String, Object> map) {
+        Query query = new Query(map);
+        return tevglBookMajorMapper.selectListByMap(query);
+    }
+
+    /**
      * <p>职业课程路径列表</p>
      *
      * @param map

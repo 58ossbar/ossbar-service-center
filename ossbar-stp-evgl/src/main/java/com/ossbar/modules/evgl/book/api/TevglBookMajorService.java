@@ -20,6 +20,15 @@ public interface TevglBookMajorService extends IBaseService<TevglBookMajor> {
 
 
     /**
+     * <p>根据条件查询记录，无分页</p>
+     * @author huj
+     * @data 2019年8月20日
+     * @param map
+     * @return
+     */
+    List<TevglBookMajor> selectListByMap(Map<String, Object> map);
+
+    /**
      * <p>职业课程路径列表</p>
      * @author huj
      * @data 2019年7月11日

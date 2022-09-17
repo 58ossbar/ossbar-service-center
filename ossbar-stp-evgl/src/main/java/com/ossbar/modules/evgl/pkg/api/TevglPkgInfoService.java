@@ -49,4 +49,11 @@ public interface TevglPkgInfoService extends IBaseService<TevglPkgInfo> {
      */
     R listMyPkgInfo(Map<String, Object> params, String loginUserId, String together);
 
+    /**
+     * 修改教学包时，查询教学包信息（专用）
+     * @param pkgId
+     * @param loginUserId
+     * @return
+     */
+    R viewPkgInfoForUpdate(String pkgId, String loginUserId);
 }

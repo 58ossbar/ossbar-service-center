@@ -120,7 +120,6 @@ public class ThirdLoginController {
     private void handleSomeData(TraineeInfoVO vo, TevglTraineeInfo user) {
         // 判断身份
         TevglTchTeacher tevglTchTeacher = tevglTchTeacherService.selectObjectByTraineeId(user.getTraineeId());
-        System.out.println("tevglTchTeacher" + tevglTchTeacher);
         vo.setIfTeacher((tevglTchTeacher == null || !"Y".equals(tevglTchTeacher.getState())) ? false : true);
         // 处理头像
         if (tevglTchTeacher != null) {

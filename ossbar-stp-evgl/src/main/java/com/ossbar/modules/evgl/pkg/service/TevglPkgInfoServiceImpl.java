@@ -402,4 +402,23 @@ public class TevglPkgInfoServiceImpl implements TevglPkgInfoService {
                 break;
         }
     }
+
+    /**
+     * 修改教学包时，查询教学包信息（专用）
+     *
+     * @param pkgId
+     * @param loginUserId
+     * @return
+     */
+    @Override
+    public R viewPkgInfoForUpdate(String pkgId, String loginUserId) {
+        Map<String, Object> pkgInfo = tevglPkgInfoMapper.selectObjectMapById(pkgId);
+        if (pkgInfo != null) {
+            pkgInfo.put("subjectIdActual", pkgInfo.get("subjectId"));
+            pkgInfo.put("subjectId", pkgInfo.get("subjectRef")); // 用于回显
+            pkgInfo.put("pkgLogo", uploadFileUtils.stitchingPath(pkgInfo.get("pkgLogo"), "12"));
+        }
+        return R.ok().put(Constant.R_DATA, pkgInfo);
+    }
+
 }

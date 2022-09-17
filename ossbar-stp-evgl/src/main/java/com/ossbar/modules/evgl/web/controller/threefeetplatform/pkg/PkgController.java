@@ -1,17 +1,21 @@
 package com.ossbar.modules.evgl.web.controller.threefeetplatform.pkg;
 
 import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.common.CbUploadUtils;
 import com.ossbar.modules.evgl.common.CheckSession;
 import com.ossbar.modules.evgl.common.EvglGlobal;
 import com.ossbar.modules.evgl.common.LoginUtils;
 import com.ossbar.modules.evgl.pkg.api.TevglPkgInfoService;
+import com.ossbar.modules.evgl.pkg.domain.TevglPkgInfo;
 import com.ossbar.modules.evgl.trainee.domain.TevglTraineeInfo;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.StrUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -34,6 +38,9 @@ public class PkgController {
 
     @Reference(version = "1.0.0")
     private TevglPkgInfoService tevglPkgInfoService;
+
+    @Autowired
+    private CbUploadUtils uploadUtils;
 
     /**
      * 获取筛选条件
@@ -111,5 +118,68 @@ public class PkgController {
         map.put("loginUserId", traineeInfo.getTraineeId());
         map.put("state", "Y");
         return R.ok().put(Constant.R_DATA, tevglPkgInfoService.selectSubjectRefList(map));
+    }
+
+    /**
+     * 保存教学包基础信息
+     * @param request
+     * @param tevglPkgInfo
+     * @param file
+     * @return
+     */
+    @RequestMapping("/saveInfo")
+    @CheckSession
+    public R saveInfo(HttpServletRequest request, TevglPkgInfo tevglPkgInfo,
+                      @RequestPart(name = "file", required = false) MultipartFile file) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        try {
+            String attachId = "";
+            String fileName = "";
+            if (file != null && !file.isEmpty()) {
+                // 头像上传
+                R r = uploadUtils.uploads(file, "12", null, "images");
+                Integer code = (Integer) r.get("code");
+                if (code != 0) {
+                    return r;
+                }
+                @SuppressWarnings("unchecked")
+                Map<String, Object> obj = (Map<String, Object>) r.get("data");
+                attachId = (String) obj.get("attachId");
+                fileName = (String) obj.get("fileName");
+            }
+            if (StrUtils.isNotEmpty(fileName)) {
+                tevglPkgInfo.setPkgLogo(fileName);
+            }
+            if (StrUtils.isNotEmpty(attachId)) {
+                tevglPkgInfo.setAttachId(attachId);
+            }
+            if (StrUtils.isEmpty(tevglPkgInfo.getPkgId())) {
+                return tevglPkgInfoService.saveInfo(tevglPkgInfo, traineeInfo.getTraineeId());
+            } else {
+                return tevglPkgInfoService.updateInfo(tevglPkgInfo, traineeInfo.getTraineeId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.error("保存失败");
+        }
+    }
+
+    /**
+     * 查看教学包基础信息
+     * @param request
+     * @param pkgId
+     * @return
+     */
+    @GetMapping("/view/{id}")
+    @CheckSession
+    public R viewPkgInfoForUpdate(HttpServletRequest request, @PathVariable("id") String pkgId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return tevglPkgInfoService.viewPkgInfoForUpdate(pkgId, traineeInfo.getTraineeId());
     }
 }
