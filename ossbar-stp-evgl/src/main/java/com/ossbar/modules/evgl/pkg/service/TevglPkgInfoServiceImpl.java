@@ -6,9 +6,14 @@ import com.ossbar.common.utils.ConvertUtil;
 import com.ossbar.common.utils.PageUtils;
 import com.ossbar.common.utils.Query;
 import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.common.PkgPermissionUtils;
 import com.ossbar.modules.evgl.pkg.api.TevglPkgInfoService;
+import com.ossbar.modules.evgl.pkg.domain.TevglBookpkgTeam;
 import com.ossbar.modules.evgl.pkg.domain.TevglPkgInfo;
+import com.ossbar.modules.evgl.pkg.persistence.TevglBookpkgTeamMapper;
 import com.ossbar.modules.evgl.pkg.persistence.TevglPkgInfoMapper;
+import com.ossbar.modules.evgl.trainee.domain.TevglTraineeInfo;
+import com.ossbar.modules.evgl.trainee.persistence.TevglTraineeInfoMapper;
 import com.ossbar.platform.core.common.utils.UploadFileUtils;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.StrUtils;
@@ -18,7 +23,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,9 +44,16 @@ public class TevglPkgInfoServiceImpl implements TevglPkgInfoService {
     @Autowired
     private TevglPkgInfoMapper tevglPkgInfoMapper;
     @Autowired
+    private TevglTraineeInfoMapper tevglTraineeInfoMapper;
+    @Autowired
+    private TevglBookpkgTeamMapper tevglBookpkgTeamMapper;
+
+    @Autowired
     private ConvertUtil convertUtil;
     @Autowired
-    private UploadFileUtils uploadFileUtils;
+    private UploadFileUtils uploadPathUtils;
+    @Autowired
+    private PkgPermissionUtils pkgPermissionUtils;
 
     /**
      * 根据条件分页查询记录
@@ -269,7 +284,7 @@ public class TevglPkgInfoServiceImpl implements TevglPkgInfoService {
             log.debug("当前有多少人正在使用这个教学包：" + list.size());
             a.put("howManyPeopleUseIt", list.size());
             // 图片处理
-            a.put("pkgLogo", uploadFileUtils.stitchingPath(a.get("pkgLogo"), "12"));
+            a.put("pkgLogo", uploadPathUtils.stitchingPath(a.get("pkgLogo"), "12"));
             // 是否为创建者
             handleTags(loginUserId, a, params, list);
         });
@@ -306,9 +321,9 @@ public class TevglPkgInfoServiceImpl implements TevglPkgInfoService {
         List<Map<String, Object>> selectSimpleList = tevglPkgInfoMapper.selectSimpleList(map);
         tevglPkgInfoList.stream().forEach(pkgInfo -> {
             if (StrUtils.isNull(pkgInfo.get("pkgLogo"))) {
-                pkgInfo.put("pkgLogo", uploadFileUtils.stitchingPath(pkgInfo.get("pic"), "14"));
+                pkgInfo.put("pkgLogo", uploadPathUtils.stitchingPath(pkgInfo.get("pic"), "14"));
             } else {
-                pkgInfo.put("pkgLogo", uploadFileUtils.stitchingPath(pkgInfo.get("pic"), "12"));
+                pkgInfo.put("pkgLogo", uploadPathUtils.stitchingPath(pkgInfo.get("pic"), "12"));
             }
             // 取出源教学包的发布出去的衍生版本
             List<Map<String, Object>> children = selectSimpleList.stream().filter(a -> a.get("refPkgId").equals(pkgInfo.get("pkgId"))).collect(Collectors.toList());
@@ -416,9 +431,152 @@ public class TevglPkgInfoServiceImpl implements TevglPkgInfoService {
         if (pkgInfo != null) {
             pkgInfo.put("subjectIdActual", pkgInfo.get("subjectId"));
             pkgInfo.put("subjectId", pkgInfo.get("subjectRef")); // 用于回显
-            pkgInfo.put("pkgLogo", uploadFileUtils.stitchingPath(pkgInfo.get("pkgLogo"), "12"));
+            pkgInfo.put("pkgLogo", uploadPathUtils.stitchingPath(pkgInfo.get("pkgLogo"), "12"));
         }
         return R.ok().put(Constant.R_DATA, pkgInfo);
+    }
+
+    /**
+     * 查看教学包基本信息
+     *
+     * @param pkgId
+     * @param loginUserId
+     * @return
+     */
+    @Override
+    public R viewPkgBaseInfo(String pkgId, String loginUserId) {
+        if (StrUtils.isEmpty(pkgId) || StrUtils.isEmpty(loginUserId)) {
+            return R.error("必传参数为空");
+        }
+        Map<String, Object> pkgInfo = tevglPkgInfoMapper.selectObjectMapById(pkgId);
+        if (pkgInfo == null) {
+            return R.error("无效的记录");
+        }
+        if (!"Y".equals((String)pkgInfo.get("state"))) {
+            return R.error("此教学包状态已无效，无法查看");
+        }
+        // 如果是已经发布了的教学包,不管是谁都没有权限
+        if ("Y".equals(pkgInfo.get("releaseStatus"))) {
+            pkgInfo.put("hasPermissionActual", false);
+        } else {
+            pkgInfo.put("hasPermissionActual", true);
+        }
+        // 字典转换
+        pkgInfo.put("pkgLimitName", pkgInfo.get("pkgLimit"));
+        convertUtil.convertDict(pkgInfo, "pkgLimitName", "pkgLimit"); // 使用限制(来源字典：授权，免费)
+        convertUtil.convertDict(pkgInfo, "pkgLevel", "pkgLevel"); // 适用层次(来源字典：本科，高职，中职)
+        convertUtil.convertDict(pkgInfo, "deployMainType", "deployMainType"); // 发布方大类(来源字典：学校，个人，创蓝)
+        convertUtil.convertDict(pkgInfo, "deploySubType", "deploySubType"); // 发布方小类
+        // 图片处理
+        Object logo = pkgInfo.get("pkgLogo");
+        pkgInfo.put("pkgLogo", uploadPathUtils.stitchingPath(logo, "12"));
+        // 是否为创建者或共建者、处理文字显示
+        String createUserId = (String)pkgInfo.get("createUserId");
+        handleTextShow(pkgInfo, createUserId, loginUserId);
+        // 创建者信息(理解为主编)
+        pkgInfo.put("createUserInfo", getUserInfo(createUserId));
+        // 副主编信息
+        String traineeId = getSubeditorTraineeId(pkgId);
+        pkgInfo.put("subeditorInfo", getUserInfo(traineeId));
+        // 更新查阅数
+        TevglPkgInfo pkg = new TevglPkgInfo();
+        pkg.setPkgId(pkgId);
+        pkg.setViewNum(1);
+        tevglPkgInfoMapper.plusNum(pkg);
+        // 当前教学包最新的衍生版本
+        if ("N".equals(pkgInfo.get("releaseStatus"))) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("refPkgId", pkgId);
+            params.put("sidx", "create_time");
+            params.put("order", "desc");
+            List<TevglPkgInfo> list = tevglPkgInfoMapper.selectListByMap(params);
+            if (list != null && list.size() > 0) {
+                String pkgLogo = list.get(0).getPkgLogo();
+                pkgInfo.put("prePkgLogo", uploadPathUtils.stitchingPath(pkgLogo, "12"));
+            }
+        }
+        // 返回数据
+        return R.ok().put(Constant.R_DATA, pkgInfo);
+    }
+
+
+    /**
+     * 获取这个教学包的创建者（主编）或者副主编信息
+     * @param traineeId
+     * @return
+     */
+    private Map<String, Object> getUserInfo(String traineeId) {
+        Map<String, Object> info = new HashMap<String, Object>();
+        info.put("traineeId", "");
+        info.put("traineePic", "/uploads/defaulthead.png");
+        info.put("subeditorPic", "/uploads/defaulthead.png");
+        info.put("traineeName", "");
+        if (StrUtils.isNotEmpty(traineeId)) {
+            TevglTraineeInfo traineeInfo = tevglTraineeInfoMapper.selectObjectById(traineeId);
+            if (traineeInfo != null) {
+                info.put("traineeId", traineeInfo.getTraineeId());
+                String traineePic = StrUtils.isEmpty(traineeInfo.getTraineePic()) ? traineeInfo.getTraineeHead() : traineeInfo.getTraineePic();
+                info.put("traineePic", uploadPathUtils.stitchingPath(traineePic, "16"));
+                info.put("subeditorPic", uploadPathUtils.stitchingPath(traineePic, "16"));
+                String traineeName = StrUtils.isEmpty(traineeInfo.getTraineeName()) ? traineeInfo.getNickName() : traineeInfo.getTraineeName();
+                info.put("traineeName", traineeName);
+            }
+        }
+        return info;
+    }
+
+    /**
+     * 获取这个教学包的副主编（学员主键）
+     * @param pkgId
+     * @return
+     */
+    private String getSubeditorTraineeId(String pkgId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("pkgId", pkgId);
+        List<TevglBookpkgTeam> list = tevglBookpkgTeamMapper.selectListByMap(map);
+        if (list != null && list.size() > 0) {
+            List<TevglBookpkgTeam> collect = list.stream().filter(a -> StrUtils.isNotEmpty(a.getIsSubeditor()) && a.getIsSubeditor().equals("Y")).collect(Collectors.toList());
+            if (collect.size() > 0) {
+                return collect.get(0).getUserId();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 处理文字
+     * @param info 教学包
+     * @param createUserId 教学包的创建者
+     * @param loginUserId 当前登录用户
+     * @apiNote
+     * <br>如果未登录，则右上角的文字，只需要字典转换
+     * <br>如果登录了，且登录用户为此教学包创建者，则显示【拥有者】
+     * <br>如果登录了，但不是此教学包的创建者，则去判断教学包创建者是否授权了当前登录用户，如果有权限，则显示【已授权】，否则显示字典转换后的就行了
+     */
+    private void handleTextShow(Map<String, Object> info, String createUserId, String loginUserId) {
+        if (StrUtils.isEmpty(loginUserId)) {
+            // 前面已经字典转换了无需处理
+            info.put("isCreator", false);
+            info.put("isTogetherBuild", false);
+        } else {
+            if (loginUserId.equals(createUserId)) {
+                info.put("pkgLimitName", "拥有者");
+                info.put("isCreator", true);
+                info.put("isTogetherBuild", false);
+            } else {
+                String pkgId = (String) info.get("pkgId");
+                boolean flag = pkgPermissionUtils.hasPermission(pkgId, loginUserId, createUserId);
+                if (flag) {
+                    info.put("pkgLimitName", "已授权");
+                    info.put("isCreator", false);
+                    info.put("isTogetherBuild", true);
+                }
+                boolean isReceiver = !StrUtils.isNull(info.get("receiverUserId")) && loginUserId.equals(info.get("receiverUserId"));
+                if (isReceiver) {
+                    info.put("pkgLimitName", "接管");
+                }
+            }
+        }
     }
 
 }

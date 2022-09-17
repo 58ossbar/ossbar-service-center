@@ -25,4 +25,26 @@ public interface TevglBookSubjectService extends IBaseService<TevglBookSubject> 
      */
     R listSelectSubject(Map<String, Object> params);
 
+    /**
+     * 获取一本书（章节树）（课堂页面专用）（优化版）
+     * @param ctId
+     * @param pkgId
+     * @param subjectId
+     * @param chapterName
+     * @param loginUserId
+     * @param queryForWx
+     * @param identity 身份标识，用于区别缓存，值：teacher、trainee
+     * @return
+     */
+    R getBookForRoomPage(String ctId, String pkgId, String subjectId, String chapterName, String loginUserId, boolean queryForWx, String identity);
+
+    /**
+     * 获取一本书（章节树）（教学包页面专用）（优化版）
+     * @param pkgId
+     * @param subjectId
+     * @param chapterName
+     * @param loginUserId
+     * @return
+     */
+    R getBookForPkgPage(String pkgId, String subjectId, String chapterName, String loginUserId);
 }

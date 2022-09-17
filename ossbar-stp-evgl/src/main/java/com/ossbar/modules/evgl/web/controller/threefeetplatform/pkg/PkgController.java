@@ -182,4 +182,37 @@ public class PkgController {
         }
         return tevglPkgInfoService.viewPkgInfoForUpdate(pkgId, traineeInfo.getTraineeId());
     }
+
+
+    /**
+     * 查看教学包基础信息
+     * @param request
+     * @param pkgId
+     * @return
+     */
+    @GetMapping("/viewPkgInfo")
+    @CheckSession
+    public R viewPkgInfo(HttpServletRequest request, String pkgId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return tevglPkgInfoService.viewPkgBaseInfo(pkgId, traineeInfo.getTraineeId());
+    }
+
+    /**
+     * 删除教学包
+     * @param request
+     * @param pkgId
+     * @return
+     */
+    @PostMapping("/deletePkg")
+    @CheckSession
+    public R deletePkg(HttpServletRequest request, String pkgId, String temp) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return R.error("暂不支持！");
+    }
 }

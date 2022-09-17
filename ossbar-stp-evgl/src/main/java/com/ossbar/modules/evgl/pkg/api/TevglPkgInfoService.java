@@ -56,4 +56,12 @@ public interface TevglPkgInfoService extends IBaseService<TevglPkgInfo> {
      * @return
      */
     R viewPkgInfoForUpdate(String pkgId, String loginUserId);
+
+    /**
+     * 查看教学包基本信息
+     * @param pkgId
+     * @param loginUserId
+     * @return
+     */
+    R viewPkgBaseInfo(String pkgId, String loginUserId);
 }
