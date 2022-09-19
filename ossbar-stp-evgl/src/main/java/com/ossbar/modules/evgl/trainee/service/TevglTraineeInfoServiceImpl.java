@@ -21,6 +21,7 @@ import com.ossbar.modules.evgl.trainee.domain.TevglTraineeInfo;
 import com.ossbar.modules.evgl.trainee.persistence.TevglTraineeInfoMapper;
 import com.ossbar.modules.evgl.trainee.vo.TraineeCharmInfoVO;
 import com.ossbar.modules.evgl.trainee.vo.TraineeInfoVO;
+import com.ossbar.modules.sys.api.TsysAttachService;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
@@ -68,6 +69,9 @@ public class TevglTraineeInfoServiceImpl implements TevglTraineeInfoService {
     private TevglTchTeacherMapper tevglTchTeacherMapper;
     @Autowired
     private TevglBookMajorMapper tevglBookMajorMapper;
+
+    @Autowired
+    private TsysAttachService tsysAttachService;
 
     @Autowired
     private ConvertUtil convertUtil;
@@ -127,10 +131,24 @@ public class TevglTraineeInfoServiceImpl implements TevglTraineeInfoService {
         return R.ok();
     }
 
-
+    /**
+     * 修改
+     * @param tevglTraineeInfo
+     * @return
+     * @throws CreatorblueException
+     */
     @Override
+    @SysLog(value="修改")
     public R update(TevglTraineeInfo tevglTraineeInfo) throws CreatorblueException {
-        return null;
+        tevglTraineeInfo.setUpdateUserId(tevglTraineeInfo.getTraineeId());
+        tevglTraineeInfo.setUpdateTime(DateUtils.getNowTimeStamp());
+        tevglTraineeInfoMapper.update(tevglTraineeInfo);
+        String attachId = tevglTraineeInfo.getAttachId();
+        // 如果上传了附件
+        if (StrUtils.isNotEmpty(attachId)) {
+            tsysAttachService.updateAttachForAdd(attachId, tevglTraineeInfo.getTraineeId(), "16");
+        }
+        return R.ok();
     }
 
     /**

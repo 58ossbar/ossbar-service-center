@@ -53,11 +53,12 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 					response.setStatus(502);
 					return false;
 				}
-				String token = request.getHeader("evglToken");
+				String token = request.getHeader(EvglGlobal.TOKEN_KEY_NAME);
+				System.out.println("token" + token);
 				if(StrUtils.isEmpty(token)) {
 					String servletPath = request.getServletPath();
 					if ("/resourceCenter-api/listChapters".equals(servletPath)) {
-						String evglToken = request.getParameter("evglToken");
+						String evglToken = request.getParameter(EvglGlobal.TOKEN_KEY_NAME);
 						if (StrUtils.isNotEmpty(evglToken)) {
 							token = evglToken;
 						}
@@ -68,7 +69,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 					if(cookies != null)
 					for (Cookie cookie : cookies) {
 					    switch(cookie.getName()){
-					        case "evglToken":
+					        case EvglGlobal.TOKEN_KEY_NAME:
 					            token = cookie.getValue();
 					            break;
 					        default:
@@ -86,7 +87,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 				TevglTraineeInfoService service = SpringContextUtils.getBean(TevglTraineeInfoService.class);
 				List<TevglTraineeInfo> list = service.selectListByMap(map);
 				if(list.size() == 0) {
-					Cookie imgCodeCookie = new Cookie("evglToken","");
+					Cookie imgCodeCookie = new Cookie(EvglGlobal.TOKEN_KEY_NAME,"");
 					imgCodeCookie.setMaxAge(0);
 				    imgCodeCookie.setPath("/");
 					response.addCookie(imgCodeCookie);
