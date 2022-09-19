@@ -320,4 +320,19 @@ public class PkgController {
         }
         return tevglPkgInfoService.getHistoryPkgList(pkgId);
     }
+
+    /**
+     * 获取当前使用的教学包，所能升级的版本
+     * @param pkgId
+     * @return
+     */
+    @PostMapping("queryUpgradeList")
+    @CheckSession
+    public R queryUpgradeList(HttpServletRequest request, String ctId, String pkgId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return R.ok().put(Constant.R_DATA, new ArrayList<>());
+    }
 }

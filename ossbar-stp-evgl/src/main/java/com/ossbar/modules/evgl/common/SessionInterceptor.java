@@ -54,7 +54,6 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 					return false;
 				}
 				String token = request.getHeader(EvglGlobal.TOKEN_KEY_NAME);
-				System.out.println("token" + token);
 				if(StrUtils.isEmpty(token)) {
 					String servletPath = request.getServletPath();
 					if ("/resourceCenter-api/listChapters".equals(servletPath)) {

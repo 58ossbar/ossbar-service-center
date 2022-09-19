@@ -35,4 +35,10 @@ public class EvglGlobal {
 	 * 布道师的token名称，注意！其它所有使用了业务基础的项目，不要与业务基础平台的一致！（业务基础平台的名称已经占用了token这个单词）
 	 */
 	public static final String TOKEN_KEY_NAME = "evglToken";
+
+
+	/**
+	 * 用于区分网站用户和管理端用户
+	 */
+	public static String ADMINISTRATOR = "administrator!@#$";
 }
