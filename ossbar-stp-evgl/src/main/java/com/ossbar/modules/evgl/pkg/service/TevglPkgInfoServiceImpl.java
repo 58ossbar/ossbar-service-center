@@ -7,11 +7,14 @@ import com.ossbar.common.utils.PageUtils;
 import com.ossbar.common.utils.Query;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.common.PkgPermissionUtils;
+import com.ossbar.modules.evgl.book.persistence.TevglBookSubperiodMapper;
 import com.ossbar.modules.evgl.pkg.api.TevglPkgInfoService;
 import com.ossbar.modules.evgl.pkg.domain.TevglBookpkgTeam;
 import com.ossbar.modules.evgl.pkg.domain.TevglPkgInfo;
 import com.ossbar.modules.evgl.pkg.persistence.TevglBookpkgTeamMapper;
 import com.ossbar.modules.evgl.pkg.persistence.TevglPkgInfoMapper;
+import com.ossbar.modules.evgl.tch.domain.TevglTchClassroom;
+import com.ossbar.modules.evgl.tch.persistence.TevglTchClassroomMapper;
 import com.ossbar.modules.evgl.trainee.domain.TevglTraineeInfo;
 import com.ossbar.modules.evgl.trainee.persistence.TevglTraineeInfoMapper;
 import com.ossbar.platform.core.common.utils.UploadFileUtils;
@@ -47,6 +50,10 @@ public class TevglPkgInfoServiceImpl implements TevglPkgInfoService {
     private TevglTraineeInfoMapper tevglTraineeInfoMapper;
     @Autowired
     private TevglBookpkgTeamMapper tevglBookpkgTeamMapper;
+    @Autowired
+    private TevglTchClassroomMapper tevglTchClassroomMapper;
+    @Autowired
+    private TevglBookSubperiodMapper tevglBookSubperiodMapper;
 
     @Autowired
     private ConvertUtil convertUtil;
@@ -617,6 +624,95 @@ public class TevglPkgInfoServiceImpl implements TevglPkgInfoService {
             list.add(list.size(), data);
         }
         return R.ok().put(Constant.R_DATA, list);
+    }
+
+    /**
+     * 【教学包下拉列表】注意：会一次性查询自己的，衍生版本，以及别人创建的免费的，以及被授权的
+     *
+     * @param params
+     * @param loginUserId
+     * @return
+     */
+    @Override
+    public R queryPkgListByUnionAllForSelect(Map<String, Object> params, String loginUserId) {
+        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+        params.put("loginUserId", loginUserId);
+        if (params.get("subjectRef") != null) {
+            List<String> majorIdList = tevglBookSubperiodMapper.findMajorIdListBySubjectId(params.get("subjectRef").toString());
+            if (majorIdList != null && !majorIdList.isEmpty()) {
+                params.put("majorIdList", majorIdList);
+            }
+        }
+        result = tevglPkgInfoMapper.queryPkgListByUnionAllForSelect(params);
+        // 用于修改课堂时的教学包回显
+        if (!StrUtils.isNull(params.get("ctId"))) {
+            log.debug("查询课堂对应的教学包");
+            TevglTchClassroom classroom = tevglTchClassroomMapper.selectObjectById(params.get("ctId"));
+            if (classroom != null) {
+                TevglPkgInfo tevglPkgInfo = tevglPkgInfoMapper.selectObjectById(classroom.getPkgId());
+                if (tevglPkgInfo != null) {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("pkgId", tevglPkgInfo.getPkgId());
+                    data.put("pkgName", tevglPkgInfo.getPkgName());
+                    data.put("pkgLogo", tevglPkgInfo.getPkgLogo());
+                    data.put("pkgVersion", tevglPkgInfo.getPkgVersion());
+                    data.put("createUserId", tevglPkgInfo.getCreateUserId());
+                    result.add(data);
+                }
+            }
+        }
+        // 部分数据处理
+        result.stream().forEach(pkgInfo -> {
+            // 教学包封面处理
+            pkgInfo.put("pkgLogo", uploadPathUtils.stitchingPath(pkgInfo.get("pkgLogo"), "12"));
+            // 返回标签名表示[授权][自建]
+            handlePkgName(pkgInfo, loginUserId);
+        });
+        return R.ok().put(Constant.R_DATA, result);
+    }
+
+    /**
+     * 处理名称
+     * @param pkgInfo
+     * @param loginUserId
+     */
+    private void handlePkgName(Map<String, Object> pkgInfo, String loginUserId) {
+        if (pkgInfo == null) {
+            return;
+        }
+        String tempName = pkgInfo.get("pkgName").toString();
+        // 版本号
+        String pkgVersion = StrUtils.isNull(pkgInfo.get("pkgVersion")) ? "" : pkgInfo.get("pkgVersion").toString();
+        // 使用限制1授权2免费
+        String pkgLimit = StrUtils.isNull(pkgInfo.get("pkgLimit")) ? "0" : pkgInfo.get("pkgLimit").toString();
+        String pkgLimitTagName = "";
+        // 返回标签名表示[授权][自建]
+        if (pkgInfo.get("createUserId").equals(loginUserId)) {
+            pkgInfo.put("tagName", "自建");
+        } else {
+            switch (pkgLimit) {
+                case "1":
+                    pkgLimitTagName = "授权";
+                    break;
+                case "2":
+                    pkgLimitTagName = "免费";
+                    break;
+                default:
+                    break;
+            }
+            pkgInfo.put("tagName", pkgLimitTagName);
+        }
+        // 拼接
+        if (!StrUtils.isNull(pkgInfo.get("pkgVersion"))) {
+            tempName = tempName + " ["+pkgVersion+"]";
+        }
+        if (!loginUserId.equals(pkgInfo.get("createUserId")) && !StrUtils.isNull(pkgInfo.get("createUserName"))) {
+            tempName = tempName + "【"+pkgInfo.get("createUserName") +" "+ pkgLimitTagName + "】";
+        } else {
+			/*String pattern = DateUtils.convertDatePattern(pkgInfo.get("createTime").toString(), "yyyy-MM-dd HH:mm:ss", "yyyy年MM月dd日 HH:mm");
+			tempName += " " + pattern;*/
+        }
+        pkgInfo.put("pkgName", tempName);
     }
 
 }

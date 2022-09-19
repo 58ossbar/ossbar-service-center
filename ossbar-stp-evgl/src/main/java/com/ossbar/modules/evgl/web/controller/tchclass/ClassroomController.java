@@ -7,6 +7,7 @@ import com.ossbar.modules.evgl.book.api.TevglBookSubjectService;
 import com.ossbar.modules.evgl.common.CheckSession;
 import com.ossbar.modules.evgl.common.EvglGlobal;
 import com.ossbar.modules.evgl.common.LoginUtils;
+import com.ossbar.modules.evgl.tch.api.TevglTchClassService;
 import com.ossbar.modules.evgl.tch.api.TevglTchClassroomService;
 import com.ossbar.modules.evgl.tch.api.TevglTchClassroomTraineeService;
 import com.ossbar.modules.evgl.trainee.domain.TevglTraineeInfo;
@@ -45,6 +46,8 @@ public class ClassroomController {
     private TevglTchClassroomService tevglTchClassroomService;
     @Reference(version = "1.0.0")
     private TevglTchClassroomTraineeService tevglTchClassroomTraineeService;
+    @Reference(version = "1.0.0")
+    private TevglTchClassService tevglTchClassService;
 
     /**
      * <p>我的课堂列表（我教的课、我听的课）</p>
@@ -274,5 +277,21 @@ public class ClassroomController {
             return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
         }
         return R.ok().put(Constant.R_DATA, tevglTchClassroomService.getDates(traineeInfo.getTraineeId(), type));
+    }
+
+    /**
+     * <p>班级下拉列表</p>
+     * @author huj
+     * @data 2019年8月19日
+     * @return
+     */
+    @GetMapping("/getClassList")
+    @CheckSession
+    public R getClassListData(HttpServletRequest request, @RequestParam Map<String, Object> params) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return tevglTchClassService.queryClassListData(params, traineeInfo.getTraineeId());
     }
 }

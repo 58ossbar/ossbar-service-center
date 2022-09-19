@@ -335,4 +335,20 @@ public class PkgController {
         }
         return R.ok().put(Constant.R_DATA, new ArrayList<>());
     }
+
+    /**
+     * 教学包下拉列表（包含自己创建的、被授权的、以及免费的）（新增课堂页面中用到）
+     * @param request
+     * @param params {'subjectRef':''}
+     * @return
+     */
+    @GetMapping("/listPkgInfoSelect")
+    @CheckSession
+    public R listPkgInfoSelect(HttpServletRequest request, @RequestParam Map<String, Object> params) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return tevglPkgInfoService.queryPkgListByUnionAllForSelect(params, traineeInfo.getTraineeId());
+    }
 }

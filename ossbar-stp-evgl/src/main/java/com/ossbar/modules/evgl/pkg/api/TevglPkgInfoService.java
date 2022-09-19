@@ -71,4 +71,12 @@ public interface TevglPkgInfoService extends IBaseService<TevglPkgInfo> {
      * @return
      */
     R getHistoryPkgList(String pkgId);
+
+    /**
+     * 【教学包下拉列表】注意：会一次性查询自己的，衍生版本，以及别人创建的免费的，以及被授权的
+     * @param params
+     * @param loginUserId
+     * @return
+     */
+    R queryPkgListByUnionAllForSelect(Map<String, Object> params, String loginUserId);
 }
