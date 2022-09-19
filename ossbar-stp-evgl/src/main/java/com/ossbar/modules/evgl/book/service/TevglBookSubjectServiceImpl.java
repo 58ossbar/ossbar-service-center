@@ -276,6 +276,55 @@ public class TevglBookSubjectServiceImpl implements TevglBookSubjectService {
     }
 
 
+    @Override
+    public TevglBookSubject selectObjectById(String id) {
+        return tevglBookSubjectMapper.selectObjectById(id);
+    }
+
+    /**
+     * 获取树形数据（只包含章节）
+     *
+     * @param subjectId
+     * @param pkgId
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> getTree(String subjectId, String pkgId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("sidx", "order_num");
+        map.put("order", "asc");
+        map.put("state", "Y");
+        map.put("subjectId", subjectId); // 课程ID
+        map.put("pkgId", pkgId); // 教学包
+        List<Map<String,Object>> list = tevglBookChapterMapper.selectSimpleListMap(map);
+        list.stream().forEach(node -> {
+            if (StrUtils.notNull(node.get("isTraineesVisible")) && "Y".equals(node.get("isTraineesVisible"))) {
+                node.put("checked", true);
+            }
+        });
+        // 获取构建好层次后的数据
+        List<Map<String,Object>> children = buildTree(subjectId, list, 0);
+        // 处理序号
+        handleSortNum(children);
+        return children;
+    }
+
+    private List<Map<String, Object>> buildTree(String parentId, List<Map<String, Object>> allList, int level) {
+        if (allList == null || allList.size() == 0) {
+            return null;
+        }
+        List<Map<String, Object>> nodeList = allList.stream().filter(a -> a.get("parentId").equals(parentId)).collect(Collectors.toList());
+        if (nodeList != null && nodeList.size() > 0) {
+            level ++; // level计算当前处于第几级
+            for (Map<String, Object> node : nodeList) {
+                node.put("type", "chapter");
+                node.put("level", level);
+                node.put("children", buildTree(node.get("chapterId").toString(), allList, level));
+            }
+        }
+        return nodeList;
+    }
+
     /**
      * 课程下拉列表，注意此方法只会查询subject_ref为空的记录
      *

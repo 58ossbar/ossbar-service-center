@@ -2,6 +2,7 @@ package com.ossbar.modules.evgl.web.controller.threefeetplatform.resource;
 
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.common.GlobalRoomPermission;
+import com.ossbar.modules.evgl.book.api.BookService;
 import com.ossbar.modules.evgl.book.api.TevglBookSubjectService;
 import com.ossbar.modules.evgl.common.CheckSession;
 import com.ossbar.modules.evgl.common.EvglGlobal;
@@ -42,6 +43,8 @@ public class ResourceController {
     private TevglTchClassroomService tevglTchClassroomService;
     @Reference(version = "1.0.0")
     private TevglBookSubjectService tevglBookSubjectService;
+    @Reference(version = "1.0.0")
+    private BookService bookService;
 
 
     /**
@@ -97,5 +100,22 @@ public class ResourceController {
         params.put("resgroupId", resgroupId);
         Map<String, Object> resInfo = tevglPkgResService.viewResInfo(params);
         return R.ok(resInfo);
+    }
+
+
+    @GetMapping("/listChapters")
+    @CheckSession
+    public List<Map<String,Object>> listChapters(HttpServletRequest request, String id, String serial, String type, String pkgId, String subjectId, String page) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return null;
+        }
+        // 如果是在课堂详情页面中触发此接口
+        if (StrUtils.isNotEmpty(page) && "room".equals(page)) {
+            // 设置学员是否可见会用到
+            return bookService.listChaptersForRoomPage(traineeInfo.getTraineeId(), id, pkgId, subjectId);
+        } else {
+            return bookService.listChaptersForPkgPage(traineeInfo.getTraineeId(), id,  serial,  type,  pkgId,  subjectId);
+        }
     }
 }

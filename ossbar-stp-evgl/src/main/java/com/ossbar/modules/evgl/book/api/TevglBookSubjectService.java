@@ -21,6 +21,20 @@ import java.util.Map;
 public interface TevglBookSubjectService extends IBaseService<TevglBookSubject> {
 
     /**
+     * 根据主键id查询记录
+     * @param id
+     * @return
+     */
+    TevglBookSubject selectObjectById(String id);
+
+    /**
+     * 获取树形数据（只包含章节）
+     * @param subjectId
+     * @return
+     */
+    List<Map<String, Object>> getTree(String subjectId, String pkgId);
+
+    /**
      * 课程下拉列表，注意此方法只会查询subject_ref为空的记录
      * @param params
      * @return
