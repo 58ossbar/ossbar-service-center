@@ -316,4 +316,23 @@ public class UploadFileUtils {
 		return result;
 	}
 
+	/**
+	 * 获取文件的绝对路径
+	 * @param paraNo
+	 * @return
+	 * @apiNote 如Linux环境下：/mnt/cbstp/uploads/cloud-pan
+	 */
+	public String getAbsolutePath(String paraNo) {
+		return creatorblueFieUploadPath + getPathByParaNo(paraNo);
+	}
+
+	/**
+	 * 获取文件的绝对路径
+	 * @param paraNo
+	 * @return
+	 * @apiNote 如Linux环境下：/mnt/cbstp/uploads/cloud-pan/2bccabad-99e6-4348-95ff-68c5be8044d0.png
+	 */
+	public String getAbsolutePath(String fileName, String paraNo) {
+		return creatorblueFieUploadPath + getPathByParaNo(paraNo) + "/" + fileName;
+	}
 }

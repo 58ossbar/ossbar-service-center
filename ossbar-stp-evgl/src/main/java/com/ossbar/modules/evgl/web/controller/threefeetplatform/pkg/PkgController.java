@@ -1,10 +1,14 @@
 package com.ossbar.modules.evgl.web.controller.threefeetplatform.pkg;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.common.CbUploadUtils;
 import com.ossbar.modules.evgl.common.CheckSession;
 import com.ossbar.modules.evgl.common.EvglGlobal;
 import com.ossbar.modules.evgl.common.LoginUtils;
+import com.ossbar.modules.evgl.pkg.api.ReleaseTeachingPackageService;
+import com.ossbar.modules.evgl.pkg.api.TevglPkgCheckService;
+import com.ossbar.modules.evgl.pkg.api.TevglPkgDefaultChapterService;
 import com.ossbar.modules.evgl.pkg.api.TevglPkgInfoService;
 import com.ossbar.modules.evgl.pkg.domain.TevglPkgInfo;
 import com.ossbar.modules.evgl.trainee.domain.TevglTraineeInfo;
@@ -38,6 +42,12 @@ public class PkgController {
 
     @Reference(version = "1.0.0")
     private TevglPkgInfoService tevglPkgInfoService;
+    @Reference(version = "1.0.0")
+    private TevglPkgDefaultChapterService tevglPkgDefaultChapterService;
+    @Reference(version = "1.0.0")
+    private ReleaseTeachingPackageService releaseTeachingPackageService;
+    @Reference(version = "1.0.0")
+    private TevglPkgCheckService tevglPkgCheckService;
 
     @Autowired
     private CbUploadUtils uploadUtils;
@@ -214,5 +224,100 @@ public class PkgController {
             return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
         }
         return R.error("暂不支持！");
+    }
+
+    /**
+     * 发布教学包
+     * @param request
+     * @param jsonObject
+     * @return
+     */
+    @PostMapping("/releaseTeachingPackage")
+    @CheckSession
+    public R releaseTeachingPackage(HttpServletRequest request, @RequestBody JSONObject jsonObject) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return releaseTeachingPackageService.releaseTeachingPackage(jsonObject, traineeInfo.getTraineeId());
+    }
+
+    @RequestMapping("/queryDataList")
+    @CheckSession
+    public R queryDataList(HttpServletRequest request, String pkgId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return releaseTeachingPackageService.queryDataList(pkgId, traineeInfo.getTraineeId());
+    }
+
+    /**
+     * 检验当前源教学包是否有正在等待审核通过的衍生教学包
+     * @param request
+     * @param pkgId
+     * @return
+     */
+    @PostMapping("/check")
+    @CheckSession
+    public R check(HttpServletRequest request, String pkgId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return releaseTeachingPackageService.check(pkgId, traineeInfo.getTraineeId());
+    }
+
+    @PostMapping("/querMyWaitCheckPkgList")
+    @CheckSession
+    public R querMyWaitCheckPkgList(HttpServletRequest request, String pkgId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("pkgId", pkgId);
+        return tevglPkgCheckService.querMyWaitCheckPkgList(params, traineeInfo.getTraineeId());
+    }
+
+    @PostMapping("/queryDefaultNameList")
+    @CheckSession
+    public R queryDefaultNameList(HttpServletRequest request, String pkgId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return tevglPkgDefaultChapterService.queryDefaultNameList(pkgId, traineeInfo.getTraineeId());
+    }
+
+    /**
+     * 保存
+     * @param request
+     * @param jsonObject
+     * @return
+     */
+    @PostMapping("/saveBatch")
+    @CheckSession
+    public R saveBatch(HttpServletRequest request, @RequestBody JSONObject jsonObject) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return tevglPkgDefaultChapterService.saveBatch(jsonObject, traineeInfo.getTraineeId());
+    }
+
+    /**
+     * 获取当前教学包的直系父教学包下的直系子教学包们（即历史版本）
+     * @param request
+     * @param pkgId
+     * @return
+     */
+    @RequestMapping("getHistoryPkgList")
+    public R getHistoryPkgList(HttpServletRequest request, String pkgId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return tevglPkgInfoService.getHistoryPkgList(pkgId);
     }
 }

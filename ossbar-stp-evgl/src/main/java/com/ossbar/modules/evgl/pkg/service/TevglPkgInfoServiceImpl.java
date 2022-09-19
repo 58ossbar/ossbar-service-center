@@ -579,4 +579,44 @@ public class TevglPkgInfoServiceImpl implements TevglPkgInfoService {
         }
     }
 
+
+    /**
+     * 获取当前教学包的直系父教学包下的直系子教学包们（即历史版本）
+     *
+     * @param pkgId
+     * @return
+     */
+    @Override
+    public R getHistoryPkgList(String pkgId) {
+        if (StrUtils.isEmpty(pkgId)) {
+            return R.error("必传参数为空");
+        }
+        TevglPkgInfo tevglPkgInfo = tevglPkgInfoMapper.selectObjectById(pkgId);
+        if (tevglPkgInfo == null) {
+            return R.error("数据获取失败");
+        }
+        Map<String, Object> params = new HashMap<>();
+        String refPkgId = "";
+        boolean ifOrigin = StrUtils.isEmpty(tevglPkgInfo.getRefPkgId());
+        if (ifOrigin) {
+            refPkgId = tevglPkgInfo.getPkgId();
+        } else {
+            refPkgId = tevglPkgInfo.getRefPkgId();
+        }
+        // 可能会是最初的源教学包
+        params.put("refPkgId", refPkgId);
+        params.put("sidx", "t1.create_time");
+        params.put("order", "desc");
+        List<Map<String,Object>> list = tevglPkgInfoMapper.selectListByMapForSimple(params);
+        if (ifOrigin) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("pkgId", tevglPkgInfo.getPkgId());
+            data.put("pkgName", tevglPkgInfo.getPkgName());
+            data.put("pkgVersion", tevglPkgInfo.getPkgVersion());
+            data.put("createTime", tevglPkgInfo.getCreateTime());
+            list.add(list.size(), data);
+        }
+        return R.ok().put(Constant.R_DATA, list);
+    }
+
 }

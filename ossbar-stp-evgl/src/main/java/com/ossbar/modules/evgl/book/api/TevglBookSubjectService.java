@@ -2,8 +2,10 @@ package com.ossbar.modules.evgl.book.api;
 
 import com.ossbar.core.baseclass.api.IBaseService;
 import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.evgl.book.domain.TevglBookChapter;
 import com.ossbar.modules.evgl.book.domain.TevglBookSubject;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,4 +49,6 @@ public interface TevglBookSubjectService extends IBaseService<TevglBookSubject> 
      * @return
      */
     R getBookForPkgPage(String pkgId, String subjectId, String chapterName, String loginUserId);
+
+    List<TevglBookChapter> buildBook(String parentId, List<TevglBookChapter> allList, int level);
 }

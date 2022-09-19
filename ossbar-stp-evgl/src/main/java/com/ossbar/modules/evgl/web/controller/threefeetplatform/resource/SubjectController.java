@@ -110,4 +110,74 @@ public class SubjectController {
         return tevglBookChapterService.viewChapterInfo(id, traineeInfo.getTraineeId(), pkgId, type);
     }
 
+    /**
+     * <p>重命名节点</p>
+     * @author huj
+     * @data 2019年7月27日
+     * @param id 教材或章节主键
+     * @param name 名称
+     * @param type 1表示重命名教材2表示重命名章节
+     * @return
+     */
+    @GetMapping("/rename")
+    public R rename(HttpServletRequest request, String pkgId, String id, String name, String type) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        if ("1".equals(type)) {
+            //return tevglBookSubjectService.rename(id, name);
+            return R.error("该节点不支持重命名！");
+        }
+        if ("2".equals(type)) {
+            return tevglBookChapterService.rename(pkgId, id, name, traineeInfo.getTraineeId());
+        }
+        return R.ok();
+    }
+
+    /**
+     * <p>删除节点</p>
+     * @author huj
+     * @data 2019年7月27日
+     * @param pkgId 教学包主键
+     * @param id
+     * @param type 1课程2章节
+     * @return
+     */
+    @GetMapping("/remove")
+    @CheckSession
+    public R remove(HttpServletRequest request, String pkgId, String id, String type) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        if ("1".equals(type)) {
+            //return tevglBookSubjectService.remove(id, traineeInfo.getTraineeId());
+            return R.error("该节点不允许删除！");
+        }
+        // 删除章节
+        if ("2".equals(type)) {
+            return tevglBookChapterService.removeV2(pkgId, id, traineeInfo.getTraineeId());
+        }
+        return R.ok();
+    }
+
+
+    /**
+     * <p>移动，目前只是简单的修改排序号</p>
+     * @author huj
+     * @data 2019年7月27日
+     * @param
+     * @return
+     */
+    @GetMapping("/move")
+    @CheckSession
+    public R move(HttpServletRequest request, @RequestParam("currId") String currId, @RequestParam("targetId") String targetId
+            ,@RequestParam("pkgId") String pkgId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        return tevglBookChapterService.move(currId, targetId, traineeInfo.getTraineeId(), pkgId);
+    }
 }

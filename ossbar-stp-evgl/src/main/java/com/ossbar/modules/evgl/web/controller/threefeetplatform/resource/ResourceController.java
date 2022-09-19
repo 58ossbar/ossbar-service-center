@@ -6,6 +6,7 @@ import com.ossbar.modules.evgl.book.api.TevglBookSubjectService;
 import com.ossbar.modules.evgl.common.CheckSession;
 import com.ossbar.modules.evgl.common.EvglGlobal;
 import com.ossbar.modules.evgl.common.LoginUtils;
+import com.ossbar.modules.evgl.pkg.api.TevglPkgResService;
 import com.ossbar.modules.evgl.tch.api.TevglTchClassroomService;
 import com.ossbar.modules.evgl.tch.domain.TevglTchClassroom;
 import com.ossbar.modules.evgl.trainee.domain.TevglTraineeInfo;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author huj
@@ -33,6 +36,8 @@ public class ResourceController {
 
     private Logger log = LoggerFactory.getLogger(ResourceController.class);
 
+    @Reference(version = "1.0.0")
+    private TevglPkgResService tevglPkgResService;
     @Reference(version = "1.0.0")
     private TevglTchClassroomService tevglTchClassroomService;
     @Reference(version = "1.0.0")
@@ -72,5 +77,25 @@ public class ResourceController {
         } else {
             return tevglBookSubjectService.getBookForPkgPage(pkgId, subjectId, chapterName, traineeInfo.getTraineeId());
         }
+    }
+
+
+    /**
+     * 点击分组查询资源
+     * @param request
+     * @param resgroupId
+     * @return
+     */
+    @GetMapping("/viewResInfo")
+    @CheckSession
+    public R viewResInfo(HttpServletRequest request, String resgroupId) {
+        TevglTraineeInfo traineeInfo = LoginUtils.getLoginUser(request);
+        if (traineeInfo == null) {
+            return R.error(EvglGlobal.UN_LOGIN_MESSAGE);
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("resgroupId", resgroupId);
+        Map<String, Object> resInfo = tevglPkgResService.viewResInfo(params);
+        return R.ok(resInfo);
     }
 }

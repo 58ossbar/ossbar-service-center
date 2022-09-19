@@ -7,6 +7,7 @@ import com.ossbar.common.utils.*;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.common.GlobalRoomPermission;
 import com.ossbar.modules.evgl.book.api.TevglBookSubjectService;
+import com.ossbar.modules.evgl.book.domain.TevglBookChapter;
 import com.ossbar.modules.evgl.book.domain.TevglBookMajor;
 import com.ossbar.modules.evgl.book.domain.TevglBookSubject;
 import com.ossbar.modules.evgl.book.domain.TevglBookSubperiod;
@@ -576,6 +577,23 @@ public class TevglBookSubjectServiceImpl implements TevglBookSubjectService {
         t.setViewNum(1);
         tevglBookSubjectMapper.updateNum(t);
         return R.ok().put(Constant.R_DATA, subjectInfo);
+    }
+
+    @Override
+    public List<TevglBookChapter> buildBook(String parentId, List<TevglBookChapter> allList, int level) {
+        if (allList == null || allList.size() == 0) {
+            return null;
+        }
+        List<TevglBookChapter> parentNode = allList.stream().filter(a -> a.getParentId().equals(parentId)).collect(Collectors.toList());
+        if (parentNode.size() > 0) {
+            level ++; // level计算当前处于第几级
+            final int level2 = level;
+            parentNode.forEach(a -> {
+                a.setLevel(level2);
+                a.setChildren(buildBook(a.getChapterId(), allList, level2));
+            });
+        }
+        return parentNode;
     }
 
     private void hasAuthButton(TevglPkgInfo tevglPkgInfo, Map<String, Object> subjectInfo, String loginUserId) {
