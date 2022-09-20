@@ -18,6 +18,7 @@ import com.ossbar.modules.evgl.tch.persistence.TevglTchClasstraineeMapper;
 import com.ossbar.modules.evgl.tch.persistence.TevglTchTeacherMapper;
 import com.ossbar.modules.evgl.trainee.api.TevglTraineeInfoService;
 import com.ossbar.modules.evgl.trainee.domain.TevglTraineeInfo;
+import com.ossbar.modules.evgl.trainee.dto.SaveTraineeDTO;
 import com.ossbar.modules.evgl.trainee.persistence.TevglTraineeInfoMapper;
 import com.ossbar.modules.evgl.trainee.vo.TraineeCharmInfoVO;
 import com.ossbar.modules.evgl.trainee.vo.TraineeInfoVO;
@@ -26,6 +27,8 @@ import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
 import com.ossbar.utils.tool.StrUtils;
+import com.ossbar.utils.tool.TicketDesUtil;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -498,4 +501,95 @@ public class TevglTraineeInfoServiceImpl implements TevglTraineeInfoService {
         info.put("empiricalValue", handleEmpiricalValue(traineeInfo));
         return info;
     }
+
+
+    /**
+     * 修改密码
+     *
+     * @param oldPwd    旧密码
+     * @param newPwd    新密码
+     * @param confimPwd 确保新密码与旧密码一致
+     * @param logUserId 当前要修改密码的人
+     * @return
+     */
+    @Override
+    public R updatePassword(String oldPwd, String newPwd, String confimPwd, String logUserId) {
+        // 验证
+        oldPwd = oldPwd.trim();
+        newPwd = newPwd.trim();
+        confimPwd = newPwd.trim();
+        if (StrUtils.isEmpty(oldPwd.trim())) {
+            return R.error("原始密码不能为空");
+        }
+        if (oldPwd.length() > 16) {
+            return R.error("原密码长度不能超过16位");
+        }
+        if (StrUtils.isEmpty(newPwd.trim()) || StrUtils.isEmpty(confimPwd.trim())) {
+            return R.error("新密码以及确认密码也不能为空");
+        }
+        if (newPwd.length() > 16 || confimPwd.length() > 16) {
+            return R.error("新密码或确认密码，长度不能超过16位");
+        }
+        if (!newPwd.equals(confimPwd)) {
+            return R.error("新密码与确认密码不一致");
+        }
+        TevglTraineeInfo traineeInfo = tevglTraineeInfoMapper.selectObjectById(logUserId);
+        // 如果没有登录提示，如果登录了且原始密码和数据库中存在的密码不一致也要提示
+        if (traineeInfo == null) {
+            return R.error("未登录，无法修改密码");
+        }else {
+            // 将数据库的密码解密进行校验
+            String originalPassword = TicketDesUtil.encryptWithMd5(oldPwd, traineeInfo.getUserYan());
+            if (!originalPassword.equals(traineeInfo.getUserPasswd())) {
+                return R.error("原始密码错误，请重新输入");
+            }
+        }
+        // 如果密码都不为空则修改
+        if (traineeInfo != null) {
+            TevglTraineeInfo userInfo = new TevglTraineeInfo();
+            if (StrUtils.isNotEmpty(newPwd)) {
+                String salt = RandomStringUtils.randomAlphanumeric(24);
+                userInfo.setUserPasswd(TicketDesUtil.encryptWithMd5(newPwd, salt));  // 修改后的密码
+                userInfo.setUserYan(salt);  										 // 加密盐
+                userInfo.setTraineeId(logUserId);
+                tevglTraineeInfoMapper.update(userInfo);
+            }
+        }
+        return R.ok("成功修改密码");
+    }
+
+    /**
+     * 修改个人信息
+     *
+     * @param dto
+     * @return
+     */
+    @Override
+    public R updatePersonInfo(SaveTraineeDTO dto) {
+        if (StrUtils.isEmpty(dto.getTraineeName())) {
+            dto.setTraineeName(dto.getTeacherName());
+        }
+        //ValidatorUtils.check(dto);
+        TevglTraineeInfo t = new TevglTraineeInfo();
+        t.setTraineeId(dto.getTraineeId());
+        t.setTraineeName(dto.getTraineeName());
+        t.setNickName(dto.getNickName());
+        t.setTraineeSex(dto.getTraineeSex());
+        t.setJobNumber(dto.getJobNumber());
+        t.setEmail(dto.getEmail());
+        tevglTraineeInfoMapper.update(t);
+        // 如果该用户是教师
+        TevglTchTeacher existedTevglTchTeacher = tevglTchTeacherMapper.selectObjectByTraineeId(dto.getTraineeId());
+        if (existedTevglTchTeacher != null) {
+            TevglTchTeacher o = new TevglTchTeacher();
+            o.setTeacherId(existedTevglTchTeacher.getTeacherId());
+            o.setTeacherName(dto.getTeacherName());
+            o.setSex(dto.getTraineeSex());
+            o.setJobNumber(dto.getJobNumber());
+            o.setTeacherErtificateNumber(dto.getTeacherErtificateNumber());
+            tevglTchTeacherMapper.update(o);
+        }
+        return R.ok("保存成功");
+    }
+
 }

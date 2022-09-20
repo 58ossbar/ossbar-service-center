@@ -3,6 +3,7 @@ package com.ossbar.modules.evgl.trainee.api;
 import com.ossbar.core.baseclass.api.IBaseService;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.evgl.trainee.domain.TevglTraineeInfo;
+import com.ossbar.modules.evgl.trainee.dto.SaveTraineeDTO;
 import com.ossbar.modules.evgl.trainee.vo.TraineeInfoVO;
 
 import java.util.List;
@@ -69,4 +70,21 @@ public interface TevglTraineeInfoService extends IBaseService<TevglTraineeInfo> 
      * @return
      */
     R viewTraineeInfo(String traineeId);
+
+    /**
+     * 修改密码
+     * @param oldPwd 旧密码
+     * @param newPwd 新密码
+     * @param confimPwd 确保新密码与旧密码一致
+     * @param logUserId 当前要修改密码的人
+     * @return
+     */
+    R updatePassword(String oldPwd, String newPwd, String confimPwd, String logUserId);
+
+    /**
+     * 修改个人信息
+     * @param dto
+     * @return
+     */
+    R updatePersonInfo(SaveTraineeDTO dto);
 }
