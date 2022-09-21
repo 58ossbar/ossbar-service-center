@@ -15,6 +15,7 @@ import com.ossbar.modules.evgl.book.persistence.TevglBookChapterMapper;
 import com.ossbar.modules.evgl.book.persistence.TevglBookMajorMapper;
 import com.ossbar.modules.evgl.book.persistence.TevglBookSubjectMapper;
 import com.ossbar.modules.evgl.book.persistence.TevglBookSubperiodMapper;
+import com.ossbar.modules.evgl.book.vo.TevglBookSubjectSelectVo;
 import com.ossbar.modules.evgl.pkg.domain.TevglBookpkgTeam;
 import com.ossbar.modules.evgl.pkg.domain.TevglBookpkgTeamDetail;
 import com.ossbar.modules.evgl.pkg.domain.TevglPkgInfo;
@@ -26,6 +27,7 @@ import com.ossbar.modules.evgl.tch.domain.TevglTchClassroom;
 import com.ossbar.modules.evgl.tch.persistence.TevglTchClassroomMapper;
 import com.ossbar.modules.evgl.tch.persistence.TevglTchClassroomRoleprivilegeMapper;
 import com.ossbar.modules.sys.api.TsysAttachService;
+import com.ossbar.modules.sys.domain.TsysDict;
 import com.ossbar.platform.core.common.utils.UploadFileUtils;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.DateUtils;
@@ -35,6 +37,7 @@ import org.apache.dubbo.config.annotation.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.*;
@@ -86,6 +89,9 @@ public class TevglBookSubjectServiceImpl implements TevglBookSubjectService {
     private DictUtil dictUtil;
     @Autowired
     private UploadFileUtils uploadFileUtils;
+
+    @Value("${com.creatorblue.file-access-path}")
+    public String creatorblueFieAccessPath;
 
     /**
      * 根据条件查询记录
@@ -949,5 +955,118 @@ public class TevglBookSubjectServiceImpl implements TevglBookSubjectService {
             return true;
         }
         return false;
+    }
+
+
+    /**
+     * <p>根据条件查询记录</p>
+     *
+     * @param map 参数中若isSubjectRefNull为"Y"则查询的是课程，若isSubjectRefNotNull为"Y"则查询的是活教材
+     * @return
+     * @author huj
+     * @data 2019年12月25日
+     */
+    @Override
+    public R selectListByMapForMgr(Map<String, Object> map) {
+        //构建查询条件对象Query
+        Query query = new Query(map);
+        PageHelper.startPage(query.getPage(),query.getLimit());
+        List<Map<String, Object>> subjectList = tevglBookSubjectMapper.selectListByMapForMgr(query);
+        convertUtil.convertDict(subjectList, "subject_type", "subjectType2"); // 课程类型(来源字典:学校，平台等)
+        convertUtil.convertDict(subjectList, "subject_property", "subjectProperty"); // 课程属性(来源字典:选修，必修等)
+        convertUtil.convertOrgId(subjectList, "org_id");
+        if (subjectList.size() > 0) {
+            subjectList.forEach(subject -> {
+                // 图片处理, 使用了从字典获取的图片时，保存了文件夹和文件名称。所以处理一下
+                if (StrUtils.isNotEmpty((String)subject.get("subject_logo"))) {
+                    int i = ((String) subject.get("subject_logo")).indexOf(creatorblueFieAccessPath);
+                    if (i == -1) {
+                        subject.put("subject_logo", creatorblueFieAccessPath + uploadFileUtils.getPathByParaNo("10") + "/" + subject.get("subject_logo"));
+                    }
+                }
+            });
+        }
+        PageUtils pageUtil = new PageUtils(subjectList,query.getPage(),query.getLimit());
+        return R.ok().put(Constant.R_DATA, pageUtil);
+    }
+
+    /**
+     * 管理端获取树形数据
+     *
+     * @param subjectId
+     * @return
+     */
+    @Override
+    public R getTreeForMgr(String subjectId) {
+        TevglBookSubject tevglBookSubject = tevglBookSubjectMapper.selectObjectById(subjectId);
+        if (tevglBookSubject == null) {
+            return R.ok().put(Constant.R_DATA, new ArrayList<>());
+        }
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        Map<String, Object> subjectInfo = new HashMap<>();
+        subjectInfo.put("type", "subject");
+        subjectInfo.put("subjectId", tevglBookSubject.getSubjectId());
+        subjectInfo.put("chapterId", tevglBookSubject.getSubjectId());
+        subjectInfo.put("chapterName", tevglBookSubject.getSubjectName());
+        subjectInfo.put("parentId", tevglBookSubject.getSubjectId());
+        subjectInfo.put("level", 0);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("sidx", "order_num");
+        map.put("order", "asc");
+        map.put("state", "Y");
+        map.put("subjectId", subjectId); // 课程ID
+        List<Map<String,Object>> list = tevglBookChapterMapper.selectSimpleListByMapForRelease(map);
+        // 获取构建好层次后的数据
+        List<Map<String,Object>> children = buildTree(subjectId, list, 0);
+        // 处理序号
+        handleSortNum(children);
+        subjectInfo.put("children", children);
+        resultList.add(subjectInfo);
+        return R.ok().put(Constant.R_DATA, resultList);
+    }
+
+    /**
+     * <p>从字典获取活教材封面图，满足前端录入界面需要</p>
+     *
+     * @return
+     * @author huj
+     * @data 2019年8月6日
+     */
+    @Override
+    public List<TsysDict> getSubjectLogo() {
+        List<TsysDict> list = dictUtil.getByType("subjectLogo");
+        if (list.size() > 0 && list != null) {
+            // 根据排序号自然顺序
+            list.stream().sorted(Comparator.comparing(TsysDict::getSortNum)).collect(Collectors.toList());
+            list.forEach(a -> {
+                // 业务基础平台中固定了dict。暂未改动，所以
+                //a.setDictUrl(creatorblueFieAccessPath + uploadPathUtils.getPathByParaNo("1") + "/" + a.getDictUrl());
+                a.setDictUrl(creatorblueFieAccessPath + "/dict/" + a.getDictUrl());
+            });
+        }
+        return list;
+    }
+
+    /**
+     * <p>更新状态</p>
+     *
+     * @param tevglBookSubject
+     * @return
+     * @author huj
+     * @data 2019年7月27日
+     */
+    @Override
+    public R updateState(TevglBookSubject tevglBookSubject) {
+        if (tevglBookSubject == null || StrUtils.isEmpty(tevglBookSubject.getSubjectId())) {
+            return R.error("操作失败");
+        }
+        tevglBookSubjectMapper.update(tevglBookSubject);
+        return R.ok();
+    }
+
+    @Override
+    public List<TevglBookSubjectSelectVo> querySubjectList(Map<String, Object> map) {
+        Query query = new Query(map);
+        return tevglBookSubjectMapper.querySubjectList(query);
     }
 }

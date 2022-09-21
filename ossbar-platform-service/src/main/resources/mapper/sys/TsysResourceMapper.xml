@@ -119,8 +119,11 @@
 		select * from
 		t_sys_resource where type &lt;= 2 and parent_id = #{parentId} order by order_num asc
 	</select>
-	
-	
+	<select id="selectListParentId2" resultType="com.ossbar.modules.sys.domain.TsysResource">
+		select * from
+		t_sys_resource where
+		parent_id = #{parentId} order by order_num asc
+	</select>
 	<select id="selectSubSysList" resultType="com.ossbar.modules.sys.domain.TsysResource">
 		select * from
 		t_sys_resource where type = -1 order by order_num asc

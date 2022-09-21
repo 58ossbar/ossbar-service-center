@@ -1,5 +1,8 @@
 package com.ossbar.modules.evgl.book.api;
 
+import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.evgl.book.domain.TevglBookChapter;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +14,42 @@ import java.util.Map;
  */
 public interface BookService {
 
+
+    /**
+     * 重名命
+     * @param chapterId
+     * @param name
+     * @return
+     */
+    R rename(String chapterId, String name);
+
+    /**
+     * 删除
+     * @param chapterId
+     * @return
+     */
+    R remove(String chapterId);
+
+    /**
+     * 保存
+     * @param tevglBookChapter
+     * @return
+     */
+    R saveChapterInfo(TevglBookChapter tevglBookChapter);
+
+    /**
+     * 仅更新章节内容
+     * @param tevglBookChapter
+     * @return
+     */
+    R saveChapterContent(TevglBookChapter tevglBookChapter);
+
+    /**
+     * 查看章节
+     * @param chapterId
+     * @return
+     */
+    R viewChapter(String chapterId);
 
     /**
      * 课堂页面，刷新ztree树专用方法

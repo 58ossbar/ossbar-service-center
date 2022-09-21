@@ -4,6 +4,8 @@ import com.ossbar.core.baseclass.api.IBaseService;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.evgl.book.domain.TevglBookChapter;
 import com.ossbar.modules.evgl.book.domain.TevglBookSubject;
+import com.ossbar.modules.evgl.book.vo.TevglBookSubjectSelectVo;
+import com.ossbar.modules.sys.domain.TsysDict;
 
 import java.util.List;
 import java.util.Map;
@@ -64,5 +66,52 @@ public interface TevglBookSubjectService extends IBaseService<TevglBookSubject> 
      */
     R getBookForPkgPage(String pkgId, String subjectId, String chapterName, String loginUserId);
 
+    /**
+     * 递归构建树
+     * @param parentId
+     * @param allList
+     * @param level
+     * @return
+     */
     List<TevglBookChapter> buildBook(String parentId, List<TevglBookChapter> allList, int level);
+
+    /**
+     * <p>根据条件查询记录</p>
+     * @author huj
+     * @data 2019年12月25日
+     * @param map 参数中若isSubjectRefNull为"Y"则查询的是课程，若isSubjectRefNotNull为"Y"则查询的是活教材
+     * @return
+     */
+    R selectListByMapForMgr(Map<String, Object> map);
+
+    /**
+     * 管理端获取树形数据
+     * @param subjectId
+     * @return
+     */
+    R getTreeForMgr(String subjectId);
+
+    /**
+     * <p>从字典获取活教材封面图，满足前端录入界面需要</p>
+     * @author huj
+     * @data 2019年8月6日
+     * @return
+     */
+    List<TsysDict> getSubjectLogo();
+
+    /**
+     * <p>更新状态</p>
+     * @author huj
+     * @data 2019年7月27日
+     * @param tevglBookSubject
+     * @return
+     */
+    R updateState(TevglBookSubject tevglBookSubject);
+
+    /**
+     * 根据条件查询课程
+     * @param map
+     * @return
+     */
+    List<TevglBookSubjectSelectVo> querySubjectList(Map<String, Object> map);
 }

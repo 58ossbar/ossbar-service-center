@@ -15,6 +15,8 @@ import com.ossbar.modules.evgl.book.domain.TevglBookSubperiod;
 import com.ossbar.modules.evgl.book.persistence.TevglBookMajorMapper;
 import com.ossbar.modules.evgl.book.persistence.TevglBookSubjectMapper;
 import com.ossbar.modules.evgl.book.persistence.TevglBookSubperiodMapper;
+import com.ossbar.modules.evgl.tch.domain.TevglTchClass;
+import com.ossbar.modules.evgl.tch.persistence.TevglTchClassMapper;
 import com.ossbar.modules.evgl.tch.persistence.TevglTchClassroomMapper;
 import com.ossbar.platform.core.common.utils.UploadFileUtils;
 import com.ossbar.utils.constants.Constant;
@@ -53,6 +55,8 @@ public class TevglBookMajorServiceImpl implements TevglBookMajorService {
     private TevglBookSubjectMapper tevglBookSubjectMapper;
     @Autowired
     private TevglTchClassroomMapper tevglTchClassroomMapper;
+    @Autowired
+    private TevglTchClassMapper tevglTchClassMapper;
 
     @Autowired
     private ConvertUtil convertUtil;
@@ -299,6 +303,126 @@ public class TevglBookMajorServiceImpl implements TevglBookMajorService {
                 major.put("classroomNum", classroomNum);
             });
         }
+        return majorList;
+    }
+
+    /**
+     * <p>根据条件查询树数据</p>
+     *
+     * @param id
+     * @return
+     * @author huj
+     * @data 2019年7月27日
+     */
+    @Override
+    @SysLog(value="查看明细")
+    public R viewForMgr(String id) {
+        TevglBookMajor major = tevglBookMajorMapper.selectObjectById(id);
+        if (major == null) {
+            return R.ok();
+        }
+        major.setMajorLogo(creatorblueFieAccessPath + uploadPathUtils.getPathByParaNo("11") + "/" + major.getMajorLogo());
+        return R.ok().put(Constant.R_DATA, major);
+    }
+
+    /**
+     * <p>根据条件查询树数据</p>
+     *
+     * @param map
+     * @return
+     * @author huj
+     * @data 2019年7月27日
+     */
+    @Override
+    public R queryForTree(Map<String, Object> map) {
+        map.put("sidx", "sort_num");
+        map.put("order", "asc");
+        Query query = new Query(map);
+        List<TevglBookMajor> tevglBookMajorList = tevglBookMajorMapper.selectListByMap(query);
+        return R.ok().put(Constant.R_DATA, tevglBookMajorList);
+    }
+
+    /**
+     * 职业路径与班级组成层次结构的数据
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> queryMajorClassTreeData(String name) {
+        // 查出职业路径
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("state", "Y");
+        params.put("sidx", "sort_num");
+        params.put("order", "asc");
+        List<TevglBookMajor> list = tevglBookMajorMapper.selectListByMap(params);
+        List<Map<String, Object>> majorList = list.stream().map(a -> {
+            Map<String, Object> info = new HashMap<>();
+            info.put("id", a.getMajorId());
+            info.put("name", a.getMajorName());
+            return info;
+        }).collect(Collectors.toList());
+        // 查出班级
+        params.clear();
+        List<TevglTchClass> classList = tevglTchClassMapper.selectListByMap(params);
+        majorList.stream().forEach(major -> {
+            List<Map<String, Object>> children = classList.stream()
+                    .filter(a -> a.getMajorId().equals(major.get("id")))
+                    .map(a -> {
+                        Map<String, Object> info = new HashMap<>();
+                        info.put("id", a.getClassId());
+                        info.put("name", a.getClassName());
+                        return info;
+                    })
+                    .collect(Collectors.toList());
+            if (children != null && children.size() > 0) {
+                major.put("children", children);
+            }
+        });
+        return majorList;
+    }
+
+    /**
+     * 职业路径与课程组成层次结构的数据
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> queryMajorSubjectTreeData(String name) {
+        // 查出职业路径
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("state", "Y");
+        params.put("sidx", "sort_num");
+        params.put("order", "asc");
+        List<TevglBookMajor> list = tevglBookMajorMapper.selectListByMap(params);
+        List<Map<String, Object>> majorList = list.stream().map(a -> {
+            Map<String, Object> info = new HashMap<>();
+            info.put("id", a.getMajorId());
+            info.put("name", a.getMajorName());
+            return info;
+        }).collect(Collectors.toList());
+        majorList.stream().forEach(major -> {
+            // 查出课程
+            params.clear();
+            params.put("state", "Y");
+            params.put("isSubjectRefNull", "Y");
+            params.put("majorId", major.get("id"));
+            List<TevglBookSubject> tevglBookSubjectList = tevglBookSubjectMapper.selectListByMapForCommon(params);
+            List<Map<String, Object>> children = tevglBookSubjectList.stream()
+                    .map(a -> {
+                        Map<String, Object> info = new HashMap<>();
+                        info.put("id", a.getSubjectId());
+                        info.put("name", a.getSubjectName());
+                        return info;
+                    })
+                    .collect(Collectors.toList());
+            if (children != null && children.size() > 0) {
+                major.put("children", children);
+            } else {
+                major.put("disabled", true);
+            }
+        });
         return majorList;
     }
 }

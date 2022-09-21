@@ -23,6 +23,15 @@ public interface TsysResourceMapper extends BaseSqlMapper<TsysResource> {
 	 * @param parentId 父菜单ID
 	 */
 	List<TsysResource> selectListParentId(String parentId);
+
+	/**
+	 * <p>没有type <= 2 这个查询条件</p>
+	 * @author huj
+	 * @data 2019年8月15日
+	 * @param parentId
+	 * @return
+	 */
+	List<TsysResource> selectListParentId2(String parentId);
 	
 	/**
 	 * 获取不包含按钮的菜单列表

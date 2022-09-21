@@ -1,9 +1,11 @@
 package com.ossbar.modules.evgl.book.service;
 
 import com.ossbar.common.utils.ServiceLoginUtil;
+import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.common.GlobalRoomPermission;
 import com.ossbar.modules.evgl.book.api.BookService;
 import com.ossbar.modules.evgl.book.api.TevglBookSubjectService;
+import com.ossbar.modules.evgl.book.domain.TevglBookChapter;
 import com.ossbar.modules.evgl.book.domain.TevglBookSubject;
 import com.ossbar.modules.evgl.book.persistence.TevglBookChapterMapper;
 import com.ossbar.modules.evgl.pkg.api.TevglPkgActivityRelationService;
@@ -50,6 +52,62 @@ public class BookServiceImpl implements BookService {
     private TevglBookpkgTeamDetailMapper tevglBookpkgTeamDetailMapper;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 重名命
+     *
+     * @param chapterId
+     * @param name
+     * @return
+     */
+    @Override
+    public R rename(String chapterId, String name) {
+        return R.ok("暂不支持");
+    }
+
+    /**
+     * 删除
+     *
+     * @param chapterId
+     * @return
+     */
+    @Override
+    public R remove(String chapterId) {
+        return R.ok("暂不支持");
+    }
+
+    /**
+     * 保存
+     *
+     * @param tevglBookChapter
+     * @return
+     */
+    @Override
+    public R saveChapterInfo(TevglBookChapter tevglBookChapter) {
+        return R.ok("暂不支持");
+    }
+
+    /**
+     * 仅更新章节内容
+     *
+     * @param tevglBookChapter
+     * @return
+     */
+    @Override
+    public R saveChapterContent(TevglBookChapter tevglBookChapter) {
+        return R.ok("暂不支持");
+    }
+
+    /**
+     * 查看章节
+     *
+     * @param chapterId
+     * @return
+     */
+    @Override
+    public R viewChapter(String chapterId) {
+        return R.ok("暂不支持");
+    }
 
     /**
      * 课堂页面，刷新ztree树专用方法
