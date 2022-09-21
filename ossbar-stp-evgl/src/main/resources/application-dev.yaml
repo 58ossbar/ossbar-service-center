@@ -89,9 +89,10 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
+    # 可选：never、always
     initialization-mode: never
-    schema: classpath:/db/creatorblue-platform-schema-mysql.sql
-    data: classpath:/db/creatorblue-platform-data-mysql.sql
+    schema: classpath:/db/ossbar-stp-schema-mysql.sql
+    data: classpath:/db/ossbar-stp-data-mysql.sql
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       connection-init-sqls: set names utf8mb4;

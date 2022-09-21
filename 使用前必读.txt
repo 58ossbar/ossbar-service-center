@@ -1,9 +1,23 @@
 
 github仓库地址：https://github.com/58ossbar/ossbar-platform.git
 
+一、布道师：启动ossbar-stp-evgl工程中的src/main/java/OssbarStpEvglApplication类即可
+
+启动如果遇到了
+org.springframework.amqp.AmqpConnectException: java.net.ConnectException: Connection refused: connect
+忽略该错误即可，不影响使用
+检查是否安装rabbitmq，没有安装也不影响使用！
+
+
+用户端账号密码：15200530000/123456
+管理端账号密码：
+
+
+
+
+
+
+
+二、如果你只想关注，业务基础平台：启动ossbar工程即可
+
 微服务版，请移步【micro-service】分支
-
-
-如果你只想关注，业务基础平台：启动ossbar工程即可
-
-布道师：
