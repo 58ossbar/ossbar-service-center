@@ -120,6 +120,7 @@ public class LoginController {
 			// 自定义错误处理
 			restTemplate.setErrorHandler(new CustomResponseErrorHandler());
 			// oauth认证
+			log.info("认证地址 {}", url);
 			Oauth2ResponseVO response = restTemplate.postForObject(url, httpEntity, Oauth2ResponseVO.class);
 			if (response != null && !StringUtils.isEmpty(response.getError())) {
 				log.error("用户{}登录失败 {}", username, response.getError_description());
