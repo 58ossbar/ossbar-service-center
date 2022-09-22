@@ -592,4 +592,36 @@ public class TevglTraineeInfoServiceImpl implements TevglTraineeInfoService {
         return R.ok("保存成功");
     }
 
+    /**
+     * 根据条件查询，不在任何班级里面的学员（学员：账号有效，且绑定了手机号码）
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    public List<TraineeInfoVO> findTraineeListNotInClass(Map<String, Object> map) {
+        List<TraineeInfoVO> traineeList = tevglTraineeInfoMapper.findTraineeListNotInClass(map);
+        if (traineeList != null && traineeList.size() > 0) {
+            traineeList.stream().forEach(trainee -> {
+                trainee.setTraineePic(uploadPathUtils.stitchingPath(trainee.getTraineePic(), "16"));
+            });
+        }
+        return traineeList;
+    }
+
+    /**
+     * 根据条件，分页查询，不在任何班级里面的学员
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    public R findTraineeListNotInClassWithPage(Map<String, Object> map) {
+        Query query = new Query(map);
+        PageHelper.startPage(query.getPage(), query.getLimit());
+        List<TraineeInfoVO> list = this.findTraineeListNotInClass(query);
+        PageUtils pageUtil = new PageUtils(list, query.getLimit(), query.getLimit());
+        return R.ok().put(Constant.R_DATA, pageUtil);
+    }
+
 }

@@ -69,7 +69,7 @@ tio:
       redis:
         ip: 172.19.0.107
         port: 6379
-        password: xqTT2929
+        password:
 server:
   port: 9084
   servlet:
@@ -112,8 +112,8 @@ spring:
       pool-prepared-statements: true
       stat-view-servlet:
         enabled: true
-        login-password: creatorblue.com
-        login-username: creatorblue
+        login-password: obsaas!@.com
+        login-username: aabb
         url-pattern: /druid/*
       test-on-borrow: false
       test-on-return: false
@@ -159,7 +159,7 @@ security:
     client:
       access-token-uri: http://localhost:${server.port}/${server.servlet.context-path}/oauth/token
       logout: http://localhost:${server.port}/${server.servlet.context-path}/logoutRest
-      client-id: creatorblue-platform-core
+      client-id: ossbar-platform-core
       client-secret: s9sd8uf9ewj9egwejgewgj0
       user-authorization-uri: http://localhost:${server.port}/${server.servlet.context-path}/oauth/authorize
     resource:

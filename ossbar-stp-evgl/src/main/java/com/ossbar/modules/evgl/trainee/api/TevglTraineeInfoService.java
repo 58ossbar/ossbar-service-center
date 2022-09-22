@@ -87,4 +87,17 @@ public interface TevglTraineeInfoService extends IBaseService<TevglTraineeInfo> 
      * @return
      */
     R updatePersonInfo(SaveTraineeDTO dto);
+
+    /**
+     * 根据条件查询，不在任何班级里面的学员（学员：账号有效，且绑定了手机号码）
+     * @return
+     */
+    List<TraineeInfoVO> findTraineeListNotInClass(Map<String, Object> map);
+
+    /**
+     * 根据条件，分页查询，不在任何班级里面的学员
+     * @param map
+     * @return
+     */
+    R findTraineeListNotInClassWithPage(Map<String, Object> map);
 }

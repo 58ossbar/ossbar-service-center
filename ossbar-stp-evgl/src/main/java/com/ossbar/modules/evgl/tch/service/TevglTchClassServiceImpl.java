@@ -8,6 +8,8 @@ import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.evgl.tch.api.TevglTchClassService;
 import com.ossbar.modules.evgl.tch.domain.TevglTchClass;
 import com.ossbar.modules.evgl.tch.persistence.TevglTchClassMapper;
+import com.ossbar.modules.sys.domain.TsysOrg;
+import com.ossbar.modules.sys.persistence.TsysOrgMapper;
 import com.ossbar.platform.core.common.utils.UploadFileUtils;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.StrUtils;
@@ -18,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p> Title: </p>
@@ -38,6 +42,9 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
     private Logger log = LoggerFactory.getLogger(TevglTchClassServiceImpl.class);
     @Autowired
     private TevglTchClassMapper tevglTchClassMapper;
+    @Autowired
+    private TsysOrgMapper tsysOrgMapper;
+
     @Autowired
     private ConvertUtil convertUtil;
     @Autowired
@@ -196,6 +203,20 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
 
 
     /**
+     * 根据条件查询记录
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    public List<TevglTchClass> selectListByMap(Map<String, Object> params) {
+        params.put("sidx", "create_time");
+        params.put("order", "desc");
+        Query query = new Query(params);
+        return tevglTchClassMapper.selectListByMap(query);
+    }
+
+    /**
      * 查询班级列表
      *
      * @param params
@@ -226,4 +247,120 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
         return R.ok().put(Constant.R_DATA, list);
     }
 
+    /**
+     * 根据条件查询记录
+     * @param params
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> selectSimpleListMap(Map<String, Object> params) {
+        return tevglTchClassMapper.selectSimpleListMap(params);
+    }
+
+    /**
+     * 获取机构年份班级树
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    public R getClassTree(Map<String, Object> params) {
+        // 班级状态
+        Object classState = params.get("classState");
+        // 最终返回结果
+        List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+        // element树组件默认展开的节点
+        List<String> defaultExpandedKeys = new ArrayList<>();
+        // 查询条件
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("sidx", "create_time");
+        map.put("order", "desc");
+        map.put("nonOrgType", "2");
+        // 查询所有机构
+        List<TsysOrg> orglist = tsysOrgMapper.selectListByMap(map);
+        for(TsysOrg org : orglist){
+            Map<String,Object> m = new HashMap<String,Object>();
+            m.put("id",org.getOrgId());
+            m.put("name", org.getOrgName());
+            m.put("parentId", org.getParentId());
+            m.put("type", "01");
+            list.add(m);
+        }
+        // 查询教育中心机构下面的班级
+        map.clear();
+        if(classState != null && !"".equals(classState)){
+            map.put("classState", classState);
+        }
+        List<TevglTchClass> classList = tevglTchClassMapper.selectListByMap(map);
+        convertUtil.convertDict(classList, "classState", "class_state");
+        Map<String,List<TevglTchClass>> yearList = classList.stream()
+                .filter(a -> StrUtils.isNotEmpty(a.getAcceptTime()))
+                .collect(Collectors.groupingBy(a -> ((TevglTchClass)a).getOrgId()+"#"+((TevglTchClass)a).getAcceptTime().substring(0, 4)));
+        List<Map<String,Object>> tempList = new ArrayList<>();
+        yearList.forEach((k,v) -> {
+            Map<String,Object> m = new HashMap<String,Object>();
+            m.put("id", k);
+            m.put("name", k.split("#")[1]);
+            m.put("parentId", k.split("#")[0]);
+            m.put("type", "04");
+            //list.add(m);
+            tempList.add(m);
+            defaultExpandedKeys.add(k);
+            v.forEach(a -> {
+                Map<String,Object> mm = new HashMap<String,Object>();
+                mm.put("id", a.getClassId());
+                mm.put("name", a.getClassName() + "("+a.getClassState()+")");
+                mm.put("parentId", k);
+                mm.put("type", "02");
+                list.add(mm);
+            });
+        });
+        // 按年份降序排序
+        List<Map<String, Object>> res = tempList.stream().sorted((h1, h2) -> h2.get("name").toString().compareTo(h1.get("name").toString())).collect(Collectors.toList());
+        list.addAll(res);
+        List<TevglTchClass> emptyList = classList.stream().filter(a -> StrUtils.isEmpty(a.getAcceptTime())).collect(Collectors.toList());
+        for(TevglTchClass cc : emptyList){
+            Map<String,Object> m = new HashMap<String,Object>();
+            m.put("id", cc.getClassId());
+            m.put("name", cc.getClassName() + "("+cc.getClassState()+")");
+            m.put("parentId", cc.getOrgId());
+            m.put("type", "02");
+            list.add(m);
+        }
+        List<Map<String, Object>> resultList = buildTree("-1", list, 0);
+        return R.ok().put(Constant.R_DATA, resultList)
+                .put("defaultExpandedKeys", defaultExpandedKeys);
+    }
+
+    /**
+     * 递归构建树形数据
+     * @param parentId
+     * @param allList
+     * @param level
+     * @return
+     */
+    private List<Map<String, Object>> buildTree(String parentId, List<Map<String, Object>> allList, int level) {
+        if (allList == null || allList.size() == 0) {
+            return null;
+        }
+        // 筛选出匹配的节点
+        List<Map<String, Object>> nodeList = allList.stream().filter(a -> a.get("parentId").equals(parentId)).collect(Collectors.toList());
+        if (nodeList != null && nodeList.size() > 0) {
+            // level计算当前处于第几级
+            level ++;
+            for (int i = 0; i < nodeList.size(); i++) {
+                Map<String, Object> node = nodeList.get(i);
+                // 当前层级
+                node.put("level", level);
+                // 递归
+                List<Map<String, Object>> list = buildTree(node.get("id").toString(), allList, level);
+                if (list != null && list.size() > 0) {
+                    node.put("children", list);
+                } else {
+                    node.put("children", null);
+                }
+            }
+        }
+        return nodeList;
+    }
 }

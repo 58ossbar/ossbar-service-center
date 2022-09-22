@@ -53,7 +53,7 @@ weixin:
   #商家端保证金退款回调地址
   pc_bond_refund_notifyurl: 
   #C端支付回调地址
-  app_notifyurl: https://frp.creatorblue.com/sp/wx/api/of/orderback
+  app_notifyurl:
   #商户秘钥
   key:
   #h5支付之后跳转地址
@@ -67,7 +67,7 @@ tio:
       redis:
         ip: 172.16.0.232
         port: 6379
-        password: xqtt2929
+        password:
 server:
   port: 9084
   servlet:
@@ -76,15 +76,15 @@ server:
     uri-encoding: UTF-8
 spring:
   rabbitmq:
-    host: 172.16.0.108
+    host: 127.0.0.1
     port: 5672
     username: admin
     password: admin
   redis:
     database: 0
-    host: 172.16.0.232
+    host: 127.0.0.1
     port: 6379
-    password: xqtt2929
+    password:
   aop:
     proxy-target-class: true
   application:
@@ -151,7 +151,7 @@ security:
     client:
       access-token-uri: http://localhost:${server.port}/${server.servlet.context-path}/oauth/token
       logout: http://localhost:${server.port}/${server.servlet.context-path}/logoutRest
-      client-id: creatorblue-platform-core
+      client-id: ossbar-platform-core
       client-secret: s9sd8uf9ewj9egwejgewgj0
       user-authorization-uri: http://localhost:${server.port}/${server.servlet.context-path}/oauth/authorize
     resource:
