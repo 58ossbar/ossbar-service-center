@@ -46,4 +46,13 @@ public interface TevglTchClassService extends IBaseService<TevglTchClass> {
      * @return
      */
     R getClassTree(Map<String, Object> params);
+
+    R getClassDictTypeList(Map<String, Object> params);
+
+    /**
+     *
+     * @param params
+     * @return
+     */
+    R queryClassListForWeb(Map<String, Object> params);
 }

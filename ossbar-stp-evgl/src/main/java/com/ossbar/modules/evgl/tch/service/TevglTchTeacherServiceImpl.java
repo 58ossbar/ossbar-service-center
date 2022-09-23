@@ -180,6 +180,7 @@ public class TevglTchTeacherServiceImpl implements TevglTchTeacherService {
 
     @Override
     public List<TevglTchTeacher> selectListByMap(Map<String, Object> map) {
+        map.put("state", "Y");
         Query query = new Query(map);
         return tevglTchTeacherMapper.selectListByMap(query);
     }

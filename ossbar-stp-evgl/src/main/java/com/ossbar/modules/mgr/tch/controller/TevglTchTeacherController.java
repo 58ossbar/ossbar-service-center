@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -147,5 +148,11 @@ public class TevglTchTeacherController {
 	@SysLog("查询列表(返回List<Bean>)")
 	public R selectTeacherList(@RequestParam Map<String, Object> params) {
 		return R.ok().put(Constant.R_DATA, tevglTchTeacherService.selectListByMapInnerJoinTraineeTable(params));
+	}
+
+	@GetMapping("/queryTeacherList")
+	public R queryTeacherList(@RequestParam Map<String, Object> map) {
+		List<TevglTchTeacher> list = tevglTchTeacherService.selectListByMap(map);
+		return R.ok().put(Constant.R_DATA, list);
 	}
 }

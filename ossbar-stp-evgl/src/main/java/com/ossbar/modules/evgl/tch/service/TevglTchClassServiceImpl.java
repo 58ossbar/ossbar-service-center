@@ -5,6 +5,7 @@ import com.ossbar.common.utils.ConvertUtil;
 import com.ossbar.common.utils.PageUtils;
 import com.ossbar.common.utils.Query;
 import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.common.DictService;
 import com.ossbar.modules.evgl.tch.api.TevglTchClassService;
 import com.ossbar.modules.evgl.tch.domain.TevglTchClass;
 import com.ossbar.modules.evgl.tch.persistence.TevglTchClassMapper;
@@ -52,6 +53,9 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
 
     @Value("${com.creatorblue.file-access-path}")
     public String creatorblueFieAccessPath;
+
+    @Autowired
+    private DictService dictService;
 
     /**
      * 根据条件查询记录
@@ -362,5 +366,31 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
             }
         }
         return nodeList;
+    }
+
+    @Override
+    public R getClassDictTypeList(Map<String, Object> params) {
+        List<Map<String,Object>> dictList = dictService.getDictList("class_type");
+        dictList.stream().forEach(item -> {
+            Object type = item.get("dictCode");
+            if (StrUtils.notNull(type)) {
+                item.put("totalCount", tevglTchClassMapper.countClassNumByType(type));
+            } else {
+                item.put("totalCount", 0);
+            }
+        });
+        return R.ok().put(Constant.R_DATA, dictList);
+    }
+
+    @Override
+    public R queryClassListForWeb(Map<String, Object> params) {
+        // 构建查询条件对象Query
+        Query query = new Query(params);
+        PageHelper.startPage(query.getPage(),query.getLimit());
+        List<TevglTchClass> tevglTchClassList = tevglTchClassMapper.findClassListByMap(query);
+        convertUtil.convertDict(tevglTchClassList, "classState", "class_state");
+        handleDatas(tevglTchClassList);
+        PageUtils pageUtil = new PageUtils(tevglTchClassList,query.getPage(),query.getLimit());
+        return R.ok().put(Constant.R_DATA, pageUtil);
     }
 }
