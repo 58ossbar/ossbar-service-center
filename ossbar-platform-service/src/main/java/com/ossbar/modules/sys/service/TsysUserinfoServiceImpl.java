@@ -146,12 +146,16 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		String pwd = TicketDesUtil.encryptWithMd5(defautPwd, null);
 		// 组装数据
 		String uuid = StringUtils.isEmpty(user.getUserId()) ? Identities.uuid() : user.getUserId();
+		user.setUserId(uuid);
 		tsysUserinfo.setUserId(uuid);
 		tsysUserinfo.setPassword(pwd);
 		tsysUserinfo.setCreateUserId(serviceLoginUtil.getLoginUserId());
 		tsysUserinfo.setCreateTime(DateUtils.getNowTimeStamp());
 		tsysUserinfo.setUpdateTime(tsysUserinfo.getCreateTime());
 		tsysUserinfo.setUserTheme("black");
+		tsysUserinfo.setUserType(StrUtils.isEmpty(tsysUserinfo.getUserType()) ? "1" : tsysUserinfo.getUserType());
+		tsysUserinfo.setSex(StrUtils.isEmpty(tsysUserinfo.getSex()) ? "0" : tsysUserinfo.getSex());
+		tsysUserinfo.setStatus(StrUtils.isEmpty(tsysUserinfo.getStatus()) ? "1" : tsysUserinfo.getStatus());
 		// 保存用户信息
 		tsysUserinfoMapper.insert(tsysUserinfo);
 		// 如果上传了资源文件

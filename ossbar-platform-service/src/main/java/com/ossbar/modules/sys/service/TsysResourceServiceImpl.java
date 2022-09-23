@@ -15,6 +15,7 @@ import com.ossbar.modules.sys.persistence.TsysUserinfoMapper;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,16 +103,105 @@ public class TsysResourceServiceImpl implements TsysResourceService {
 		return R.ok();
 	}
 
+	/**
+	 * 一键生成增删改查按钮菜单
+	 *
+	 * @param menuId
+	 * @return R
+	 * @author huangwb
+	 * @date 2019-05-06 15:18
+	 */
 	@Override
-	public R init(String menuId) {
-		// TODO Auto-generated method stub
-		return null;
+	@PostMapping("/init/{menuId}")
+	@SentinelResource("/sys/resource/init")
+	@Transactional
+	@CacheEvict(value = "menu_list_cache", allEntries = true)
+	public R init(@PathVariable("menuId") String menuId) {
+		try {
+			TsysResource resource = tsysResourceMapper.selectObjectById(menuId);
+			String url = resource.getUrl();
+			if (url == null || url.trim().length() == 0) {
+				return R.error("请先设置菜单url");
+			}
+			url = url.substring(1, url.length());
+			String[] perms = url.split("/");
+			if (perms.length < 2) {
+				return R.error("url格式不正确");
+			}
+			String permsP = perms[0] + ":" + perms[1];
+			if (resource.getPerms() == null || resource.getPerms().trim().length() == 0) {
+				resource.setPerms(permsP + ":list," + permsP + ":query");
+				update(resource);
+			}
+			List<TsysResource> menuList = tsysResourceMapper.selectListParentId(menuId);
+			List<String> names = new ArrayList<String>();
+			for (TsysResource res : menuList) {
+				names.add(res.getName());
+			}
+			TsysResource temp = new TsysResource();
+			temp.setParentId(menuId);
+			temp.setType(2);
+			temp.setDisplay("1");
+			List<TsysResource> menuData = new ArrayList<TsysResource>();
+			if (!names.contains("新增")) {
+				temp.setName("新增");
+				temp.setPerms(permsP + ":add");
+				temp.setOrderNum(tsysResourceMapper.selectMaxOrderNumByParentId(temp.getParentId()) + 1);
+				insert(temp);
+				// 由于List中存放的是对象引用 所以需要调用BeanUtils对对象进行clone操作
+				menuData.add((TsysResource) BeanUtils.cloneBean(temp));
+			}
+			if (!names.contains("修改")) {
+				temp.setName("修改");
+				temp.setPerms(permsP + ":edit");
+				temp.setOrderNum(tsysResourceMapper.selectMaxOrderNumByParentId(temp.getParentId()) + 1);
+				insert(temp);
+				// 由于List中存放的是对象引用 所以需要调用BeanUtils对对象进行clone操作
+				menuData.add((TsysResource) BeanUtils.cloneBean(temp));
+			}
+			if (!names.contains("删除")) {
+				temp.setName("删除");
+				temp.setPerms(permsP + ":remove");
+				temp.setOrderNum(tsysResourceMapper.selectMaxOrderNumByParentId(temp.getParentId()) + 1);
+				insert(temp);
+				// 由于List中存放的是对象引用 所以需要调用BeanUtils对对象进行clone操作
+				menuData.add((TsysResource) BeanUtils.cloneBean(temp));
+			}
+			if (!names.contains("查看")) {
+				temp.setName("查看");
+				temp.setPerms(permsP + ":view");
+				temp.setOrderNum(tsysResourceMapper.selectMaxOrderNumByParentId(temp.getParentId()) + 1);
+				insert(temp);
+				// 由于List中存放的是对象引用 所以需要调用BeanUtils对对象进行clone操作
+				menuData.add((TsysResource) BeanUtils.cloneBean(temp));
+			}
+			return R.ok().put("data", menuData);
+		} catch (Exception e) {
+			return R.error(e.getMessage());
+		}
 	}
 
+	/**
+	 * 选择菜单(添加、修改菜单)
+	 *
+	 * @return R
+	 * @author huangwb
+	 * @date 2019-05-06 15:18
+	 */
+	@GetMapping("/select")
+	@SentinelResource("/sys/resource/select")
 	@Override
 	public R select() {
-		// TODO Auto-generated method stub
-		return null;
+		// 查询列表数据
+		List<TsysResource> menuList = tsysResourceMapper.selectNotButtonList();
+		// 添加顶级菜单
+		TsysResource root = new TsysResource();
+		root.setMenuId("0");
+		root.setName("一级菜单");
+		root.setParentId("-1");
+		root.setOpen(true);
+		menuList.add(root);
+		return R.ok().put("data", menuList);
 	}
 
 	/**
@@ -188,7 +278,7 @@ public class TsysResourceServiceImpl implements TsysResourceService {
 	/**
 	 * 通过用户名获取用户菜单列表
 	 *
-	 * @param userId
+	 * @param username
 	 * @return R
 	 * @author huangwb
 	 * @date 2019-05-06 15:18
@@ -374,7 +464,7 @@ public class TsysResourceServiceImpl implements TsysResourceService {
 	/**
 	 * 根据前端map参数获取菜单列表
 	 *
-	 * @param parentId 判断需要查询的是子菜单还是父级菜单 type判断是否是展开树还是模糊查询的操作 name模糊查询参数
+	 * @param map parentId 判断需要查询的是子菜单还是父级菜单 type判断是否是展开树还是模糊查询的操作 name模糊查询参数
 	 * @return R
 	 * @author huangwb
 	 * @date 2019-05-20 15:18
@@ -426,7 +516,7 @@ public class TsysResourceServiceImpl implements TsysResourceService {
 	/**
 	 * 根据前端map参数获取display显示的菜单列表
 	 *
-	 * @param parentId 判断需要查询的是子菜单还是父级菜单 type判断是否是展开树还是模糊查询的操作 name模糊查询参数
+	 * @param map parentId 判断需要查询的是子菜单还是父级菜单 type判断是否是展开树还是模糊查询的操作 name模糊查询参数
 	 * @return R
 	 * @author huangwb
 	 * @date 2019-06-1 15:18

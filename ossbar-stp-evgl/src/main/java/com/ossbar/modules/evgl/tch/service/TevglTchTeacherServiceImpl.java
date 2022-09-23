@@ -26,6 +26,7 @@ import com.ossbar.platform.core.common.utils.UploadFileUtils;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.BeanUtils;
 import com.ossbar.utils.tool.DateUtils;
+import com.ossbar.utils.tool.Identities;
 import com.ossbar.utils.tool.StrUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -223,7 +224,6 @@ public class TevglTchTeacherServiceImpl implements TevglTchTeacherService {
             tsysUserinfoMapper.update(user);
         } else { // 否则新建一个账号
             SaveUserDTO userDTO = new SaveUserDTO();
-            userDTO.setUserId(tevglTchTeacher.getTraineeId());
             userDTO.setUsername(tevglTchTeacher.getUsername().trim());
             userDTO.setUserRealname(tevglTchTeacher.getTeacherName());
             // 默认教师角色 如有改动 自行替换
@@ -234,11 +234,15 @@ public class TevglTchTeacherServiceImpl implements TevglTchTeacherService {
             if (StrUtils.isNotEmpty(tevglTchTeacher.getTeacherPost())) {
                 userDTO.setPostIdList(Arrays.asList(tevglTchTeacher.getTeacherPost()));
             }
+            userDTO.setSex(dto.getSex());
+            userDTO.setMobile(dto.getUsername());
             tsysUserinfoService.save(userDTO);
+            // 建立关系
+            tevglTchTeacher.setUserId(userDTO.getUserId());
         }
+        tevglTchTeacher.setTeacherId(Identities.uuid());
         tevglTchTeacher.setOrgId(StrUtils.isEmpty(tevglTchTeacher.getOrgId()) ? getDefaultOrgIdDepartment() : tevglTchTeacher.getOrgId());
         tevglTchTeacher.setOrgIdDepartment(getDefaultOrgIdDepartment());
-        tevglTchTeacher.setTeacherId(tevglTchTeacher.getTraineeId());
         tevglTchTeacher.setCreateUserId(serviceLoginUtil.getLoginUserId());
         tevglTchTeacher.setCreateTime(DateUtils.getNowTimeStamp());
         tevglTchTeacher.setUpdateTime(DateUtils.getNowTimeStamp());
