@@ -125,7 +125,7 @@ public class TevglTchClassController {
 	@GetMapping("/getClassPic")
 	public R getClassPic() {
 		List<TsysDict> list = dictService.getTsysDictListByType("classPic");
-		if (list.size() > 0 && list != null) {
+		if (list != null && list.size() > 0) {
 			// 根据排序号自然顺序
 			list.stream().sorted(Comparator.comparing(TsysDict::getSortNum)).collect(Collectors.toList());
 			list.forEach(a -> {

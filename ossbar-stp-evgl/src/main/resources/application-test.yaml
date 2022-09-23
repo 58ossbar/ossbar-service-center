@@ -1,11 +1,9 @@
 com:
   creatorblue:
     anno-filter: /druid/**, /user/login, /user/logout, /index.html, /user/captcha.jpg, /user/querySettings, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.ttf, /**/*.woff, /**/*.js, /**/*.css, /**/*.jpg, /**/*.jpeg, /**/*.png, /**/*.git, /**/*.bmp, /doLogin, /logoutRest, /login-api/**, /index-api/**, /subject-api/**, /major-api/**, /pkginfo-api/**, /teacher-api/**, /trainee-story/**, /partner-api/**, /news-api/**, /cbeditor/**, /resourceCenter-api/**, /teachingCenter-api/**, /classroom-api/**, /dict-api/**, /questions-api/**, /examCenter-api/**, /testPaper-api/**, /paperExamine/**, /managementPanel-api/**, /activity/**, /site/**, /cbim/**, /cloud-api/**, /typora/**
-    baseUrl: https://frp.creatorblue.com/console
+    baseUrl:
     file-upload-path: /mnt/cbstp/uploads
     file-access-path: /uploads
-    file-upload-path-cloud-pan: /mnt/cbstp/uploads/cloud-pan
-    file-access-path-cloud-pan: /uploads/cloud-pan
     cb-upload-paths: /default, /dict-img, /sys-user-img, /settings-img, /site-img, /avd-img, /news-img, /teacher-img, /stustar-img, /partner-img, /subject-img, /major-img, /pkg-img, /class-img, /classroom-img, /resource-data, /trainee-data, /activity-data, /signin-data, /activity-data/answer-discuss, /activity-data/vote-questionnaire, /activity-data/brainstorming, /activity-data/task, /question-data, /friend-data, /trainee-data/blog-bg-pic, /auxiliary-teaching-video
     cbeditor-image-path: cbeditor-image
     cbeditor-image-suffix: png, jpg, jpeg, gif
@@ -17,7 +15,7 @@ com:
     is-cors: true
     schedule-cluster: false
     schedule-autostart: false
-    signName: 创蓝科技
+    signName:
     accessKeyId:
     accessKeySecret:
     defaultHeadImg: uploads/defaulthead.png

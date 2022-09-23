@@ -7,12 +7,12 @@ import com.ossbar.modules.evgl.tch.domain.TevglTchTeacher;
 import com.ossbar.modules.evgl.tch.dto.SaveTeacherDTO;
 import com.ossbar.platform.core.common.utils.UploadFileUtils;
 import com.ossbar.utils.constants.Constant;
-import com.ossbar.utils.tool.StrUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,15 +75,22 @@ public class TevglTchTeacherController {
 	 * 执行数据新增
 	 * 
 	 */
-	@PostMapping("/saveorupdate")
+	@PostMapping("/save")
 	@PreAuthorize("hasAuthority('tch:tevgltchteacher:add') or hasAuthority('tch:tevgltchteacher:edit')")
 	@SysLog("执行数据新增")
-	public R saveOrUpdate(@RequestBody SaveTeacherDTO dto) {
-		if(StrUtils.isEmpty(dto.getTeacherId())) { //新增
-			return tevglTchTeacherService.saveTeacherInfo(dto);
-		} else {
-			return tevglTchTeacherService.updateTeacherInfo(dto);
-		}
+	public R save(@RequestBody @Validated SaveTeacherDTO dto) {
+		return tevglTchTeacherService.saveTeacherInfo(dto);
+	}
+
+	/**
+	 * 执行数据新增
+	 *
+	 */
+	@PostMapping("/update")
+	@PreAuthorize("hasAuthority('tch:tevgltchteacher:edit')")
+	@SysLog("修改教师数据")
+	public R update(@RequestBody @Validated SaveTeacherDTO dto) {
+		return tevglTchTeacherService.updateTeacherInfo(dto);
 	}
 	
 	/**

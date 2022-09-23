@@ -72,6 +72,13 @@ public interface TevglTraineeInfoService extends IBaseService<TevglTraineeInfo> 
     R viewTraineeInfo(String traineeId);
 
     /**
+     * 学员列表
+     * @param params
+     * @return
+     */
+    R listTrainee(Map<String, Object> params);
+
+    /**
      * 修改密码
      * @param oldPwd 旧密码
      * @param newPwd 新密码

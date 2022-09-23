@@ -279,6 +279,22 @@ public class TevglTraineeInfoServiceImpl implements TevglTraineeInfoService {
     }
 
     /**
+     * 学员列表
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    public R listTrainee(Map<String, Object> params) {
+        Query query = new Query(params);
+        List<Map<String,Object>> list = tevglTraineeInfoMapper.selectSimpleListByMap(query);
+        list.stream().forEach(trainee -> {
+            trainee.put("traineePic", uploadPathUtils.stitchingPath(trainee.get("traineePic"), "16"));
+        });
+        return R.ok().put(Constant.R_DATA, list);
+    }
+
+    /**
      * 个人信息（教师身份）
      *
      * @param traineeId

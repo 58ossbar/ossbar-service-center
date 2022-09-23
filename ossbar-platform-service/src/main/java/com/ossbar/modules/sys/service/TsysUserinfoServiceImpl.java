@@ -17,6 +17,7 @@ import com.ossbar.modules.sys.persistence.*;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.*;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -144,12 +145,13 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 		// 加密
 		String pwd = TicketDesUtil.encryptWithMd5(defautPwd, null);
 		// 组装数据
-		String uuid = Identities.uuid();
+		String uuid = StringUtils.isEmpty(user.getUserId()) ? Identities.uuid() : user.getUserId();
 		tsysUserinfo.setUserId(uuid);
 		tsysUserinfo.setPassword(pwd);
 		tsysUserinfo.setCreateUserId(serviceLoginUtil.getLoginUserId());
 		tsysUserinfo.setCreateTime(DateUtils.getNowTimeStamp());
 		tsysUserinfo.setUpdateTime(tsysUserinfo.getCreateTime());
+		tsysUserinfo.setUserTheme("black");
 		// 保存用户信息
 		tsysUserinfoMapper.insert(tsysUserinfo);
 		// 如果上传了资源文件
