@@ -154,10 +154,11 @@ public class UploadFileUtils {
 			// 判断目录是否存在 不存在则创建指定的目录
 			File file = new File(creatorblueFieUploadPath + fileDir);
 			if (!file.exists()) {
-				file.mkdir();
+				file.mkdirs();
 			}
 			// 保存图片地址
 			String longNamePc = creatorblueFieUploadPath + fileDir + "/" + imgNamePc;
+			log.debug("文件被上传至 {}", longNamePc);
 			// 调用图片压缩上传操作
 			uploadImgThread(multipartFile, longNamePc, maxWidth, maxHeigth);
 			// 上传成功之后保存在附件中添加一条数据
