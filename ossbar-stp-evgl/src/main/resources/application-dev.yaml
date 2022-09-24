@@ -16,11 +16,11 @@ com:
     schedule-cluster: false
     schedule-autostart: true
     signName: 创蓝科技
-    accessKeyId: w0XX74M55SFK8hNo
-    accessKeySecret: KdX5qowcsOc2IQtmps6p5lMzJa5VF6
+    accessKeyId:
+    accessKeySecret:
     defaultHeadImg: defaulthead.png
     defaultName: 游客
-    loginBackUrl: https://frp.creatorblue.com/console
+    loginBackUrl:
     qqAppId:
     qqAppKey:
     xlAppId:
@@ -33,7 +33,7 @@ com:
 #微信支付配置
 weixin:
   #小程序appid
-  appid: wx782efe0306206d7b
+  appid:
   #APP端的appid
   app_appid: xx
   #小程序秘钥
@@ -103,8 +103,8 @@ spring:
       pool-prepared-statements: true
       stat-view-servlet:
         enabled: true
-        login-password: creatorblue.com
-        login-username: creatorblue
+        login-password: ossbar.com
+        login-username: ossbar
         url-pattern: /druid/*
       test-on-borrow: false
       test-on-return: false

@@ -22,6 +22,7 @@
         <module>ossbar-platform-service</module>
         <module>ossbar-sso</module>
         <module>ossbar</module>
+        <module>ossbar-stp-evgl</module>
     </modules>
 
     <properties>

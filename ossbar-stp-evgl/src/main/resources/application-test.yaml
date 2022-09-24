@@ -29,7 +29,7 @@ com:
     wxAppKey:
     gitUrl:
     gitTicket:
-    #mq-type: rabbit
+    log-level: debug
 #微信支付配置
 weixin:
   #小程序appid
@@ -102,8 +102,8 @@ spring:
       pool-prepared-statements: true
       stat-view-servlet:
         enabled: true
-        login-password: creatorblue.com
-        login-username: creatorblue
+        login-password: ossbar.com
+        login-username: ossbar
         url-pattern: /druid/*
       test-on-borrow: false
       test-on-return: false
