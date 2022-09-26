@@ -1,6 +1,6 @@
 com:
   creatorblue:
-    anno-filter: /druid/**, /user/login, /user/logout, /index.html, /user/captcha.jpg, /user/querySettings, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.ttf, /**/*.woff, /**/*.js, /**/*.css, /**/*.jpg, /**/*.jpeg, /**/*.png, /**/*.git, /**/*.bmp, /doLogin, /logoutRest, /login-api/**, /index-api/**, /subject-api/**, /major-api/**, /pkginfo-api/**, /teacher-api/**, /trainee-story/**, /partner-api/**, /news-api/**, /cbeditor/**, /resourceCenter-api/**, /teachingCenter-api/**, /classroom-api/**, /dict-api/**, /questions-api/**, /examCenter-api/**, /testPaper-api/**, /paperExamine/**, /managementPanel-api/**, /activity/**, /site/**, /cloud-api/**
+    anno-filter: /druid/**, /user/login, /user/logout, /index.html, /user/captcha.jpg, /user/querySettings, /swagger-ui.html**, /webjars/**, /swagger-resources/**, /v2/**, /**/*.ttf, /**/*.woff, /**/*.js, /**/*.css, /**/*.jpg, /**/*.jpeg, /**/*.png, /**/*.git, /**/*.bmp, /doLogin, /logoutRest, /login-api/**, /index-api/**, /subject-api/**, /major-api/**, /pkginfo-api/**, /teacher-api/**, /trainee-story/**, /partner-api/**, /news-api/**, /cbeditor/**, /resourceCenter-api/**, /teachingCenter-api/**, /classroom-api/**, /dict-api/**, /questions-api/**, /examCenter-api/**, /testPaper-api/**, /paperExamine/**, /managementPanel-api/**, /activity/**, /site/**, /cloud-api/**, /wx/**
     baseUrl: http://locahost:9084/console
     file-upload-path: e:/uploads/
     file-access-path: /uploads
