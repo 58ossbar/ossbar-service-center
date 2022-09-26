@@ -23,6 +23,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.liyiorg</groupId>
+            <artifactId>weixin-popular</artifactId>
+            <version>2.8.32</version>
+        </dependency>
+        <dependency>
             <groupId>com.ossbar</groupId>
             <artifactId>ossbar-sso</artifactId>
             <version>1.0.0</version>
@@ -329,6 +334,47 @@
                                 <configuration>
                                     <excludes>
                                         <!--排除一些不需要打包的class文件,避免出现多个应用程序入口 -->
+                                        <exclude>application-test.yaml</exclude>
+                                        <exclude>application-dev.yaml</exclude>
+                                        <exclude>application-prod-demo.yaml</exclude>
+                                        <exclude>Dockerfile</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- 该节点配置无需理会 -->
+        <profile>
+            <id>frp</id>
+            <properties>
+                <group>frp</group>
+                <ehcache-bind-addr>172.19.0.204</ehcache-bind-addr>
+                <ehcache-evgl-host>172.19.0.204</ehcache-evgl-host>
+                <ehcache-evgl-port>4001</ehcache-evgl-port>
+                <ehcache-mgr-host>172.19.0.205</ehcache-mgr-host>
+                <ehcache-mgr-port>4001</ehcache-mgr-port>
+                <ehcache-sp-host>172.19.0.206</ehcache-sp-host>
+                <ehcache-sp-port>4001</ehcache-sp-port>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <excludes>
+                                        <!--排除一些不需要打包的class文件,避免出现多个应用程序入口 -->
+                                        <exclude>application-prod.yaml</exclude>
                                         <exclude>application-test.yaml</exclude>
                                         <exclude>application-dev.yaml</exclude>
                                         <exclude>application-prod-demo.yaml</exclude>
