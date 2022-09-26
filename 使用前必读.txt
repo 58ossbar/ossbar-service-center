@@ -1,26 +1,17 @@
 
-github仓库地址：https://github.com/58ossbar/ossbar-platform.git
+如果你只想关注，业务基础平台，启动ossbar工程即可。
 
-
-用户端账号密码：15200530000/123456
-管理端账号密码：
-
-【布道师 ossbar-stp-evgl】
-如果运行服务端
-一、自行借助工具或命令行，创建好数据库creatorblue-stp-ossbar
-二、如果是全新的第一次启动本项目，建议修改application-dev.yaml中的spring.datasource.initialization-mode的值为always    程序将自动帮你建表添加数据
-三、然后启动ossbar-stp-evgl工程中的src/main/java/OssbarStpEvglApplication类即可
-
-启动如果遇到了
-org.springframework.amqp.AmqpConnectException: java.net.ConnectException: Connection refused: connect
-忽略该错误即可，不影响使用
-检查是否安装rabbitmq，没有安装也不影响使用！
+微服务版，请移步【micro-service】分支
 
 
 
+【github仓库】
+克隆下载：  https://github.com/58ossbar/ossbar-platform-service.git
+zip下载：   https://github.com/58ossbar/ossbar-platform-service/archive/refs/heads/main.zip
 
+【gitee仓库】
+克隆下载：  https://gitee.com/ossbar/ossbar-platform-service.git
+zip下载：   https://gitee.com/ossbar/ossbar-platform-service/repository/archive/main.zip
 
-
-
-如果你只想关注，业务基础平台：启动ossbar工程即可。
-微服务版，请移步【micro-service】分支/
+相关文档参考
+详见： https://www.ossbar.com/#/platformConsultingDetails?newsId=165
