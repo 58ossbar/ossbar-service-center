@@ -86,7 +86,7 @@ spring:
   aop:
     proxy-target-class: true
   application:
-    name: creatorblue-stp-evgl
+    name: ossbar-stp-evgl
   main:
     allow-bean-definition-overriding: true
   datasource:

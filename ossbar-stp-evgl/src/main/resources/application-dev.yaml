@@ -83,7 +83,7 @@ spring:
   aop:
     proxy-target-class: true
   application:
-    name: platform
+    name: ossbar-stp-evgl
   main:
     allow-bean-definition-overriding: true
   datasource:

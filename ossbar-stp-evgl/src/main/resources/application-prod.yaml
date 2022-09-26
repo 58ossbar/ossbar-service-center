@@ -77,9 +77,9 @@ server:
 spring:
   redis:
     database: 0
-    host: 172.19.0.107
+    host: 127.0.0.1
     port: 6379
-    password: xqTT2929
+    password: 2
     timeout: 3000
     jedis:
       pool:
@@ -90,7 +90,7 @@ spring:
   aop:
     proxy-target-class: true
   application:
-    name: creatorblue-stp-evgl
+    name: ossbar-stp-evgl
   main:
     allow-bean-definition-overriding: true
   datasource:
