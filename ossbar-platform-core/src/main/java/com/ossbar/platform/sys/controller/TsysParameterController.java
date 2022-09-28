@@ -75,6 +75,21 @@ public class TsysParameterController {
     }
 
     /**
+     * 修改
+     *
+     * @param tsysparameter
+     * @return R
+     * @author huangwb
+     * @date 2019-05-20 15:18
+     */
+    @PostMapping("/update")
+    @PreAuthorize("hasAuthority('sys:tsysparameter:add')")
+    @SysLog("参数信息保存或修改")
+    public R update(@RequestBody TsysParameter tsysparameter) {
+        return tsysParameterService.update(tsysparameter);
+    }
+
+    /**
      * 根据参数Id获取参数详情
      *
      * @param parameterId

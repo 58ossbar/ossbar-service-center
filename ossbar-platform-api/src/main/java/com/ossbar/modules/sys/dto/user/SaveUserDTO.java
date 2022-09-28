@@ -113,6 +113,11 @@ public class SaveUserDTO implements Serializable {
     private String postId;
 
     /**
+     * 排序号
+     */
+    private Integer sortNum;
+
+    /**
      * 所属岗位
      */
     private List<String> postIdList;
@@ -285,6 +290,14 @@ public class SaveUserDTO implements Serializable {
 
     public void setRoleIdList(List<String> roleIdList) {
         this.roleIdList = roleIdList;
+    }
+
+    public Integer getSortNum() {
+        return sortNum;
+    }
+
+    public void setSortNum(Integer sortNum) {
+        this.sortNum = sortNum;
     }
 
     @Override
