@@ -13,6 +13,7 @@ import com.ossbar.modules.sys.vo.Oauth2ResponseVO;
 import com.ossbar.modules.sys.vo.SysUserVO;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import com.ossbar.platform.core.common.handler.CustomResponseErrorHandler;
+import com.ossbar.platform.core.common.utils.UploadFileUtils;
 import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.BeanUtils;
 import com.ossbar.utils.tool.StrUtils;
@@ -57,6 +58,8 @@ public class LoginController {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 
+	private final static String INDEX_USER = "2";
+
 	@Reference(version = "1.0.0")
 	private TsysSettingsService tsysSettingsService;
 	@Autowired
@@ -76,6 +79,9 @@ public class LoginController {
 	private String clientId;
 	@Value("${security.oauth2.client.client-secret:}")
 	private String clientSecret;
+
+	@Autowired
+	private UploadFileUtils uploadFileUtils;
 
 	@RequestMapping("login")
 	public R doLogin(@RequestBody JSONObject data, HttpSession session, HttpServletRequest request) throws Exception {
@@ -133,6 +139,7 @@ public class LoginController {
 			SysUserVO vo = new SysUserVO();
 			BeanUtils.copyProperties(vo, userInfo);
 			vo.setToken(response.getAccess_token());
+			vo.setUserimg(uploadFileUtils.stitchingPath(userInfo.getUserimg(), INDEX_USER));
 			return R.ok().put(Constant.R_DATA, vo);
 		} catch (Exception e) {
 			log.error("系统出现了问题！", e);
