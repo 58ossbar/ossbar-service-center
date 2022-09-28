@@ -44,7 +44,7 @@ public class TsysOrgController {
     /**
      * 查询机构列表
      *
-     * @param parentId 父机构节点ID orgName机构名称模糊查询条件 type=1代表树形菜单展开否则模糊查询情况
+     * @param map parentId 父机构节点ID orgName机构名称模糊查询条件 type=1代表树形菜单展开否则模糊查询情况
      * @return
      * @author huangwb
      * @date 2019-5-16 11:30
@@ -70,6 +70,19 @@ public class TsysOrgController {
     public R save(@RequestBody @Validated SaveOrgDTO dto) {
         return tsysOrgService.save(dto);
     }
+
+    /**
+     * 修改
+     * @param dto
+     * @return
+     */
+    @PostMapping("update")
+    @PreAuthorize("hasAuthority('sys:tsysorg:add') and hasAuthority('sys:tsysorg:edit')")
+    @SysLog("机构保存或修改")
+    public R update(@RequestBody @Validated SaveOrgDTO dto) {
+        return tsysOrgService.update(dto);
+    }
+
 
     /**
      * 删除操作
