@@ -300,7 +300,7 @@ public class TsysRoleServiceImpl implements TsysRoleService {
     @CacheEvict(value = {"menu_list_cache", "authorization_cache"}, allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public R saveRoleUser(SaveRoleAssignUserDTO role) {
-        return tuserRoleService.saveOrUpdate(role.getRoleIdList(), role.getUserIdList());
+        return tuserRoleService.saveOrUpdateForRole(role.getRoleIdList(), role.getUserIdList());
     }
 
     /**

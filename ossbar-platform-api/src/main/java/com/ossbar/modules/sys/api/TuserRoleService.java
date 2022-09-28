@@ -23,6 +23,14 @@ public interface TuserRoleService {
     R saveOrUpdate(List<String> roleIdList, List<String> userIdList);
 
     /**
+     * 先删除，再保存用户与角色关系
+     * @param roleIdList
+     * @param userIdList
+     * @return
+     */
+    R saveOrUpdateForRole(List<String> roleIdList, List<String> userIdList);
+
+    /**
      * 根据用户ID，获取角色ID列表
      * @author huj
      * @data 2019年5月6日

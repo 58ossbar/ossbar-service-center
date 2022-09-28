@@ -180,6 +180,7 @@ public class TsysUserinfoServiceImpl implements TsysUserinfoService {
 	@PostMapping("/update")
 	@SentinelResource("/sys/userinfo/update")
 	@Transactional(rollbackFor = Exception.class)
+	@CacheEvict(value = {"menu_list_cache", "authorization_cache"}, allEntries = true)
 	public R update(SaveUserDTO user) {
 		TsysUserinfo obj = tsysUserinfoMapper.selectObjectById(user.getUserId());
 		if (obj == null) {

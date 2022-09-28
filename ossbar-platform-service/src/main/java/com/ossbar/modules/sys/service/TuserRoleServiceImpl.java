@@ -7,6 +7,7 @@ import com.ossbar.modules.sys.persistence.TuserRoleMapper;
 import com.ossbar.utils.tool.Identities;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,38 @@ public class TuserRoleServiceImpl implements TuserRoleService {
             tuserRoleMapper.delete(userId);
             // 批量保存
             roleIdList.stream().forEach(roleId -> {
+                if (!roleId.trim().isEmpty()) {
+                    // 批量保存
+                    List<TuserRole> insertList = new ArrayList<>();
+                    TuserRole t = new TuserRole();
+                    t.setId(Identities.uuid());
+                    t.setRoleId(roleId);
+                    t.setUserId(userId);
+                    insertList.add(t);
+                    if (insertList.size() > 0) {
+                        tuserRoleMapper.insertBatch(insertList);
+                    }
+                }
+            });
+        });
+        return R.ok("保存成功");
+    }
+
+    /**
+     * 先删除，再保存用户与角色关系
+     *
+     * @param roleIdList
+     * @param userIdList
+     * @return
+     */
+    @Override
+    @Transactional
+    public R saveOrUpdateForRole(List<String> roleIdList, List<String> userIdList) {
+        roleIdList.stream().forEach(roleId -> {
+            // 先删除用户与角色关系
+            tuserRoleMapper.deleteByRole(roleId);
+            // 批量保存
+            userIdList.stream().forEach(userId -> {
                 if (!roleId.trim().isEmpty()) {
                     // 批量保存
                     List<TuserRole> insertList = new ArrayList<>();
