@@ -20,7 +20,7 @@
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 		</dependency>
-	</dependencies>
+    </dependencies>
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<resources>

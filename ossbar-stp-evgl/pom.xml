@@ -86,9 +86,16 @@
             <artifactId>ossbar-platform-service</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <!--业务基础平台core核心域-->
         <dependency>
             <groupId>com.ossbar</groupId>
             <artifactId>ossbar-platform-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!--工具包-->
+        <dependency>
+            <groupId>com.ossbar</groupId>
+            <artifactId>ossbar-platform-utils</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

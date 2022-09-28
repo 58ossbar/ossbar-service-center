@@ -1,24 +1,36 @@
 package com.ossbar.modules.evgl.tch.service;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.github.pagehelper.PageHelper;
+import com.ossbar.common.cbsecurity.logs.annotation.SysLog;
+import com.ossbar.common.exception.CreatorblueException;
 import com.ossbar.common.utils.ConvertUtil;
 import com.ossbar.common.utils.PageUtils;
 import com.ossbar.common.utils.Query;
+import com.ossbar.common.utils.ServiceLoginUtil;
+import com.ossbar.common.validator.ValidatorUtils;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.common.DictService;
 import com.ossbar.modules.evgl.tch.api.TevglTchClassService;
 import com.ossbar.modules.evgl.tch.domain.TevglTchClass;
 import com.ossbar.modules.evgl.tch.persistence.TevglTchClassMapper;
+import com.ossbar.modules.sys.api.TsysAttachService;
 import com.ossbar.modules.sys.domain.TsysOrg;
 import com.ossbar.modules.sys.persistence.TsysOrgMapper;
 import com.ossbar.platform.core.common.utils.UploadFileUtils;
 import com.ossbar.utils.constants.Constant;
+import com.ossbar.utils.tool.DateUtils;
+import com.ossbar.utils.tool.Identities;
 import com.ossbar.utils.tool.StrUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +61,8 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
     @Autowired
     private ConvertUtil convertUtil;
     @Autowired
+    private ServiceLoginUtil serviceLoginUtil;
+    @Autowired
     private UploadFileUtils uploadPathUtils;
 
     @Value("${com.creatorblue.file-access-path}")
@@ -56,6 +70,8 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
 
     @Autowired
     private DictService dictService;
+    @Autowired
+    private TsysAttachService tsysAttachService;
 
     /**
      * 根据条件查询记录
@@ -158,7 +174,16 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
      */
     @Override
     public R save(TevglTchClass tevglTchClass) {
-        return null;
+        String attachId = tevglTchClass.getAttachId();
+        String id = Identities.uuid();
+        tevglTchClass.setClassId(id);
+        tevglTchClass.setCreateUserId(serviceLoginUtil.getLoginUserId());
+        tevglTchClass.setCreateTime(DateUtils.getNowTimeStamp());
+        ValidatorUtils.check(tevglTchClass);
+        tevglTchClassMapper.insert(tevglTchClass);
+        // 如果上传了资源文件
+        tsysAttachService.updateAttachForAdd(attachId, id, "13");
+        return R.ok();
     }
 
     /**
@@ -179,8 +204,12 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
      * @return
      */
     @Override
-    public R delete(String id) {
-        return null;
+    @SysLog(value="单条删除")
+    @GetMapping("delete/{id}")
+    @SentinelResource("/tch/tevgltchclass/delete")
+    public R delete(@PathVariable("id") String id) throws CreatorblueException {
+        tevglTchClassMapper.delete(id);
+        return R.ok();
     }
 
     /**
@@ -190,8 +219,12 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
      * @return
      */
     @Override
-    public R deleteBatch(String[] ids) {
-        return null;
+    @SysLog(value="批量删除")
+    @PostMapping("deleteBatch")
+    @SentinelResource("/tch/tevgltchclass/deleteBatch")
+    public R deleteBatch(@RequestBody(required = true) String[] ids) throws CreatorblueException {
+        tevglTchClassMapper.deleteBatch(ids);
+        return R.ok();
     }
 
     /**
@@ -201,8 +234,31 @@ public class TevglTchClassServiceImpl implements TevglTchClassService {
      * @return
      */
     @Override
-    public R view(String id) {
-        return null;
+    @SysLog(value="查看明细")
+    @GetMapping("view/{id}")
+    @SentinelResource("/tch/tevgltchclass/view")
+    public R view(@PathVariable("id") String id) {
+        TevglTchClass tevglTchClass = tevglTchClassMapper.selectObjectById(id);
+        if (tevglTchClass == null) {
+            return R.ok().put(Constant.R_DATA, new TevglTchClass());
+        }
+        tevglTchClass.setTeacherPic(uploadPathUtils.stitchingPath(tevglTchClass.getTeacherPic(), "7"));
+        tevglTchClass.setTeachingAssistantPic(uploadPathUtils.stitchingPath(tevglTchClass.getTeachingAssistantPic(), "7"));
+        if (StrUtils.isNotEmpty(tevglTchClass.getClassImg())) {
+            tevglTchClass.setClassImg(uploadPathUtils.stitchingPath(tevglTchClass.getClassImg(), "13"));
+        }
+        if (StrUtils.isNotEmpty(tevglTchClass.getClassPic())) {
+            String name = tevglTchClass.getClassPic();
+            // 如果不是网络头像,则拼接地址
+            if (name.indexOf("https") == -1 && name.indexOf("http") == -1) {
+                // 如果没有uploads才拼接
+                if (name.indexOf("uploads/dict") == -1) {
+                    String val = creatorblueFieAccessPath + "/dict/" + name;
+                    tevglTchClass.setClassPic(val);
+                }
+            }
+        }
+        return R.ok().put(Constant.R_DATA, tevglTchClass);
     }
 
 

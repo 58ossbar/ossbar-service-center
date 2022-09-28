@@ -100,7 +100,7 @@ public class TevglTchClassController {
 	 * 单条删除
 	 */
 	@GetMapping("/delete/{id}")
-	@PreAuthorize("hasAuthority('tch:tevgltchclass:delete')")
+	@PreAuthorize("hasAuthority('tch:tevgltchclass:delete') or hasAuthority('tch:tevgltchclass:remove')")
 	@SysLog("单条删除")
 	public R delete(@PathVariable("id") String id) {
 		return tevglTchClassService.delete(id);
@@ -110,7 +110,7 @@ public class TevglTchClassController {
 	 * 批量删除
 	 */
 	@PostMapping("/deletes")
-	@PreAuthorize("hasAuthority('tch:tevgltchclass:delete')")
+	@PreAuthorize("hasAuthority('tch:tevgltchclass:delete') or hasAuthority('tch:tevgltchclass:remove')")
 	@SysLog("批量删除")
 	public R deleteBatch(@RequestBody(required = true) String[] ids) {
 		return tevglTchClassService.deleteBatch(ids);
