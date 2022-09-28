@@ -5,14 +5,19 @@ import com.github.pagehelper.PageHelper;
 import com.ossbar.common.utils.ConvertUtil;
 import com.ossbar.common.utils.PageUtils;
 import com.ossbar.common.utils.Query;
+import com.ossbar.common.utils.ServiceLoginUtil;
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysParameterService;
 import com.ossbar.modules.sys.domain.TsysParameter;
 import com.ossbar.modules.sys.persistence.TsysParameterMapper;
 import com.ossbar.utils.constants.Constant;
+import com.ossbar.utils.tool.DateUtils;
+import com.ossbar.utils.tool.Identities;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +42,8 @@ public class TsysParameterServiceImpl implements TsysParameterService {
     private TsysParameterMapper tsysParameterMapper;
     @Autowired
     private ConvertUtil convertUtil;
+    @Autowired
+    private ServiceLoginUtil serviceLoginUtil;
 
     /**
      * 根据paraType获取类型的所有参数 方便前端下拉框选择
@@ -109,5 +116,57 @@ public class TsysParameterServiceImpl implements TsysParameterService {
     @SentinelResource("/sys/parameter/view")
     public R view(@PathVariable("parameterId") String parameterId) {
         return R.ok().put(Constant.R_DATA, tsysParameterMapper.selectObjectById(parameterId));
+    }
+
+    /**
+     * 新增
+     *
+     * @param tsysParameter
+     * @return
+     */
+    @Override
+    @CacheEvict(value="parameter_cache", allEntries=true)
+    @Transactional
+    public R save(TsysParameter tsysParameter) {
+        tsysParameter.setParaid(Identities.uuid());
+        tsysParameter.setCreateTime(DateUtils.getNowTimeStamp());
+        tsysParameter.setCreateUserId(serviceLoginUtil.getLoginUserId());
+        tsysParameterMapper.insert(tsysParameter);
+        return R.ok("新增成功");
+    }
+
+    /**
+     * 修改
+     *
+     * @param tsysParameter
+     * @return
+     */
+    @Override
+    @CacheEvict(value="parameter_cache", allEntries=true)
+    @Transactional
+    public R update(TsysParameter tsysParameter) {
+        tsysParameter.setUpdateTime(DateUtils.getNowTimeStamp());
+        tsysParameter.setUpdateUserId(serviceLoginUtil.getLoginUserId());
+        tsysParameterMapper.update(tsysParameter);
+        return R.ok("修改成功");
+    }
+
+    /**
+     * 删除
+     *
+     * @param ids
+     * @return R
+     * @author huangwb
+     * @date 2019-05-05 15:18
+     */
+    @Override
+    @CacheEvict(value="parameter_cache", allEntries=true)
+    @Transactional
+    public R deleteBatch(String[] ids) {
+        if (ids == null || ids.length == 0) {
+            return R.error("参数为空");
+        }
+        tsysParameterMapper.deleteBatch(ids);
+        return R.ok("删除成功");
     }
 }

@@ -1,6 +1,7 @@
 package com.ossbar.modules.sys.api;
 
 import com.ossbar.core.baseclass.domain.R;
+import com.ossbar.modules.sys.domain.TsysParameter;
 
 import java.util.Map;
 
@@ -45,5 +46,29 @@ public interface TsysParameterService {
      * @return
      */
     R view(String parameterId);
+
+    /**
+     * 新增
+     * @param tsysParameter
+     * @return
+     */
+    R save(TsysParameter tsysParameter);
+
+    /**
+     * 修改
+     * @param tsysParameter
+     * @return
+     */
+    R update(TsysParameter tsysParameter);
+
+    /**
+     * 删除
+     *
+     * @param ids
+     * @return R
+     * @author huangwb
+     * @date 2019-05-05 15:18
+     */
+    R deleteBatch(String[] ids);
 
 }

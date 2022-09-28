@@ -2,6 +2,7 @@ package com.ossbar.platform.sys.controller;
 
 import com.ossbar.core.baseclass.domain.R;
 import com.ossbar.modules.sys.api.TsysParameterService;
+import com.ossbar.modules.sys.domain.TsysParameter;
 import com.ossbar.platform.core.common.cbsecurity.log.SysLog;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,6 +59,20 @@ public class TsysParameterController {
         return tsysParameterService.query(params);
     }
 
+    /**
+     * 新增
+     *
+     * @param tsysparameter
+     * @return R
+     * @author huangwb
+     * @date 2019-05-20 15:18
+     */
+    @PostMapping("/save")
+    @PreAuthorize("hasAuthority('sys:tsysparameter:add')")
+    @SysLog("参数信息保存或修改")
+    public R save(@RequestBody TsysParameter tsysparameter) {
+        return tsysParameterService.save(tsysparameter);
+    }
 
     /**
      * 根据参数Id获取参数详情
