@@ -23,6 +23,7 @@ import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.BeanUtils;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
+import com.ossbar.utils.tool.StrUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -173,6 +174,7 @@ public class TsysRoleServiceImpl implements TsysRoleService {
         tsysRole.setRoleId(Identities.uuid());
         tsysRole.setCreateTime(DateUtils.getNowTimeStamp());
         tsysRole.setUpdateTime(tsysRole.getCreateTime());
+        tsysRole.setStatus(StrUtils.isEmpty(tsysRole.getStatus()) ? "1" : tsysRole.getStatus());
         // 角色状态：1启用、0禁用
         tsysRole.setStatus("1");
         // 入库
@@ -209,6 +211,7 @@ public class TsysRoleServiceImpl implements TsysRoleService {
         if (!r.get("code").equals(0)) {
             return r;
         }
+        tsysRole.setStatus(StrUtils.isEmpty(tsysRole.getStatus()) ? "1" : tsysRole.getStatus());
         tsysRole.setUpdateUserId(userId);
         tsysRole.setUpdateTime(DateUtils.getNowTimeStamp());
         tsysRoleMapper.update(tsysRole);

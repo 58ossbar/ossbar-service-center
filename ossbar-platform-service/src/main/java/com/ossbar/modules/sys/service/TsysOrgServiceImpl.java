@@ -215,7 +215,7 @@ public class TsysOrgServiceImpl implements TsysOrgService {
     }
 
     /**
-     * 新增
+     * 修改
      *
      * @param dto
      * @return
@@ -238,6 +238,7 @@ public class TsysOrgServiceImpl implements TsysOrgService {
      * @return
      */
     @Override
+    @CacheEvict(value = "authorization_cache", allEntries = true)
     public R update(TsysOrg tsysOrg) {
         if (!validateOrgName(tsysOrg)) {
             return R.error("在当前机构下,您输入的机构名称有重复值,请重新输入");
@@ -258,6 +259,7 @@ public class TsysOrgServiceImpl implements TsysOrgService {
                 }
             }
         }
+        tsysOrg.setState(StrUtils.isNull(tsysOrg.getState()) ? "1" : tsysOrg.getState());
         tsysOrg.setUpdateTime(DateUtils.getNowTimeStamp());
         tsysOrgMapper.update(tsysOrg);
         return R.ok("机构修改成功").put(Constant.R_DATA, tsysOrg);
