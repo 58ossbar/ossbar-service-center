@@ -63,7 +63,7 @@ public class TsysPostController {
      * @return
      */
     @PostMapping("/save")
-    @PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
+    @PreAuthorize("hasAuthority('sys:tsyspost:add')")
     @SysLog("执行岗位数据新增")
     public R save(@RequestBody @Validated({AddGroup.class}) SavePostDTO post) {
         return tsysPostService.save(post);
@@ -75,7 +75,7 @@ public class TsysPostController {
      * @return
      */
     @PostMapping("/update")
-    @PreAuthorize("hasAuthority('sys:tsyspost:add') and hasAuthority('sys:tsyspost:edit')")
+    @PreAuthorize("hasAuthority('sys:tsyspost:edit')")
     @SysLog("执行岗位数据修改")
     public R update(@RequestBody @Validated({UpdateGroup.class}) SavePostDTO post) {
         return tsysPostService.update(post);
@@ -91,7 +91,7 @@ public class TsysPostController {
     @PostMapping("/deletes")
     @PreAuthorize("hasAuthority('sys:tsyspost:remove')")
     @SysLog("批量删除岗位")
-    public R deleteBatch(@RequestBody(required = false) String[] ids) {
+    public R deleteBatch(@RequestBody String[] ids) {
         return tsysPostService.deleteBatch(ids);
     }
 
