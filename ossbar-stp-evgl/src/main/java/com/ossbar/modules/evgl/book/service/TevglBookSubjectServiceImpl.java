@@ -1035,7 +1035,7 @@ public class TevglBookSubjectServiceImpl implements TevglBookSubjectService {
     @Override
     public List<TsysDict> getSubjectLogo() {
         List<TsysDict> list = dictUtil.getByType("subjectLogo");
-        if (list.size() > 0 && list != null) {
+        if (list != null && list.size() > 0) {
             // 根据排序号自然顺序
             list.stream().sorted(Comparator.comparing(TsysDict::getSortNum)).collect(Collectors.toList());
             list.forEach(a -> {

@@ -54,7 +54,7 @@ public class TevglBookSubjectController {
 	 * @return R
 	 */
 	@GetMapping("/queryForMap")
-	@PreAuthorize("hasAuthority('book:tevglbooksubject:query')")
+	@PreAuthorize("hasAuthority('book:tevglbooksubject:query') or hasAuthority('book:tevglbooksubject:query')")
 	@SysLog("查询列表(返回List<Map<String, Object>)")
 	public R queryForMap(@RequestParam Map<String, Object> params) {
 		return tevglBookSubjectService.queryForMap(params);
