@@ -96,7 +96,7 @@ security:
     client:
       access-token-uri: http://localhost:${server.port}${server.servlet.context-path}/oauth/token
       logout: http://localhost:${server.port}/${server.servlet.context-path}/logoutRest
-      client-id: creatorblue-platform-core
+      client-id: ossbar-platform-core
       client-secret: s9sd8uf9ewj9egwejgewgj0
       user-authorization-uri: http://localhost:${server.port}/${server.servlet.context-path}/oauth/authorize
     resource:
