@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,6 +51,13 @@ public class SSOUserDetailsService implements UserDetailsService {
 			perms.parallelStream().forEach(perm -> {
 				grantedAuthorityList.add(new SSOGrantedAuthority(perm));
 			});
+		}
+		// 非空处理，规避错误 GrantedAuthority list cannot contain any null elements
+		for (int i = 0; i < grantedAuthorityList.size(); i++) {
+			if (grantedAuthorityList.get(i) == null) {
+				grantedAuthorityList.remove(i);
+				i--;
+			}
 		}
 		SSOUser user = new SSOUser(username, tsysUserinfo.getPassword(), grantedAuthorityList);
 		user.setTsysUserinfo(tsysUserinfo);
