@@ -70,6 +70,10 @@ https://frp.creatorblue.com/bds/
 ### 小程序
 微信小程序中搜索布道师高校版
 
+# 系统主界面
+
+![image](https://user-images.githubusercontent.com/110378589/198028949-80c2e0cb-7856-4473-8239-67102e36b6a3.png)
+
 # 详细安装和部署手册
 
 详见：https://www.ossbar.com/#/platformConsultingDetails?newsId=165
