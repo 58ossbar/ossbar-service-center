@@ -72,7 +72,7 @@ spring:
     database: 0
     host: 127.0.0.1
     port: 6379
-    password: xqtt2929
+    password:
     timeout: 3000
     jedis:
       pool:
@@ -88,10 +88,11 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     # 可选：never、always
-    initialization-mode: never
+    initialization-mode: always
     schema: classpath:/db/ossbar-stp-schema-mysql.sql
     data: classpath:/db/ossbar-stp-data-mysql.sql
     driver-class-name: com.mysql.cj.jdbc.Driver
+    filters: stat,wall,log4j
     druid:
       connection-init-sqls: set names utf8mb4;
       initial-size: 1
@@ -101,6 +102,10 @@ spring:
       min-evictable-idle-time-millis: 300000
       minIdle: 1
       pool-prepared-statements: true
+      #druid监控必须设置参数
+      filter:
+        stat:
+          enabled: true
       stat-view-servlet:
         enabled: true
         login-password: ossbar.com

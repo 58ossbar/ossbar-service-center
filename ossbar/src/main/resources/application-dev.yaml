@@ -6,6 +6,7 @@ com:
     file-upload-path: E:/uploads/
     file-access-path: /uploads
     cb-upload-paths: /default, /dict-img, /sys-user-img, /settings-img, /site-img, /avd-img, /news-img, /teacher-img, /stustar-img, /partner-img
+    #编辑器设置目录
     cbeditor-image-path: cbeditor-image
     cbeditor-image-suffix: png, jpg, jpeg, gif
     cbeditor-media-path: cbeditor-media
@@ -24,7 +25,7 @@ server:
     uri-encoding: UTF-8
 spring:
   redis:
-    password: xqtt2929
+    password: ossbar
     port: 6379
     database: 0
   aop:
@@ -34,10 +35,12 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    initialization-mode: never
+    #数据库初始化，第一次修改成always，创建成功为修改成never
+    initialization-mode: always
     schema: classpath:/db/ossbar-platform-schema-mysql.sql
     data: classpath:/db/ossbar-platform-data-mysql.sql
     driver-class-name: com.mysql.cj.jdbc.Driver
+    filters: stat,wall,log4j
     druid:
       connection-init-sqls: set names utf8mb4;
       initial-size: 1
@@ -47,6 +50,10 @@ spring:
       min-evictable-idle-time-millis: 300000
       minIdle: 1
       pool-prepared-statements: true
+      #druid监控必须设置参数
+      filter:
+        stat:
+          enabled: true
       stat-view-servlet:
         enabled: true
         login-password: creatorblue.com
