@@ -68,7 +68,7 @@ spring:
         enabled: true
         exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
         url-pattern: /*
-    password: root
+    password: root123
     sql-script-encoding: UTF-8
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://localhost:3306/ossbar-platform?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=GMT%2B8
