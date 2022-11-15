@@ -738,9 +738,9 @@
 		t3.ref_pkg_id as refPkgId,
 		t4.subject_ref as subjectId
 		from T_EVGL_TCH_CLASSROOM t1
-		inner join t_evgl_tch_class t2 on t1.class_id = t2.class_id
-		inner join t_evgl_pkg_info t3 on t1.pkg_id = t3.pkg_id
-		inner join t_evgl_book_subject t4 on t3.subject_id = t4.subject_id
+		left join t_evgl_tch_class t2 on t1.class_id = t2.class_id
+		left join t_evgl_pkg_info t3 on t1.pkg_id = t3.pkg_id
+		left join t_evgl_book_subject t4 on t3.subject_id = t4.subject_id
 		WHERE t1.ct_id = #{ctId,jdbcType=VARCHAR} 
 	</select>
     
