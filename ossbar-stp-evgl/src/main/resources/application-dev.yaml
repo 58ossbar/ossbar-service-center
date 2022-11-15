@@ -88,7 +88,7 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     # 可选：never、always
-    initialization-mode: always
+    initialization-mode: never
     schema: classpath:/db/ossbar-stp-schema-mysql.sql
     data: classpath:/db/ossbar-stp-data-mysql.sql
     driver-class-name: com.mysql.cj.jdbc.Driver
