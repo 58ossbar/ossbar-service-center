@@ -18,7 +18,7 @@ import com.ossbar.utils.constants.Constant;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
 import com.ossbar.utils.tool.StrUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,8 +3,7 @@ package com.ossbar.utils.tool;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
-import org.apache.commons.lang.CharUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -407,8 +406,6 @@ public final class ReflectUtil {
 	 * 转换字符串类型到clazz的property类型的值.
 	 * 
 	 * @param value 待转换的字符串
-	 * @param clazz 提供类型信息的Class
-	 * @param propertyName 提供类型信息的Class的属性.
 	 */
 	public static Object convertValue(Object value, Class<?> toType) {
 		try {

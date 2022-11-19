@@ -1,7 +1,7 @@
 package com.ossbar.common.validator;
 
 import com.ossbar.common.exception.CreatorblueException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Title:数据校验

@@ -42,16 +42,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!--<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-			<scope>provided</scope>
-		</dependency>
+		<!-- 汉字转拼音pinyin4j -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-			<scope>provided</scope>
-		</dependency>-->
+			<groupId>com.belerweb</groupId>
+			<artifactId>pinyin4j</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
@@ -71,6 +66,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.session</groupId>

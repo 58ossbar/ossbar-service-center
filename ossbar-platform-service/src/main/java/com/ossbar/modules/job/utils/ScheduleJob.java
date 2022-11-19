@@ -6,7 +6,7 @@ import com.ossbar.modules.sys.domain.ScheduleJobEntity;
 import com.ossbar.modules.sys.domain.ScheduleJobLogEntity;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.SpringContextUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

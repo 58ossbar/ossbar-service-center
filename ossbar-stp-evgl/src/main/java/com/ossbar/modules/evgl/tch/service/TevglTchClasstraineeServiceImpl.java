@@ -27,7 +27,7 @@ import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.Identities;
 import com.ossbar.utils.tool.StrUtils;
 import com.ossbar.utils.tool.TicketDesUtil;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;

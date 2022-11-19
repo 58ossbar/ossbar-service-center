@@ -31,18 +31,6 @@
 			<artifactId>ossbar-platform-api</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
