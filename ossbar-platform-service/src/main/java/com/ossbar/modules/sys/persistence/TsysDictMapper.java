@@ -31,7 +31,7 @@ public interface TsysDictMapper extends BaseSqlMapper<TsysDict> {
 	@Cacheable(value="dict_cache")
 	List<TsysDict> selectAllTsysDict();
 
-	@Cacheable(value="dict_cache", key = "'selectVoListByMap'")
+	//@Cacheable(value="dict_cache", key = "'selectVoListByMap'+#map.get('dictType')")
 	List<TsysDictVO> selectVoListByMap(Map<String, Object> map);
 
 	/**

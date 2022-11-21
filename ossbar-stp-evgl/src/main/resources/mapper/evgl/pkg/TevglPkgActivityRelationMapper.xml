@@ -362,15 +362,7 @@
 			select count(activity_id) as num from t_evgl_activity_vote_questionnaire_trainee_answer where ct_id = #{ctId} and trainee_id = #{traineeId} GROUP BY activity_id
 			
 			union all
-			
-			select count(activity_id) as num from t_evgl_activity_brainstorming_trainee_answer where ct_id = #{ctId} and trainee_id = #{traineeId} GROUP BY activity_id
-			
-			union all
-			
-			select count(msg_id) as num from t_im_group_msg where groupuser_id = (select t1.groupuser_id from t_im_group_user t1 where t1.group_id = #{ctId} and t1.user_id = #{traineeId})
-			
-			union all
-			
+
 			select count(distinct paper_id) as num from t_ep_examine_dynamic_paper where ct_id = #{ctId} and trainee_id = #{traineeId}
 			
 			union all
