@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.ossbar.utils.tool.ReflectUtil;
 import com.ossbar.utils.tool.StrUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Title:查询参数Copyright: Copyright (c) 2017

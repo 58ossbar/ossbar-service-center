@@ -2,7 +2,7 @@ package com.ossbar.modules.job.utils;
 
 import com.ossbar.common.exception.CreatorblueException;
 import com.ossbar.utils.tool.SpringContextUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;

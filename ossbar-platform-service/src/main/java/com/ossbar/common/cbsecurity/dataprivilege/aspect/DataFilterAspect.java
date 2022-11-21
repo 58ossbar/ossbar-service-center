@@ -5,7 +5,7 @@ import com.ossbar.common.exception.CreatorblueException;
 import com.ossbar.common.utils.ServiceLoginUtil;
 import com.ossbar.modules.sys.api.TsysDataprivilegeService;
 import com.ossbar.utils.constants.Constant;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

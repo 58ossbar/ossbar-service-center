@@ -2,7 +2,7 @@ package com.ossbar.modules.job.task;
 
 import com.ossbar.modules.sys.api.TsysUserinfoService;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
