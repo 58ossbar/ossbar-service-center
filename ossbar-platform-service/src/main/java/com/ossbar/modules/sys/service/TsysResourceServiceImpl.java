@@ -437,7 +437,7 @@ public class TsysResourceServiceImpl implements TsysResourceService {
 	 * @return
 	 */
 	@Override
-	@Cacheable(value = "menu_list_cache", key = "'getUserPermissions_'+#userId")
+	//@Cacheable(value = "menu_list_cache", key = "'getUserPermissions_'+#userId")
 	public Set<String> getUserPermissions(String userId) {
 		List<String> permsList;
 		// 系统管理员，拥有最高权限
