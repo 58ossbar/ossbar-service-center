@@ -73,11 +73,6 @@ server:
   tomcat:
     uri-encoding: UTF-8
 spring:
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    username: admin
-    password: admin
   redis:
     database: 0
     host: 127.0.0.1

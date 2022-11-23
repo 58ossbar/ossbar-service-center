@@ -6,7 +6,6 @@ import com.ossbar.modules.sys.api.TsysLogService;
 import com.ossbar.modules.sys.domain.TsysLog;
 import com.ossbar.modules.sys.domain.TsysUserinfo;
 import com.ossbar.platform.core.common.utils.LoginUtils;
-import com.ossbar.utils.rabbitmq.RabbitMqProducer;
 import com.ossbar.utils.tool.DateUtils;
 import com.ossbar.utils.tool.IPUtils;
 import com.ossbar.utils.tool.Identities;
@@ -50,8 +49,6 @@ public class SysLogAspect {
     private ThreadLocal<TsysLog> localLog = new ThreadLocal<TsysLog>();
 	@Reference(version = "1.0.0")
 	private TsysLogService sysLogService;
-	@Autowired
-	private RabbitMqProducer rabbitMqProducer;
     @Autowired
     private LoginUtils loginUtils;
 	//定义日志切入点
@@ -120,11 +117,7 @@ public class SysLogAspect {
 	
 	private void doSave(TsysLog tsysLog) {
     	cleanLocal();
-		if("mysql".equals(logType)) {
-			sysLogService.save(tsysLog);
-		}else if("rabbitmq".equals(logType)) {
-			rabbitMqProducer.send(logTopic, JSONObject.toJSONString(tsysLog));
-		}
+		sysLogService.save(tsysLog);
 	}
 	 /**
      * 异常通知 用于拦截service层记录异常日志

@@ -63,11 +63,6 @@ server:
   tomcat:
     uri-encoding: UTF-8
 spring:
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    username: admin
-    password: admin
   redis:
     database: 15
     host: 127.0.0.1
@@ -88,7 +83,7 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     # 可选：never、always
-    initialization-mode: never
+    initialization-mode: always
     schema: classpath:/db/ossbar-stp-schema-mysql.sql
     data: classpath:/db/ossbar-stp-data-mysql.sql
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -120,7 +115,7 @@ spring:
         enabled: true
         exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
         url-pattern: /*
-    password: root
+    password: root123
     sql-script-encoding: UTF-8
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://localhost:3306/creatorblue-stp-ossbar?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=GMT%2B8
