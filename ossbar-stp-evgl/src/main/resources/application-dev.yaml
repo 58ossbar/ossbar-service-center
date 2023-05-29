@@ -27,8 +27,8 @@ com:
     xlAppKey:
     wxAppId:
     wxAppKey:
-    gitUrl: 
-    gitTicket: 
+    gitUrl:
+    gitTicket:
     log-level: debug
 #微信支付配置
 weixin:
@@ -37,25 +37,25 @@ weixin:
   #APP端的appid
   app_appid: xx
   #小程序秘钥
-  secret: 
+  secret:
   #商户号
-  mchid: 
+  mchid:
   #证书路径
   certurl: /cert/apiclient_cert.p12
   #商家端端保证金支付回调地址
-  pc_notifyurl: 
+  pc_notifyurl:
   #平台端售后同意退款回调地址
-  pc_refund_notifyurl: 
+  pc_refund_notifyurl:
   #C端订单取消退款回调地址
-  order_refund_notifyurl: 
+  order_refund_notifyurl:
   #商家端保证金退款回调地址
-  pc_bond_refund_notifyurl: 
+  pc_bond_refund_notifyurl:
   #C端支付回调地址
-  app_notifyurl: 
+  app_notifyurl:
   #商户秘钥
-  key: 
+  key:
   #h5支付之后跳转地址
-  redirect_url: 
+  redirect_url:
 server:
   port: 19999
   servlet:
@@ -115,7 +115,7 @@ spring:
         enabled: true
         exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
         url-pattern: /*
-    password: root123
+    password: root
     sql-script-encoding: UTF-8
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://localhost:3306/creatorblue-stp-ossbar?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=GMT%2B8
