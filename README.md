@@ -1,4 +1,4 @@
-# ossbar-platform-service
+# ossbar-platform-api
 
 为各终端提供服务：教务管理端、小程序端和教学实训云网站/门户端
 

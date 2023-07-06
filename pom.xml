@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ossbar</groupId>
-    <artifactId>ossbar-platform</artifactId>
+    <artifactId>ossbar-api</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
@@ -21,8 +21,7 @@
         <module>ossbar-platform-db-mysql</module>
         <module>ossbar-platform-service</module>
         <module>ossbar-sso</module>
-        <module>ossbar</module>
-        <module>ossbar-stp-evgl</module>
+        <module>ossbar-api</module>
     </modules>
     <properties>
         <ossbar-platform-db-mysql.version>1.0.0</ossbar-platform-db-mysql.version>

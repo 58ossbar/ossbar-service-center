@@ -8,10 +8,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>com.ossbar</groupId>
-    <artifactId>ossbar-stp-evgl</artifactId>
+    <artifactId>ossbar-api</artifactId>
     <version>1.0.0</version>
-    <name>ossbar-stp-evgl</name>
-    <description>布道师服务</description>
+    <name>ossbar-api</name>
+    <description>服务中台总入口</description>
 
     <properties>
         <group>dev</group>
