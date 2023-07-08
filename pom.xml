@@ -18,15 +18,12 @@
         <module>ossbar-platform-core</module>
         <module>ossbar-platform-api</module>
         <module>ossbar-platform-dubbo</module>
-        <module>ossbar-platform-db-mysql</module>
-        <module>ossbar-platform-service</module>
         <module>ossbar-sso</module>
         <module>ossbar-api</module>
     </modules>
     <properties>
-        <ossbar-platform-db-mysql.version>1.0.0</ossbar-platform-db-mysql.version>
         <ossbar-platform-utils.version>1.0.0</ossbar-platform-utils.version>
-        <ossbar-platform-api.version>1.0.0</ossbar-platform-api.version>
+        <ossbar-platform-core.version>1.0.0</ossbar-platform-core.version>
         <ossbar-platform-dubbo.version>1.0.0</ossbar-platform-dubbo.version>
         <java.version>1.8</java.version>
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>

@@ -6,10 +6,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled=true)
-public class OssbarStpEvglApplication {
+public class OssbarApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OssbarStpEvglApplication.class, args);
+        SpringApplication.run(OssbarApplication.class, args);
     }
 
 }

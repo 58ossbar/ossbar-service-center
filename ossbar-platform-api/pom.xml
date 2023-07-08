@@ -8,51 +8,114 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>ossbar-platform-api</artifactId>
 	<version>1.0.0</version>
-    <name>ossbar-platform-api</name>
-	<description>ossbar-platform-api</description>
-	<packaging>jar</packaging>
+	<name>ossbar-platform-api</name>
+	<description>创蓝基础平台服务类</description>
 	<properties>
+		<group>dev</group>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 	<dependencies>
-		<!-- kaptcha验证码 -->
+
 		<dependency>
-			<groupId>com.github.penggle</groupId>
-			<artifactId>kaptcha</artifactId>
-		</dependency>
-		<!-- 引入任务调度框架必须：quartz和spring-context-support支持 -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
+			<groupId>com.ossbar</groupId>
+			<artifactId>ossbar-platform-utils</artifactId>
+			<version>${ossbar-platform-utils.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.mchange</groupId>
-					<artifactId>c3p0</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<!-- json工具类 -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
+			<groupId>com.ossbar</groupId>
+			<artifactId>ossbar-platform-core</artifactId>
+			<version>${ossbar-platform-core.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<groupId>com.ossbar</groupId>
+			<artifactId>ossbar-platform-dubbo</artifactId>
+			<version>${ossbar-platform-dubbo.version}</version>
 			<scope>provided</scope>
 		</dependency>
-    </dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- 汉字转拼音pinyin4j -->
+		<dependency>
+			<groupId>com.belerweb</groupId>
+			<artifactId>pinyin4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security.oauth.boot</groupId>
+			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-swagger2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox-swagger2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>${thumbnailator.version}</version>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
+				<version>${spring-cloud-alibaba.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<finalName>${project.artifactId}</finalName>
+		<!-- <finalName>${project.artifactId}_${project.version}_${maven.build.timestamp}</finalName> -->
 		<resources>
 			<resource>
 				<directory>src/main/java</directory>
@@ -67,17 +130,33 @@
 				<includes>
 					<include>**/*.*</include>
 				</includes>
+				<excludes>
+					<exclude>Dockerfile</exclude>
+				</excludes>
+				<!-- 不过滤，改成true会导致creatorblue.lic文件失效 -->
 				<filtering>false</filtering>
+			</resource>
+			<!-- 单独过滤application.properties文件，填充变量 -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>bootstrap.yaml</include>
+				</includes>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 		<plugins>
+			<!--<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
-					<encoding>UTF-8</encoding>
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 			<!-- 跳过test 相当于mvn install -Dmaven.test.skip=true -->
@@ -88,7 +167,29 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<!--排除一些不需要打包的class文件,避免出现多个应用程序入口 -->
+								<exclude>application.properties</exclude>
+								<exclude>bootstrap.yaml</exclude>
+								<exclude>banner.txt</exclude>
+								<exclude>logback-spring.xml</exclude>
+								<exclude>Dockerfile</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>

@@ -12,9 +12,7 @@
     <version>1.0.0</version>
     <name>ossbar-api</name>
     <description>服务中台总入口</description>
-
     <properties>
-
         <group>dev</group>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -80,12 +78,6 @@
             <artifactId>ossbar-platform-api</artifactId>
             <version>1.0.0</version>
             <scope>provided</scope>
-        </dependency>
-        <!--业务基础平台service-->
-        <dependency>
-            <groupId>com.ossbar</groupId>
-            <artifactId>ossbar-platform-service</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <!--业务基础平台core核心域-->
         <dependency>
