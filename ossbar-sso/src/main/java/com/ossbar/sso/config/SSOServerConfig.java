@@ -34,17 +34,13 @@ public class SSOServerConfig extends AuthorizationServerConfigurerAdapter {
 	@Autowired
 	private DataSource dataSource;
 	
-	@Value("${com.creatorblue.redisFlag:true}")
+	@Value("${com.ossbar.redisFlag:true}")
 	private boolean redisFlag;
 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		// 配置token获取和验证时的策略
-		security.tokenKeyAccess("permitAll()")
-				// 验证通过，返回token信息
-				.checkTokenAccess("isAuthenticated()");
-				// 允许客户端使用client_id和client_secret获取token
-				//.allowFormAuthenticationForClients();
+		security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
 	}
 
 	@Override

@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class CommonUtil {
     public static boolean isNull(String str) {
-        return StringUtils.isEmpty(str);
+        return StringUtils.isBlank(str);
     }
 
     public static boolean isNull(Collection<?> collection) {

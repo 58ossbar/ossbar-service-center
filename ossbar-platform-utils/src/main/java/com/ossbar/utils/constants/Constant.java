@@ -37,7 +37,7 @@ public class Constant {
      */
     public static final String HEAD_REFRESH_TOKEN_FORM = "X-Refresh-Token-Form";
 	public static final String MSG_SUCCESS = "success";
-	public static String SSO_KEY = "creatorblue123creatorblue";
+	public static String SSO_KEY = "ossbar123ossbar";
 	public static final int DEFAULT_PAGE_SIZE = 20;
 	/** 超级管理员ID */
 	public static final String SUPER_ADMIN = "1";

@@ -1,8 +1,9 @@
 package com.ossbar.sso.config;
 
-import com.ossbar.modules.sys.api.TsysResourceService;
-import com.ossbar.modules.sys.api.TsysUserinfoService;
-import com.ossbar.modules.sys.domain.TsysUserinfo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.dubbo.config.annotation.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.ossbar.modules.sys.api.TsysResourceService;
+import com.ossbar.modules.sys.api.TsysUserinfoService;
+import com.ossbar.modules.sys.domain.TsysUserinfo;
 
 /**
  * 登陆用户认证
@@ -24,7 +25,7 @@ import java.util.Set;
  */
 @Component
 public class SSOUserDetailsService implements UserDetailsService {
-
+	
 	private Logger log = LoggerFactory.getLogger(getClass());
 
 	@Reference(version = "1.0.0")
@@ -44,15 +45,17 @@ public class SSOUserDetailsService implements UserDetailsService {
 			log.error("账号【" + username + "】被禁用，请联系管理员");
 			throw new UsernameNotFoundException("账号【" + username + "】被禁用，请联系管理员");
 		}
+		// 测试发现是grantedAuthorityList集合里的值，若有任意一个为null，则会报这个错误
+		// GrantedAuthority list cannot contain any null elements
 		List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
 		Set<String> perms = tsysResourceService.getUserPermissions(tsysUserinfo.getUserId());
-		log.debug("当前用户拥有的菜单权限 {}", perms);
-		if (perms != null && !perms.isEmpty()) {
-			perms.parallelStream().forEach(perm -> {
-				grantedAuthorityList.add(new SSOGrantedAuthority(perm));
-			});
-		}
-		// 非空处理，规避错误 GrantedAuthority list cannot contain any null elements
+		perms.parallelStream().forEach(perm -> {
+			SSOGrantedAuthority ssoGrantedAuthority = new SSOGrantedAuthority(perm);
+			// 所以这里做下非空处理
+			if (ssoGrantedAuthority != null) {
+				grantedAuthorityList.add(ssoGrantedAuthority);
+			}
+		});
 		for (int i = 0; i < grantedAuthorityList.size(); i++) {
 			if (grantedAuthorityList.get(i) == null) {
 				grantedAuthorityList.remove(i);

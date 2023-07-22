@@ -7,7 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.RandomStringUtils;
+
+import org.apache.commons.lang.RandomStringUtils;
 /**
  * Title:字符串处理 Copyright: Copyright (c) 2017
  * Company:ossbar.co.,ltd

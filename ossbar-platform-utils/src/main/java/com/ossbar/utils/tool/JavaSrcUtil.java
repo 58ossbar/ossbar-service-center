@@ -139,7 +139,7 @@ public class JavaSrcUtil {
 	public static void main(String[] args) throws IOException {
 		// ass——14014  common——6896 protocol——3531	short-master——1163
 		// server——7666+178+7703=15547 web——6583
-		File file = new File("D:/work_2017/creatorblue-platform/src/main");
+		File file = new File("D:/work_2017/ossbar-platform/src/main");
 		JavaSrcUtil jsu = new JavaSrcUtil();
 		System.out.println(jsu.staticRowsByDirectory(file));
 		OutputStream os = new FileOutputStream(new File("d:/crm.java"));

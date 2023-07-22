@@ -8,9 +8,9 @@ import java.util.Properties;
 
 /**
  * Title:生成验证码配置  Copyright: Copyright (c) 2017
- * Company:creatorblue.co.,ltd
+ * Company:ossbar.co.,ltd
  * 
- * @author creatorblue.co.,ltd
+ * @author ossbar.co.,ltd
  * @version 1.0
  */
 @Configuration

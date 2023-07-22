@@ -1,11 +1,10 @@
 package com.ossbar.sso.config;
 
 import java.util.Collection;
-
-import com.ossbar.modules.sys.domain.TsysUserinfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import com.ossbar.modules.sys.domain.TsysUserinfo;
 
 /**
  * 自定义认证信息

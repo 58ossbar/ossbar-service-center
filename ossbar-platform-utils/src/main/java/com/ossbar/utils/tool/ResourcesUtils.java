@@ -15,7 +15,7 @@ public class ResourcesUtils {
 	//默认配置文件的路径前缀
 	private static String prefixPath = "properties";
 	//默认系统配置文件
-	private static String defaultProp = prefixPath + File.separator + "creatorblue-config";
+	private static String defaultProp = prefixPath + File.separator + "ossbar-config";
 	//默认子工程配置文件
 	private static String customProp = prefixPath + File.separator + "custom-config";
 	/**

@@ -1,6 +1,5 @@
 package com.ossbar.sso.config;
 
-import com.ossbar.utils.tool.TicketDesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +9,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.ossbar.utils.tool.TicketDesUtil;
 
 /**
  * 授权配置
@@ -29,10 +29,10 @@ public class SSOSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private SSOUserDetailsService userDetailsService;
 
-	@Value("${com.creatorblue.anno-filter:}")
+	@Value("${com.ossbar.anno-filter:}")
 	private String[] annoFilter;
 	
-	@Value("${com.creatorblue.is-cors:false}")
+	@Value("${com.ossbar.is-cors:false}")
 	private boolean isCors;
 
 	@Override
@@ -55,19 +55,19 @@ public class SSOSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		if(isCors) {
 			http.antMatcher("/**")
-			.authorizeRequests()
-			.antMatchers(annoFilter)
-			.permitAll()
-			.anyRequest()
-			.authenticated()
-			.and().cors()
-			.and().csrf().disable()
-			.formLogin()
+	        .authorizeRequests()
+	        .antMatchers(annoFilter)
+	        .permitAll()
+	        .anyRequest()
+	        .authenticated()
+	        .and().cors()
+	        .and().csrf().disable()
+	        .formLogin()
 			.loginPage("/login").permitAll()
 			// 自动登录
 			.and().rememberMe()
 			// 加密的秘钥
-			.key("creatorblue-yyds-666!")
+			.key("ossbar-#*s23*(")
 			// 存放在浏览器端cookie的key
 			.rememberMeCookieName("remember-me-cookie-name")
 			// token失效的时间，单位为秒
@@ -87,7 +87,7 @@ public class SSOSecurityConfig extends WebSecurityConfigurerAdapter {
 			// 自动登录
 			.and().rememberMe()
 			// 加密的秘钥
-			.key("creatorblue-yyds-666!")
+			.key("ossbar-#*s23*(")
 			// 存放在浏览器端cookie的key
 			.rememberMeCookieName("remember-me-cookie-name")
 			// token失效的时间，单位为秒

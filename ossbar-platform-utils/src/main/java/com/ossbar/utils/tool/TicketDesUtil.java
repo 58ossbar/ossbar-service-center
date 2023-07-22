@@ -13,7 +13,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class TicketDesUtil {
 
 	private static final String Algorithm = "DESede"; // 定义加密算法,可用 DES,DESede,Blowfish
-	private static final String salt = "creatorblue123@!admin#&*";
+	private static final String salt = "ossbar123@!admin#&*";
 
 	public static String byte2hex(byte[] b) {
 		String hs = "";
