@@ -18,8 +18,8 @@ com:
     schedule-cluster: false
     schedule-autostart: true
     signName: 创蓝科技
-    accessKeyId: w0XX74M55SFK8hNo
-    accessKeySecret: KdX5qowcsOc2IQtmps6p5lMzJa5VF6
+    accessKeyId: w0XX74M12121213545FK8hNo
+    accessKeySecret: KdX5qowcsOc245532IQtmps6p54545zJa5VF6
     defaultHeadImg: defaulthead.png
     defaultName: 游客
     loginBackUrl: http://locahost:9084/console
@@ -27,17 +27,16 @@ com:
     qqAppKey: e259977afc168e50d53b8bdbd2241ba7
     xlAppId: 2117335614
     xlAppKey: b3a00287cb511e9cc4c57ce8509e380a
-    wxAppId: wx2d9a2d7700fbc9a4
-    wxAppKey: 4ee3fb8ea2941e6f8afd3b545145a94a
+    wxAppId: wx2d9a2d2AA941e6f8afd3b545145a94a
     gitUrl: 
     gitTicket: 
     log-level: debug
 #微信支付配置
 weixin:
   #小程序appid
-  appid: wx782efe0306206d7b
+  appid: wxsdtttt782efe030452326206d7b
   #APP端的appid
-  app_appid: xx
+  app_appid: xx222
   #小程序秘钥
   secret: 
   #商户号
@@ -69,7 +68,7 @@ spring:
     database: 0
     host: 127.0.0.1
     port: 6379
-    password: ossbar
+    password: ossb22ar222323
     timeout: 3000
     jedis:
       pool:

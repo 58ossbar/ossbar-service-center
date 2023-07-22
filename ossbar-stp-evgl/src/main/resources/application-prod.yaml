@@ -18,8 +18,8 @@ com:
     schedule-cluster: false
     schedule-autostart: false
     signName: 创蓝科技
-    accessKeyId: w0XX74M55SFK8hNo
-    accessKeySecret: KdX5qowcsOc2IQtmps6p5lMzJa5VF6
+    accessKeyId: 5678814M55SF4568No
+    accessKeySecret: 4579Oc2IQtmps6p5l00a5VF6
     defaultHeadImg: uploads/defaulthead.png
     defaultName: 游客
     loginBackUrl: https://www.budaos.com/bds
@@ -30,18 +30,18 @@ com:
     wxAppId: wx9cefe1842a7ba1e6
     wxAppKey: 7c45203caa2954e0561701abf658100f
     gitUrl: https://git.ossbar.com
-    gitTicket: 19fda444e7a382db8539e9dd4147e228
+    gitTicket: 566777444e7a382db85567e9dd4147e228
     log-level: error
-publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAOSVrgZEvirvjeElVNOio+EZadoCflQ+8oxF42lDq4yQ2Dg8epeWP0hQAUGBik8wgy1S9MFJkK82MC5LX87IAgUCAwEAAQ==
-password: g9xdSrtpAu5u/+/T/6kARJGWsGoh2c9dzKE7xIcqi5KcMes9XL2yjrRJqLlonp1hz9jdzvZtQELLA2q7CNLHrw==
+publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAOSV45ZEvirvjeElVNOio+EZadoCflQ+8oxF42lDq4yQ2Dg8epeWP0hQAUGBik8wgy1S9MFJkK82MC5LX87IAgUCAwEAAQ==
+password: g9xdSrtpAu5u/+/T/6kARJGWsGoh2c9dzKE755qi5KcMes9XL2yjrRJqLlonp1hz9jdzvZtQELLA2q7CNLHrw==
 #微信支付配置
 weixin:
   #小程序appid
-  appid: wx782efe0306206d7b
+  appid: wx3455782efe06677306889206d7b
   #APP端的appid
   app_appid: xx
   #小程序秘钥
-  secret: 1d00f3d9501febbb644afeca712883e2
+  secret: 1d00f3d934566767501febbb644afeca712883e2
   #商户号
   mchid: 1492042542
   #证书路径
@@ -57,7 +57,7 @@ weixin:
   #C端支付回调地址
   app_notifyurl: https://www.budaos.com/sp/wx/api/of/orderback
   #商户秘钥
-  key: ossbar1234567890ossbar
+  key: ossba34566778888978977890s990r
   #h5支付之后跳转地址
   redirect_url: 
 tio:
@@ -69,7 +69,7 @@ tio:
       redis:
         ip: 172.19.0.107
         port: 6379
-        password: xqTT2929
+        password: 90908
 server:
   port: 9084
   servlet:
@@ -81,7 +81,7 @@ spring:
     database: 0
     host: 172.19.0.107
     port: 6379
-    password: xqTT2929
+    password: x998723
     timeout: 3000
     jedis:
       pool:
